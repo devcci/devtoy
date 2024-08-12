@@ -1,0 +1,93 @@
+# default mysql db
+spring:
+  application:
+    name: devtoy-member
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3307/devtoy_member
+    username: devtoy
+    password: devtoy
+  sql:
+    init:
+      mode: never
+  jpa:
+    defer-datasource-initialization: false
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  security:
+    user:
+      name:
+
+jwt:
+  secret-key: 5bbb92ebf0d8443754b7cc85b8c2f8983ee6a074e191fbec8b1efb33379f92dd0d3b0ba4d96e161c0250f5f60f4f35c8c4b8e7291e92f37649bf9123e2b340c7
+  access-expiration: 86400 # 60 * 60 * 24
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8070/eureka
+
+server:
+  port: 8082
+  servlet:
+    encoding:
+      charset: utf-8
+      enabled: true
+      force: true
+
+# h2 db
+---
+spring:
+  config:
+    activate:
+      on-profile: local-h2
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:devtoy-member
+    username: sa
+    password:
+  sql:
+    init:
+      mode: always
+  jpa:
+    open-in-view: false
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+
+# Integration Test - TestContainers
+---
+spring:
+  config:
+    activate:
+      on-profile: integrationTest
+  sql:
+    init:
+      mode: always
+  jpa:
+    open-in-view: false
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true

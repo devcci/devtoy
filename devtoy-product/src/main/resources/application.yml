@@ -1,0 +1,95 @@
+# default mysql db
+spring:
+  application:
+    name: devtoy-product
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/devtoy_product
+    username: devtoy
+    password: devtoy
+  sql:
+    init:
+      mode: never
+  jpa:
+    defer-datasource-initialization: false
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+kafka:
+  enabled: true
+  product:
+    bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+    topic:
+      delete: devtoy-product-delete
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8070/eureka
+
+server:
+  port: 8081
+  servlet:
+    encoding:
+      charset: utf-8
+      enabled: true
+      force: true
+
+# h2 db
+---
+spring:
+  config:
+    activate:
+      on-profile: local-h2
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:devtoy-product
+    username: sa
+    password:
+  sql:
+    init:
+      mode: always
+  jpa:
+    open-in-view: false
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+
+# Integration Test - TestContainers
+---
+spring:
+  config:
+    activate:
+      on-profile: integrationTest
+  sql:
+    init:
+      mode: always
+  jpa:
+    open-in-view: false
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+kafka:
+  enabled: false

@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: devtoy-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: devtoy-product
+          uri: lb://DEVTOY-PRODUCT
+          predicates:
+            - Path=/products/**, /brands/**
+        #          filters:
+        #            - RewritePath=/product/(?<segment>.*), /$\{segment}
+        - id: devtoy-member
+          uri: lb://DEVTOY-MEMBER
+          predicates:
+            - Path=/member/**
+        #          filters:
+        #            - RewritePath=/member/(?<segment>.*), /$\{segment}
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8070/eureka
+
+server:
+  port: 8080
