@@ -1,7 +1,9 @@
-package com.devcci.devtoy.member.web.dto;
+package com.devcci.devtoy.member.application.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+
+import java.util.Set;
 
 public record SignUpRequest(
     @NotBlank(message = "아이디를 입력해주세요.")
@@ -12,6 +14,7 @@ public record SignUpRequest(
     String name,
     @NotBlank(message = "이메일을 입력해주세요.")
     @Email
-    String email
+    String email,
+    Set<String> role
 ) {
 }

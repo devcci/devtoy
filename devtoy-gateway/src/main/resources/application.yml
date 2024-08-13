@@ -13,7 +13,7 @@ spring:
         - id: devtoy-member
           uri: lb://DEVTOY-MEMBER
           predicates:
-            - Path=/member/**
+            - Path=/member/**,/auth/**
         #          filters:
         #            - RewritePath=/member/(?<segment>.*), /$\{segment}
 
