@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional(readOnly = true)
 @Service
 public class MemberSearchService {
     private final MemberRepository memberRepository;
@@ -16,7 +17,6 @@ public class MemberSearchService {
         this.memberRepository = memberRepository;
     }
 
-    @Transactional(readOnly = true)
     public List<MemberInfoResponse> getAllMembers() {
         List<Member> members = memberRepository.findAll();
         return MemberInfoResponse.of(members);

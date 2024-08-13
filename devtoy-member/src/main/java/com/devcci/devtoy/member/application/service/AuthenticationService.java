@@ -10,6 +10,8 @@ import com.devcci.devtoy.member.domain.member.Member;
 import com.devcci.devtoy.member.domain.member.MemberRepository;
 import com.devcci.devtoy.member.domain.member.MemberRole;
 import com.devcci.devtoy.member.infra.jwt.JwtProvider;
+import com.devcci.devtoy.member.infra.jwt.event.JwtAdditionEvent;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,17 +26,20 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final List<SignUpValidator> signUpValidators;
+    private final ApplicationEventPublisher eventPublisher;
 
     public AuthenticationService(
         MemberRepository memberRepository,
         PasswordEncoder passwordEncoder,
         JwtProvider jwtProvider,
-        List<SignUpValidator> signUpValidators
+        List<SignUpValidator> signUpValidators,
+        ApplicationEventPublisher eventPublisher
     ) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtProvider = jwtProvider;
         this.signUpValidators = signUpValidators;
+        this.eventPublisher = eventPublisher;
     }
 
     @Transactional
@@ -47,15 +52,19 @@ public class AuthenticationService {
         return memberRepository.save(signUpMember);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public LoginResponse login(LoginRequest userLoginRequest) {
-        Member byUserId = memberRepository.findByMemberId(userLoginRequest.memberId())
+        Member member = memberRepository.findByMemberId(userLoginRequest.memberId())
             .orElseThrow(() -> new ApiException(ErrorCode.MEMBER_NOT_FOUND));
 
-        if (passwordEncoder.matches(userLoginRequest.password(), byUserId.getPassword())) {
-            return LoginResponse.of(
-                jwtProvider.generateAccessToken(byUserId.getMemberId(), byUserId.getRole())
+        if (passwordEncoder.matches(userLoginRequest.password(), member.getPassword())) {
+            LoginResponse response = LoginResponse.of(member.getName(), member.getRole(),
+                jwtProvider.generateAccessToken(member.getMemberId(), member.getRole()),
+                jwtProvider.generateRefreshAccessToken(member.getMemberId(), member.getRole())
             );
+
+            eventPublisher.publishEvent(new JwtAdditionEvent(member.getMemberId(), response.getAccessToken(), response.getRefreshToken()));
+            return response;
         } else {
             throw new ApiException(ErrorCode.MEMBER_PASSWORD_INCORRECT);
         }

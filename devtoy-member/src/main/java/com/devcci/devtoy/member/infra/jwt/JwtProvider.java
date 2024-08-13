@@ -20,9 +20,9 @@ import java.util.Set;
 
 @Component
 public class JwtProvider {
-    private SecretKey secretKey = null;
-    private Long expireTimeHour;
-    private Long refreshExpireTimeHour;
+    private final SecretKey secretKey;
+    private final Long expireTimeHour;
+    private final Long refreshExpireTimeHour;
     private final MemberDetailService memberDetailService;
 
     public JwtProvider(
@@ -52,18 +52,8 @@ public class JwtProvider {
         return new UsernamePasswordAuthenticationToken(userDetails, "Authorization", userDetails.getAuthorities());
     }
 
-    public String getRole(String token) {
-
-        return Jwts.parser()
-            .verifyWith(secretKey)
-            .build()
-            .parseSignedClaims(token)
-            .getPayload()
-            .get(AuthConstants.ROLES, String.class);
-    }
 
     public Boolean isExpired(String token) {
-
         return Jwts.parser()
             .verifyWith(secretKey)
             .build()

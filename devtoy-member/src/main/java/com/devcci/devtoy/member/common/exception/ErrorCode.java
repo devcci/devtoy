@@ -16,6 +16,7 @@ public enum ErrorCode {
     JWT_TOKEN_NOT_EXISTS(HttpStatus.UNAUTHORIZED, 9001, "인증 토큰이 존재하지 않습니다."),
     JWT_TOKEN_INVALID(HttpStatus.UNAUTHORIZED, 9002, "잘못된 토큰입니다."),
     JWT_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, 9003, "만료된 토큰입니다."),
+    JWT_CREATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 9004, "토큰 발행 중 문제가 발생했습니다."),
     ;
 
     ErrorCode(HttpStatus status, int code, String message) {

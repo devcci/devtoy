@@ -6,6 +6,7 @@ import com.devcci.devtoy.member.infra.jwt.auth.AuthConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,12 @@ import java.io.IOException;
 
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
+
+    private final ApplicationEventPublisher eventPublisher;
+
+    public JwtAuthenticationEntryPoint(ApplicationEventPublisher eventPublisher) {
+        this.eventPublisher = eventPublisher;
+    }
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
@@ -26,6 +33,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         } else if (exception.equals(ErrorCode.JWT_TOKEN_EXPIRED.name())) {
             setResponse(response, ErrorCode.JWT_TOKEN_EXPIRED);
         }
+//        eventPublisher.publishEvent(new JwtDeletionEvent(request.get))
     }
 
     private void setResponse(HttpServletResponse response, ErrorCode code) throws IOException {
