@@ -1,12 +1,14 @@
 # default mysql db
 spring:
+  config:
+    import: optional:file:.env[.properties]
   application:
     name: devtoy-member
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3307/devtoy_member
-    username: devtoy
-    password: devtoy
+    url: jdbc:mysql://${MYSQL_MEMBER_HOST:localhost}:${MYSQL_MEMBER_PORT:3307}/${MYSQL_MEMBER_DB:devtoy_member}
+    username: ${MYSQL_MEMBER_USER:devtoy}
+    password: ${MYSQL_MEMBER_PASS:devtoy}
   sql:
     init:
       mode: never
@@ -22,12 +24,12 @@ spring:
         use_sql_comments: true
   data:
     redis:
-      host: localhost
-      port: 6379
-      password: devtoy
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASS:devtoy}
 
 jwt:
-  secret-key: 5bbb92ebf0d8443754b7cc85b8c2f8983ee6a074e191fbec8b1efb33379f92dd0d3b0ba4d96e161c0250f5f60f4f35c8c4b8e7291e92f37649bf9123e2b340c7
+  secret-key: ${JWT_SECRET_KEY}
   expire-time-hour: 1
   refresh-expire-time-hour: 24
 
@@ -36,10 +38,10 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://localhost:8070/eureka
+      defaultZone: ${EUREKA_URL:http://localhost:8070/eureka}
 
 server:
-  port: 8082
+  port: ${SERVER_MEMBER_PORT:8082}
   servlet:
     encoding:
       charset: utf-8

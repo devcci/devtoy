@@ -1,4 +1,6 @@
 spring:
+  config:
+    import: optional:file:.env[.properties]
   application:
     name: devtoy-discovery
 
@@ -7,4 +9,4 @@ eureka:
     register-with-eureka: false
     fetch-registry: false
 server:
-  port: 8070
+  port: ${SERVER_EUREKA_PORT:8070}
