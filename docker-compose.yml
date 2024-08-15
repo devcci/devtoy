@@ -1,10 +1,10 @@
-networks:
-  eureka-network:
-    driver: bridge
+#networks:
+#  eureka-network:
+#    driver: bridge
 
 services:
   mysql-product:
-    image: mysql:latest
+    image: mysql:8.4.2
     container_name: devtoy-product-mysql
     ports:
       - 3306:3306
@@ -15,7 +15,7 @@ services:
       - ./docker_volume/mysql/product/data:/var/lib/mysql
 
   mysql-member:
-    image: mysql:latest
+    image: mysql:8.4.2
     container_name: devtoy-member-mysql
     ports:
       - 3307:3306
@@ -27,10 +27,10 @@ services:
 
   # https://velog.io/@jthugg/make-local-kafka-cluster-kraft-mode-feat-debezium-cdc
   kafka-01:
-    image: confluentinc/cp-kafka:latest
+    image: confluentinc/cp-kafka:7.7.0
     container_name: devtoy-kafka-01
     ports:
-      - "9092:9092"
+      - 9092:9092
     volumes:
       - ./docker_volume/kafka/kafka-01/secrets:/etc/kafka/secrets
       - ./docker_volume/kafka/kafka-01/data:/var/lib/kafka/data
@@ -40,7 +40,7 @@ services:
       KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
       KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka-01:29092,2@kafka-02:29093,3@kafka-03:29094"
       KAFKA_LISTENERS: "PLAINTEXT://:19092,CONTROLLER://:29092,EXTERNAL://:9092"
-      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka-01:19092,EXTERNAL://localhost:9092"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka-01:19092,EXTERNAL://devtoy-kafka-01:9092"
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT'
       KAFKA_PROCESS_ROLES: 'broker,controller'
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
@@ -49,10 +49,10 @@ services:
       KAFKA_MIN_INSYNC_REPLICAS: 2
 
   kafka-02:
-    image: confluentinc/cp-kafka:latest
+    image: confluentinc/cp-kafka:7.7.0
     container_name: devtoy-kafka-02
     ports:
-      - "9093:9093"
+      - 9093:9093
     volumes:
       - ./docker_volume/kafka/kafka-02/secrets:/etc/kafka/secrets
       - ./docker_volume/kafka/kafka-02/data:/var/lib/kafka/data
@@ -62,7 +62,7 @@ services:
       KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
       KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka-01:29092,2@kafka-02:29093,3@kafka-03:29094"
       KAFKA_LISTENERS: "PLAINTEXT://:19093,CONTROLLER://:29093,EXTERNAL://:9093"
-      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka-02:19093,EXTERNAL://localhost:9093"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka-02:19093,EXTERNAL://devtoy-kafka-02:9093"
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT'
       KAFKA_PROCESS_ROLES: 'broker,controller'
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
@@ -71,10 +71,10 @@ services:
       KAFKA_MIN_INSYNC_REPLICAS: 2
 
   kafka-03:
-    image: confluentinc/cp-kafka:latest
+    image: confluentinc/cp-kafka:7.7.0
     container_name: devtoy-kafka-03
     ports:
-      - "9094:9094"
+      - 9094:9094
     volumes:
       - ./docker_volume/kafka/kafka-03/secrets:/etc/kafka/secrets
       - ./docker_volume/kafka/kafka-03/data:/var/lib/kafka/data
@@ -85,7 +85,7 @@ services:
       KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
       KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka-01:29092,2@kafka-02:29093,3@kafka-03:29094"
       KAFKA_LISTENERS: "PLAINTEXT://:19094,CONTROLLER://:29094,EXTERNAL://:9094"
-      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka-03:19094,EXTERNAL://localhost:9094"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka-03:19094,EXTERNAL://devtoy-kafka-03:9094"
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT'
       KAFKA_PROCESS_ROLES: 'broker,controller'
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
@@ -96,44 +96,77 @@ services:
   # Kafka UI
   # Just for monitoring...
   kafka-ui:
-    image: provectuslabs/kafka-ui:latest
+    image: provectuslabs/kafka-ui:v0.7.2
     container_name: devtoy-kafka-ui
     depends_on:
       - kafka-01
       - kafka-02
       - kafka-03
     ports:
-      - "9090:8080"
+      - 9090:8080
     environment:
       KAFKA_CLUSTERS_0_NAME: event-broker
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka-01:19092,kafka-02:19093,kafka-03:19094
 
   redis:
-    image: redis:latest
+    image: redis:7.4
     container_name: devtoy-redis
     ports:
-      - "6379:6379"
+      - 6379:6379
     volumes:
       - ./docker_volume/redis/data:/data
       - ./docker_volume/redis/redis.conf:/usr/local/etc/redis/redis.conf
     command: redis-server /usr/local/etc/redis/redis.conf
 
-  discovery-server:
-    image: devtoy-discovery:latest
-    container_name: devtoy-discovery
+  eureka:
+    image: devcci/devtoy-eureka:0.0.1
+    container_name: devtoy-eureka
     ports:
-      - "8070:8070"
-    networks:
-      - eureka-network
+      - 8070:8070
+    environment:
+      EUREKA_HOST: http://eureka
 
-  gateway-server:
-    image: devtoy-gateway:latest
+  gateway:
+    image: devcci/devtoy-gateway:0.0.1
     container_name: devtoy-gateway
     ports:
-      - "8080:8080"
-    environment:
-      eureka.client.serviceUrl.defaultZone: http://discovery-server:8070/eureka
+      - 8080:8080
     depends_on:
-      - discovery-server
-    networks:
-      - eureka-network
+      - eureka
+    environment:
+      EUREKA_URL: http://eureka:8070/eureka
+
+  devtoy-product:
+    image: devcci/devtoy-product:0.0.1
+    container_name: devtoy-product
+    ports:
+      - 8081:8081
+    environment:
+      MYSQL_PRODUCT_HOST: devtoy-product-mysql
+      MYSQL_PRODUCT_PORT: 3306
+      MYSQL_PRODUCT_DB: devtoy_product
+      MYSQL_PRODUCT_USER: devtoy_product
+      MYSQL_PRODUCT_PASS: devtoy_product
+      KAFKA_BOOTSTRAP_SERVERS: devtoy-kafka-01:9092,devtoy-kafka-02:9093,devtoy-kafka-03:9094
+      REDIS_HOST: devtoy-redis
+      REDIS_PORT: 6379
+      REDIS_PASS: devtoy
+      EUREKA_URL: http://eureka:8070/eureka
+
+  devtoy-member:
+    image: devcci/devtoy-member:0.0.1
+    container_name: devtoy-member
+    ports:
+      - 8082:8082
+    environment:
+      MYSQL_MEMBER_HOST: devtoy-member-mysql
+      MYSQL_MEMBER_PORT: 3306
+      MYSQL_MEMBER_DB: devtoy_member
+      MYSQL_MEMBER_USER: devtoy_member
+      MYSQL_MEMBER_PASS: devtoy_member
+      JWT_SECRET_KEY: 5bbb92ebf0d8443754b7cc85b8c2f8983ee6a074e191fbec8b1efb33379f92dd0d3b0ba4d96e161c0250f5f60f4f35c8c4b8e7291e92f37649bf9123e2b340c7
+      REDIS_HOST: devtoy-redis
+      REDIS_PORT: 6379
+      REDIS_PASS: devtoy
+      EUREKA_URL: http://eureka:8070/eureka
+

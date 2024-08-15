@@ -7,8 +7,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${MYSQL_PRODUCT_HOST:localhost}:${MYSQL_PRODUCT_PORT:3306}/${MYSQL_PRODUCT_DB:devtoy_product}
-    username: ${MYSQL_PRODUCT_USER:devtoy}
-    password: ${MYSQL_PRODUCT_PASS:devtoy}
+    username: ${MYSQL_PRODUCT_USER:devtoy_product}
+    password: ${MYSQL_PRODUCT_PASS:devtoy_product}
   sql:
     init:
       mode: never
@@ -31,7 +31,7 @@ spring:
 kafka:
   enabled: true
   product:
-    bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092,localhost:9093,localhost:9094}
     topic:
       delete: devtoy-product-delete
 
@@ -41,6 +41,8 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: ${EUREKA_URL:http://localhost:8070/eureka}
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 server:
   port: ${SERVER_PRODUCT_PORT:8081}

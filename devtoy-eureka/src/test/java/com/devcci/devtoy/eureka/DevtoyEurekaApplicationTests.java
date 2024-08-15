@@ -1,10 +1,10 @@
-package com.devcci.devtoy.discovery;
+package com.devcci.devtoy.eureka;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class DevtoyDiscoveryApplicationTests {
+class DevtoyEurekaApplicationTests {
 
     @Test
     void contextLoads() {
