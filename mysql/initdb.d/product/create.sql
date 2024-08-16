@@ -4,8 +4,6 @@ create table brand
     id          bigint      not null auto_increment,
     modified_at datetime(6),
     name        varchar(20) not null,
-    created_by  varchar(255),
-    modified_by varchar(255),
     primary key (id)
 ) engine = InnoDB
   DEFAULT CHARACTER SET utf8
@@ -17,8 +15,6 @@ create table category
     id          bigint      not null auto_increment,
     modified_at datetime(6),
     name        varchar(20) not null,
-    created_by  varchar(255),
-    modified_by varchar(255),
     primary key (id)
 ) engine = InnoDB
   DEFAULT CHARACTER SET utf8
@@ -32,9 +28,7 @@ create table product
     created_at  datetime(6),
     id          bigint         not null auto_increment,
     modified_at datetime(6),
-    created_by  varchar(255),
     description varchar(255) comment '상품의 간략한 설명',
-    modified_by varchar(255),
     name        varchar(255),
     primary key (id)
 ) engine = InnoDB

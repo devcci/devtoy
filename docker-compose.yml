@@ -1,7 +1,3 @@
-#networks:
-#  eureka-network:
-#    driver: bridge
-
 services:
   mysql-product:
     image: mysql:8.4.2
@@ -14,7 +10,6 @@ services:
       MYSQL_USER: devtoy_product
       MYSQL_PASSWORD: devtoy_product
       TZ: Asia/Seoul
-
     volumes:
       - ./mysql/conf.d:/etc/mysql/conf.d
       - ./docker_volume/mysql/product/data:/var/lib/mysql

@@ -1,8 +1,8 @@
-INSERT INTO member (member_id, name, password, email, created_at, modified_at, created_by, modified_by)
-VALUES ('testUser1', '데브토일', 'test1234', 'testUser@gmail.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'admin',
-        'admin'),
-       ('testUser2', '데브토이이', 'test1234', 'testUser@gmail.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'admin',
-        'admin');
+INSERT INTO member (member_id, name, password, email, created_at, modified_at)
+VALUES ('tester1', '테스트1', '$2a$10$rL9Izkn6XB8P19uYwY6Kn.tzv36ClKbNwP3QNamgtiKefFJphLh72', 'tester1@gmail.com',
+        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       ('tester2', '테스트2', '$2a$10$gBArOlKYC0nV7FNEc5z3ce7oXLihod5PMQzogHWP3BpsszUZr9DGq', 'tester2@gmail.com',
+        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO member_role (id, role)
 values (1, 'admin'),

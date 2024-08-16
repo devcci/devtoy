@@ -2,9 +2,7 @@ create table member
 (
     id          bigint       not null auto_increment,
     created_at  datetime(6),
-    created_by  varchar(255),
     modified_at datetime(6),
-    modified_by varchar(255),
     email       varchar(255) not null,
     member_id   varchar(255) not null,
     name        varchar(255) not null,
