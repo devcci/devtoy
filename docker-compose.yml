@@ -10,9 +10,15 @@ services:
       - 3306:3306
     environment:
       MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: devtoy_product
+      MYSQL_USER: devtoy_product
+      MYSQL_PASSWORD: devtoy_product
       TZ: Asia/Seoul
+
     volumes:
+      - ./mysql/conf.d:/etc/mysql/conf.d
       - ./docker_volume/mysql/product/data:/var/lib/mysql
+      - ./mysql/initdb.d/product:/docker-entrypoint-initdb.d
 
   mysql-member:
     image: mysql:8.4.2
@@ -21,9 +27,14 @@ services:
       - 3307:3306
     environment:
       MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: devtoy_member
+      MYSQL_USER: devtoy_member
+      MYSQL_PASSWORD: devtoy_member
       TZ: Asia/Seoul
     volumes:
+      - ./mysql/conf.d:/etc/mysql/conf.d
       - ./docker_volume/mysql/member/data:/var/lib/mysql
+      - ./mysql/initdb.d/member:/docker-entrypoint-initdb.d
 
   # https://velog.io/@jthugg/make-local-kafka-cluster-kraft-mode-feat-debezium-cdc
   kafka-01:
@@ -152,6 +163,8 @@ services:
       REDIS_PORT: 6379
       REDIS_PASS: devtoy
       EUREKA_URL: http://eureka:8070/eureka
+    depends_on:
+      - mysql-product
 
   devtoy-member:
     image: devcci/devtoy-member:0.0.1
@@ -169,4 +182,5 @@ services:
       REDIS_PORT: 6379
       REDIS_PASS: devtoy
       EUREKA_URL: http://eureka:8070/eureka
-
+    depends_on:
+      - mysql-member
