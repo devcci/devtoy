@@ -33,7 +33,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         } else if (exception.equals(ErrorCode.JWT_TOKEN_EXPIRED.name())) {
             setResponse(response, ErrorCode.JWT_TOKEN_EXPIRED);
         }
-//        eventPublisher.publishEvent(new JwtDeletionEvent(request.get))
     }
 
     private void setResponse(HttpServletResponse response, ErrorCode code) throws IOException {
@@ -46,3 +45,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     }
 
 }
+
+//https://yookeun.github.io/java/2023/12/30/jwt-refresh/
+//https://colabear754.tistory.com/179
+//https://velog.io/@sheltonwon/MSA-API-Gateway-%ED%8C%A8%ED%84%B4%EC%97%90%EC%84%9C%EC%9D%98-%EC%9D%B8%EC%A6%9D%EC%9D%B8%EA%B0%80

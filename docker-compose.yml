@@ -106,7 +106,7 @@ services:
       - devtoy-kafka-02
       - devtoy-kafka-03
     ports:
-      - 9090:8080
+      - "9090:8080"
     environment:
       KAFKA_CLUSTERS_0_NAME: event-broker
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: devtoy-kafka-01:19092,devtoy-kafka-02:19093,devtoy-kafka-03:19094
