@@ -11,6 +11,7 @@ import com.devcci.devtoy.member.domain.member.MemberRepository;
 import com.devcci.devtoy.member.domain.member.MemberRole;
 import com.devcci.devtoy.member.infra.jwt.JwtProvider;
 import com.devcci.devtoy.member.infra.jwt.event.JwtAdditionEvent;
+import com.devcci.devtoy.member.infra.jwt.event.JwtDeletionEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -66,6 +67,7 @@ public class AuthenticationService {
             eventPublisher.publishEvent(new JwtAdditionEvent(member.getMemberId(), response.getAccessToken(), response.getRefreshToken()));
             return response;
         } else {
+            eventPublisher.publishEvent(new JwtDeletionEvent(member.getMemberId()));
             throw new ApiException(ErrorCode.MEMBER_PASSWORD_INCORRECT);
         }
     }
