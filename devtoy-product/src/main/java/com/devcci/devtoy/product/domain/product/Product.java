@@ -1,7 +1,7 @@
 package com.devcci.devtoy.product.domain.product;
 
+import com.devcci.devtoy.common.domain.BaseTimeEntity;
 import com.devcci.devtoy.product.common.util.BigDecimalUtil;
-import com.devcci.devtoy.product.domain.BaseTimeEntity;
 import com.devcci.devtoy.product.domain.brand.Brand;
 import com.devcci.devtoy.product.domain.category.Category;
 import jakarta.persistence.Column;

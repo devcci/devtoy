@@ -1,7 +1,7 @@
 package com.devcci.devtoy.member.application.validator;
 
-import com.devcci.devtoy.member.common.exception.ApiException;
-import com.devcci.devtoy.member.common.exception.ErrorCode;
+import com.devcci.devtoy.common.exception.ApiException;
+import com.devcci.devtoy.common.exception.ErrorCode;
 import com.devcci.devtoy.member.domain.member.Member;
 import com.devcci.devtoy.member.domain.member.MemberRepository;
 import org.springframework.stereotype.Service;

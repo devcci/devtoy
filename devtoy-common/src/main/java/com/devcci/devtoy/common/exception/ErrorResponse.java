@@ -1,4 +1,4 @@
-package com.devcci.devtoy.member.common.exception;
+package com.devcci.devtoy.common.exception;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;

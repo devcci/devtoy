@@ -1,6 +1,6 @@
 package com.devcci.devtoy.member.infra.jwt;
 
-import com.devcci.devtoy.member.common.exception.ErrorCode;
+import com.devcci.devtoy.common.exception.ErrorCode;
 import com.devcci.devtoy.member.infra.jwt.auth.AuthConstants;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -10,6 +10,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.StringUtils;

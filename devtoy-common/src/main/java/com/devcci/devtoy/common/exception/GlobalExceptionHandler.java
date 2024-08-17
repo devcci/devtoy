@@ -1,4 +1,4 @@
-package com.devcci.devtoy.product.common.exception;
+package com.devcci.devtoy.common.exception;
 
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;

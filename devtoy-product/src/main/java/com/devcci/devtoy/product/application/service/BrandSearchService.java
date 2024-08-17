@@ -1,9 +1,9 @@
 package com.devcci.devtoy.product.application.service;
 
 
+import com.devcci.devtoy.common.exception.ApiException;
+import com.devcci.devtoy.common.exception.ErrorCode;
 import com.devcci.devtoy.product.application.dto.BrandResponse;
-import com.devcci.devtoy.product.common.exception.ApiException;
-import com.devcci.devtoy.product.common.exception.ErrorCode;
 import com.devcci.devtoy.product.domain.brand.Brand;
 import com.devcci.devtoy.product.domain.brand.BrandRepository;
 import org.springframework.stereotype.Service;

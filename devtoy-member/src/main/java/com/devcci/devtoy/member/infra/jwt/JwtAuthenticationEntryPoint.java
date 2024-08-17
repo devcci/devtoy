@@ -1,7 +1,7 @@
 package com.devcci.devtoy.member.infra.jwt;
 
-import com.devcci.devtoy.member.common.exception.ErrorCode;
-import com.devcci.devtoy.member.common.exception.JwtErrorResponse;
+import com.devcci.devtoy.common.exception.ErrorCode;
+import com.devcci.devtoy.common.exception.JwtErrorResponse;
 import com.devcci.devtoy.member.infra.jwt.auth.AuthConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;

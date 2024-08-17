@@ -1,8 +1,8 @@
 package com.devcci.devtoy.member.infra.jwt.handler;
 
 
-import com.devcci.devtoy.member.common.exception.ApiException;
-import com.devcci.devtoy.member.common.exception.ErrorCode;
+import com.devcci.devtoy.common.exception.ApiException;
+import com.devcci.devtoy.common.exception.ErrorCode;
 import com.devcci.devtoy.member.infra.cache.redis.JwtRedisRepository;
 import com.devcci.devtoy.member.infra.cache.redis.dto.MemberJwtInfo;
 import com.devcci.devtoy.member.infra.jwt.event.JwtAdditionEvent;

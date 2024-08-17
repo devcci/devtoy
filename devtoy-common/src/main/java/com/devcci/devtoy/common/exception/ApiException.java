@@ -1,4 +1,4 @@
-package com.devcci.devtoy.product.common.exception;
+package com.devcci.devtoy.common.exception;
 
 import lombok.Getter;
 

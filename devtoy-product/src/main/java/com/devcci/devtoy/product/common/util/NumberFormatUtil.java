@@ -1,7 +1,7 @@
 package com.devcci.devtoy.product.common.util;
 
-import com.devcci.devtoy.product.common.exception.ApiException;
-import com.devcci.devtoy.product.common.exception.ErrorCode;
+import com.devcci.devtoy.common.exception.ApiException;
+import com.devcci.devtoy.common.exception.ErrorCode;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
