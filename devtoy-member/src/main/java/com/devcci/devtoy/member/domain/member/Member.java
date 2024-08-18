@@ -1,6 +1,6 @@
 package com.devcci.devtoy.member.domain.member;
 
-import com.devcci.devtoy.common.domain.BaseTimeEntity;
+import com.devcci.devtoy.member.domain.BaseTimeEntity;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -26,7 +26,7 @@ import java.util.Set;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "member",
     uniqueConstraints = {
-        @UniqueConstraint(name = "member_id_uq", columnNames = "memberId")
+        @UniqueConstraint(name = "member_id_uq", columnNames = "member_id")
     }
 )
 public class Member extends BaseTimeEntity {

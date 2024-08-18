@@ -34,8 +34,6 @@ configurations {
 }
 
 dependencies {
-    implementation project(':devtoy-common')
-
     // Spring
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -69,7 +67,8 @@ dependencies {
     // docs
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
 
-//  // local-commons
+    // local-commons
+    implementation project(':devtoy-common')
 }
 
 tasks.named('test', Test) {

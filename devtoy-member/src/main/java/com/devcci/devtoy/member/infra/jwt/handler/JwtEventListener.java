@@ -25,7 +25,7 @@ public class JwtEventListener {
     @EventListener
     public void onJwtCreated(JwtAdditionEvent event) {
         try {
-            jwtRedisRepository.saveRedis(MemberJwtInfo.createMemberJwtInfo(event.memberId(), event.accessToken(), event.refreshToken()));
+            jwtRedisRepository.saveRedis(MemberJwtInfo.createMemberJwtInfo(event.memberId(), event.refreshToken()));
         } catch (JsonProcessingException e) {
             throw new ApiException(ErrorCode.JWT_CREATION_FAILED);
         }

@@ -123,6 +123,7 @@ services:
 
   devtoy-eureka:
     image: devcci/devtoy-eureka:latest
+    pull_policy: always
     container_name: devtoy-eureka
     ports:
       - "8070:8070"
@@ -131,6 +132,7 @@ services:
 
   devtoy-gateway:
     image: devcci/devtoy-gateway:latest
+    pull_policy: always
     container_name: devtoy-gateway
     ports:
       - "8080:8080"
@@ -141,6 +143,7 @@ services:
 
   devtoy-product:
     image: devcci/devtoy-product:latest
+    pull_policy: always
     container_name: devtoy-product
     ports:
       - "8081:8081"
@@ -160,6 +163,7 @@ services:
 
   devtoy-member:
     image: devcci/devtoy-member:latest
+    pull_policy: always
     container_name: devtoy-member
     ports:
       - "8082:8082"
@@ -169,7 +173,6 @@ services:
       MYSQL_MEMBER_DB: devtoy_member
       MYSQL_MEMBER_USER: devtoy_member
       MYSQL_MEMBER_PASS: devtoy_member
-      JWT_SECRET_KEY: 5bbb92ebf0d8443754b7cc85b8c2f8983ee6a074e191fbec8b1efb33379f92dd0d3b0ba4d96e161c0250f5f60f4f35c8c4b8e7291e92f37649bf9123e2b340c7
       REDIS_HOST: devtoy-redis
       REDIS_PORT: 6379
       REDIS_PASS: devtoy

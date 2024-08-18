@@ -1,6 +1,6 @@
 package com.devcci.devtoy.product.domain.category;
 
-import com.devcci.devtoy.common.domain.BaseTimeEntity;
+import com.devcci.devtoy.product.domain.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -5,11 +5,14 @@ spring:
     name: devtoy-eureka
 
 eureka:
+  server:
+    response-cache-update-interval-ms: 5000
   client:
     register-with-eureka: false
     fetch-registry: false
     service-url:
       defaultZone: ${EUREKA_HOST:http://localhost}:${server.port}/eureka/
+
 server:
   port: ${SERVER_EUREKA_PORT:8070}
 

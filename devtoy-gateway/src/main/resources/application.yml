@@ -3,22 +3,30 @@ spring:
     import: optional:file:.env[.properties]
   application:
     name: devtoy-gateway
-  cloud:
-    gateway:
-      routes:
-        - id: devtoy-product
-          uri: lb://DEVTOY-PRODUCT
-          predicates:
-            - Path=/product/**, /brand/**
-        #          filters:
-        #            - RewritePath=/product/(?<segment>.*), /$\{segment}
-        - id: devtoy-member
-          uri: lb://DEVTOY-MEMBER
-          predicates:
-            - Path=/member/**,/auth/**
-        #          filters:
-        #            - RewritePath=/member/(?<segment>.*), /$\{segment}
+#  cloud:
+#    gateway:
+#      default-filters:
+#        - AuthorizationFilter
+#      routes:
+#        - id: devtoy-member
+#          uri: lb://DEVTOY-MEMBER
+#          predicates:
+#            - Path=/auth/**
+#        - id: devtoy-member
+#          uri: lb://DEVTOY-MEMBER
+#          predicates:
+#            - Path=/member/**
+#          filters:
+#            - AuthorizationFilter
+#        - id: devtoy-product
+#          uri: lb://DEVTOY-PRODUCT
+#          predicates:
+#            - Path=/product/**, /brand/**
+#          filters:
+#            - AuthorizationFilter
 
+jwt:
+  secret-key: ${JWT_SECRET_KEY:5bbb92ebf0d8443754b7cc85b8c2f8983ee6a074e191fbec8b1efb33379f92dd0d3b0ba4d96e161c0250f5f60f4f35c8c4b8e7291e92f37649bf9123e2b340c7}}
 
 eureka:
   client:
@@ -26,6 +34,8 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: ${EUREKA_URL:http://localhost:8070/eureka}
+    registry-fetch-interval-seconds: 5
+    disable-delta: true
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
@@ -40,7 +50,7 @@ springdoc:
     use-root-path: true
     path: /swagger-ui/index.html
     urls:
-      - url: /product/v3/api-docs
+      - url: /v3/api-docs/product
         name: product
-      - url: /member/v3/api-docs
+      - url: /v3/api-docs/member
         name: member

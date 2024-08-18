@@ -6,7 +6,6 @@ import com.devcci.devtoy.member.application.dto.SignUpRequest;
 import com.devcci.devtoy.member.application.service.AuthenticationService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +26,7 @@ public class AuthenticationApi {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping
+    @PostMapping("/login")
     public ResponseEntity<LoginResponse> memberLogin(@Valid @RequestBody LoginRequest request) {
         LoginResponse login = authenticationService.login(request);
         return ResponseEntity.ok().body(login);

@@ -8,16 +8,14 @@ import lombok.NoArgsConstructor;
 @Getter
 public class MemberJwtInfo {
     private String memberId;
-    private String accessToken;
     private String refreshToken;
 
-    private MemberJwtInfo(String memberId, String accessToken, String refreshToken) {
+    private MemberJwtInfo(String memberId, String refreshToken) {
         this.memberId = memberId;
-        this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
 
-    public static MemberJwtInfo createMemberJwtInfo(String memberId, String accessToken, String refreshToken) {
-        return new MemberJwtInfo(memberId, accessToken, refreshToken);
+    public static MemberJwtInfo createMemberJwtInfo(String memberId, String refreshToken) {
+        return new MemberJwtInfo(memberId, refreshToken);
     }
 }

@@ -1,4 +1,4 @@
-package com.devcci.devtoy.common.domain;
+package com.devcci.devtoy.product.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

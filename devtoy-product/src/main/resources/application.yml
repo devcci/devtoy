@@ -54,7 +54,7 @@ server:
 
 springdoc:
   api-docs:
-    path: /product/v3/api-docs
+    path: /v3/api-docs/product
   swagger-ui:
     use-root-path: true
 

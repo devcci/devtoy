@@ -52,7 +52,7 @@ server:
 
 springdoc:
   api-docs:
-    path: /member/v3/api-docs
+    path: /v3/api-docs/member
   swagger-ui:
     use-root-path: true
 

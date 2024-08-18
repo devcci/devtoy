@@ -5,11 +5,19 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum ErrorCode {
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 1500, "서버 오류가 발생했습니다."),
-    INVALID_FORMAT(HttpStatus.INTERNAL_SERVER_ERROR, 1501, "포맷 에러"),
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 1000, "서버 오류가 발생했습니다."),
+    INVALID_FORMAT(HttpStatus.INTERNAL_SERVER_ERROR, 1001, "포맷 에러"),
+    API_SERVER_NOT_AVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, 1002, "API 서버 오류입니다."),
+    NO_RESOURCE_FOUND(HttpStatus.NOT_FOUND, 1003, "존재하지 않는 URL 입니다."),
 
-    INVALID_PAGING_ORDER(HttpStatus.BAD_REQUEST, 1950, "정렬을 위한 기준값이 잘못됐습니다."),
+    JWT_TOKEN_NOT_EXISTS(HttpStatus.UNAUTHORIZED, 1004, "인증 토큰이 존재하지 않습니다."),
+    JWT_TOKEN_INVALID(HttpStatus.UNAUTHORIZED, 1005, "잘못된 토큰입니다."),
+    JWT_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, 1006, "만료된 토큰입니다."),
+    JWT_CREATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 1007, "토큰 발행 중 문제가 발생했습니다."),
 
+    NOT_AUTHORIZED(HttpStatus.FORBIDDEN, 1501, "권한이 없습니다."),
+
+    INVALID_PAGING_ORDER(HttpStatus.BAD_REQUEST, 1100, "정렬을 위한 기준값이 잘못됐습니다."),
     BRAND_DUPLICATE(HttpStatus.CONFLICT, 1101, "이미 존재하는 브랜드입니다."),
     BRAND_NOT_FOUND(HttpStatus.BAD_REQUEST, 1102, "존재하지 않는 브랜드입니다."),
     BRAND_NOT_CHANGED(HttpStatus.OK, 1103, "브랜드의 변경 내용이 없습니다."),
@@ -34,10 +42,6 @@ public enum ErrorCode {
     MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, 2003, "존재하지 않는 사용자입니다."),
     MEMBER_PASSWORD_INCORRECT(HttpStatus.BAD_REQUEST, 2004, "잘못된 패스워드입니다."),
 
-    JWT_TOKEN_NOT_EXISTS(HttpStatus.UNAUTHORIZED, 9001, "인증 토큰이 존재하지 않습니다."),
-    JWT_TOKEN_INVALID(HttpStatus.UNAUTHORIZED, 9002, "잘못된 토큰입니다."),
-    JWT_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, 9003, "만료된 토큰입니다."),
-    JWT_CREATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 9004, "토큰 발행 중 문제가 발생했습니다."),
     ;
 
     ErrorCode(HttpStatus status, int code, String message) {
