@@ -34,4 +34,5 @@ jobs:
           file: ./devtoy-eureka/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/devtoy-eureka:latest
           tags: ${{ secrets.DOCKER_USERNAME }}/devtoy-eureka:${{ github.sha }}
