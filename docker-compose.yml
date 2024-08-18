@@ -122,7 +122,7 @@ services:
     command: redis-server /usr/local/etc/redis/redis.conf
 
   devtoy-eureka:
-    image: devcci/devtoy-eureka:0.0.1
+    image: devcci/devtoy-eureka:latest
     container_name: devtoy-eureka
     ports:
       - "8070:8070"
@@ -130,7 +130,7 @@ services:
       EUREKA_HOST: http://devtoy-eureka
 
   devtoy-gateway:
-    image: devcci/devtoy-gateway:0.0.1
+    image: devcci/devtoy-gateway:latest
     container_name: devtoy-gateway
     ports:
       - "8080:8080"
@@ -140,7 +140,7 @@ services:
       EUREKA_URL: http://devtoy-eureka:8070/eureka
 
   devtoy-product:
-    image: devcci/devtoy-product:0.0.1
+    image: devcci/devtoy-product:latest
     container_name: devtoy-product
     ports:
       - "8081:8081"
@@ -159,7 +159,7 @@ services:
       - devtoy-mysql-product
 
   devtoy-member:
-    image: devcci/devtoy-member:0.0.1
+    image: devcci/devtoy-member:latest
     container_name: devtoy-member
     ports:
       - "8082:8082"
