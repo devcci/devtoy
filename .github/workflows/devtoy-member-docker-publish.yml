@@ -1,4 +1,4 @@
-name: Build and Push Docker Images
+name: devtoy-member Docker Images Publish
 
 on:
   push:
