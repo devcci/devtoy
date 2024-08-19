@@ -15,7 +15,6 @@ java {
 
 repositories {
     mavenCentral()
-    mavenLocal()
 }
 
 ext {
@@ -35,6 +34,8 @@ configurations {
 }
 
 dependencies {
+    implementation project(':devtoy-common')
+
     // Spring
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -68,8 +69,7 @@ dependencies {
     // docs
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
 
-    // local-commons
-    implementation 'com.devcci:devtoy-common:0.0.1-SNAPSHOT'
+//  // local-commons
 }
 
 tasks.named('test', Test) {

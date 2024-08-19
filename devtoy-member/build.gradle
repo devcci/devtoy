@@ -15,7 +15,6 @@ java {
 
 repositories {
     mavenCentral()
-    mavenLocal()
 }
 
 ext {
@@ -71,7 +70,7 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
 
     // local-commons
-    implementation 'com.devcci:devtoy-common:0.0.1-SNAPSHOT'
+    implementation project(':devtoy-common')
 }
 
 tasks.named('test', Test) {
