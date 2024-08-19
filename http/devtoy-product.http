@@ -2,15 +2,15 @@
 
 ###
 # @name 카테고리별최저가상품
-GET {{server-gateway}}/products/categories/lowest
+GET {{server-gateway}}/product/categories/lowest
 
 ###
 # @name 최저가브랜드
-GET {{server-gateway}}/products/brands/lowest
+GET {{server-gateway}}/product/brands/lowest
 
 ###
 # @name 카테고리 최고/최저가
-GET {{server-product}}/products/categories/min-max-prices?
+GET {{server-product}}/product/categories/min-max-prices?
     categoryName=상의
 
 ###
@@ -42,14 +42,14 @@ DELETE {{server-product}}/brands/10
 
 ###
 # @name 상품 리스트
-GET {{server-product}}/products?
+GET {{server-product}}/product?
     page=1&
     size=100&
     sort=asc
 
 ###
 # @name 상품 추가
-POST {{server-product}}/products
+POST {{server-product}}/product
 Content-Type: application/json
 
 {
@@ -61,7 +61,7 @@ Content-Type: application/json
 
 ###
 # @name 상품 수정
-PUT {{server-product}}/products
+PUT {{server-product}}/product
 Content-Type: application/json
 
 {
@@ -75,4 +75,4 @@ Content-Type: application/json
 
 ###
 # @name 상품 삭제
-DELETE {{server-product}}/products/4
+DELETE {{server-product}}/product/4
