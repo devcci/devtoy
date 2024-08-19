@@ -52,6 +52,13 @@ server:
       enabled: true
       force: true
 
+springdoc:
+  api-docs:
+    path: /product/v3/api-docs
+  swagger-ui:
+    use-root-path: true
+
+
 # h2 db
 ---
 spring:

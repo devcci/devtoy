@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @Tag(name = "브랜드 조회 API")
-@RequestMapping("/brands")
+@RequestMapping("/brand")
 @RestController
 public class BrandSearchController {
 

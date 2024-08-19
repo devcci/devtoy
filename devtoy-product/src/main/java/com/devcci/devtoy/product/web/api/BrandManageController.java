@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
 
 @Tag(name = "브랜드 관리 API")
-@RequestMapping("/brands")
+@RequestMapping("/brand")
 @RestController
 public class BrandManageController {
 

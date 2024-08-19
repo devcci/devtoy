@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
 
 @Tag(name = "상품 관리 API")
-@RequestMapping("/products")
+@RequestMapping("/product")
 @RestController
 public class ProductManageController {
 
@@ -36,7 +36,7 @@ public class ProductManageController {
     public ResponseEntity<Void> addProduct(
         @RequestBody @Valid ProductAddRequest productAddRequest) {
         long newProductId = productManageService.addProduct(productAddRequest).getId();
-        return ResponseEntity.created(URI.create("products/" + newProductId)).build();
+        return ResponseEntity.created(URI.create("product/" + newProductId)).build();
     }
 
     @Operation(summary = "상품 수정")

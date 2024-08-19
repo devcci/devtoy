@@ -23,7 +23,7 @@ import java.util.List;
 
 @Tag(name = "상품 조회 API")
 @Validated
-@RequestMapping("/products")
+@RequestMapping("/product")
 @RestController
 public class ProductSearchController {
 
