@@ -1,8 +1,9 @@
 package com.devcci.devtoy.gateway.filter;
 
 import com.devcci.devtoy.common.Constans.AuthConstants;
+import com.devcci.devtoy.common.exception.AuthenticationException;
 import com.devcci.devtoy.common.exception.ErrorCode;
-import com.devcci.devtoy.gateway.exception.AuthenticationException;
+import com.devcci.devtoy.common.util.TokenUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -15,7 +16,6 @@ import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFac
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
 import java.util.List;
@@ -29,8 +29,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
     private final SecretKey secretKey;
 
     public AuthenticationFilter(
-        @Value("${jwt.secret-key}") String secretKey
-    ) {
+        @Value("${jwt.secret-key}") String secretKey) {
         super(Config.class);
         this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
     }
@@ -51,7 +50,10 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
             String path = exchange.getRequest().getURI().getPath();
-            if (path.startsWith("/auth")) {
+            if (
+                path.startsWith("/auth/signup") ||
+                    path.startsWith("/auth/login")
+            ) {
                 return chain.filter(exchange);
             }
             ServerHttpRequest request = exchange.getRequest();
@@ -60,18 +62,20 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                 throw new AuthenticationException(ErrorCode.JWT_TOKEN_NOT_EXISTS);
             String token = parse(request);
             Claims payload = verifyAndGetPayload(token);
-            List<String> requiredRole = config.getRoles();
-
-            List roles = Optional.of(payload.get(AuthConstants.ROLES, List.class))
-                .orElseThrow(() -> new AuthenticationException(ErrorCode.JWT_TOKEN_INVALID));
-
-            boolean hasRequiredRole = roles.stream().anyMatch(requiredRole::contains);
-
-            if (!hasRequiredRole) {
-                throw new AuthenticationException(ErrorCode.NOT_AUTHORIZED);
-            }
+            checkMemberRole(payload, config.getRoles());
             return chain.filter(exchange);
         };
+    }
+
+    private void checkMemberRole(Claims payload, List<String> requiredRole) {
+        List roles = Optional.of(payload.get(AuthConstants.ROLES, List.class))
+            .orElseThrow(() -> new AuthenticationException(ErrorCode.JWT_TOKEN_INVALID));
+
+        boolean hasRequiredRole = roles.stream().anyMatch(requiredRole::contains);
+
+        if (!hasRequiredRole) {
+            throw new AuthenticationException(ErrorCode.NOT_AUTHORIZED);
+        }
     }
 
     private Claims verifyAndGetPayload(String token) {
@@ -82,12 +86,8 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
             .getPayload();
     }
 
-
     private String parse(ServerHttpRequest request) {
         String header = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-        if (StringUtils.hasText(header) && header.startsWith(AuthConstants.BEARER)) {
-            return header.substring(7);
-        }
-        throw new AuthenticationException(ErrorCode.JWT_TOKEN_INVALID);
+        return TokenUtils.extractBearerToken(header);
     }
 }

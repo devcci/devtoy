@@ -1,7 +1,8 @@
-package com.devcci.devtoy.gateway.exception;
+package com.devcci.devtoy.common.exception;
 
-import com.devcci.devtoy.common.exception.ErrorCode;
+import lombok.Getter;
 
+@Getter
 public class AuthenticationException extends RuntimeException {
 
     private final ErrorCode errorCode;
@@ -11,7 +12,4 @@ public class AuthenticationException extends RuntimeException {
         this.errorCode = errorCode;
     }
 
-    public ErrorCode getErrorCode() {
-        return errorCode;
-    }
 }

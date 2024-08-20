@@ -3,6 +3,8 @@ spring:
     import: optional:file:.env[.properties]
   application:
     name: devtoy-gateway
+  main:
+    web-application-type: reactive
 #  cloud:
 #    gateway:
 #      default-filters:
@@ -24,6 +26,11 @@ spring:
 #            - Path=/product/**, /brand/**
 #          filters:
 #            - AuthorizationFilter
+
+service:
+  uri:
+    product: "lb://DEVTOY-PRODUCT"
+    member: "lb://DEVTOY-MEMBER"
 
 jwt:
   secret-key: ${JWT_SECRET_KEY:5bbb92ebf0d8443754b7cc85b8c2f8983ee6a074e191fbec8b1efb33379f92dd0d3b0ba4d96e161c0250f5f60f4f35c8c4b8e7291e92f37649bf9123e2b340c7}}

@@ -6,16 +6,16 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class MemberJwtInfo {
+public class MemberRefreshToken {
     private String memberId;
     private String refreshToken;
 
-    private MemberJwtInfo(String memberId, String refreshToken) {
+    private MemberRefreshToken(String memberId, String refreshToken) {
         this.memberId = memberId;
         this.refreshToken = refreshToken;
     }
 
-    public static MemberJwtInfo createMemberJwtInfo(String memberId, String refreshToken) {
-        return new MemberJwtInfo(memberId, refreshToken);
+    public static MemberRefreshToken createMemberJwtInfo(String memberId, String refreshToken) {
+        return new MemberRefreshToken(memberId, refreshToken);
     }
 }

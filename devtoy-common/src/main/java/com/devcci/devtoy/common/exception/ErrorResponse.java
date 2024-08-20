@@ -38,4 +38,13 @@ public class ErrorResponse {
                 message
             ));
     }
+
+    public static ResponseEntity<ErrorResponse> toResponseEntity(int status, int errorCode, String message) {
+        return ResponseEntity
+            .status(status)
+            .body(new ErrorResponse(
+                errorCode,
+                message
+            ));
+    }
 }

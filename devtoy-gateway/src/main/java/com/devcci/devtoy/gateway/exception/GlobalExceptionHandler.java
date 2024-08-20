@@ -2,7 +2,7 @@ package com.devcci.devtoy.gateway.exception;
 
 import com.devcci.devtoy.common.exception.ErrorCode;
 import com.devcci.devtoy.common.exception.ErrorResponse;
-import com.devcci.devtoy.gateway.exception.strategy.ExceptionHandlerStrategy;
+import com.devcci.devtoy.gateway.exception.strategy.ExceptionStrategy;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
@@ -23,11 +23,11 @@ import java.util.List;
 @Component
 public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
     private final ObjectMapper objectMapper;
-    private final List<ExceptionHandlerStrategy> exceptionHandlerStrategies;
+    private final List<ExceptionStrategy> exceptionStrategies;
 
-    public GlobalExceptionHandler(ObjectMapper objectMapper, List<ExceptionHandlerStrategy> exceptionHandlerStrategies) {
+    public GlobalExceptionHandler(ObjectMapper objectMapper, List<ExceptionStrategy> exceptionStrategies) {
         this.objectMapper = objectMapper;
-        this.exceptionHandlerStrategies = exceptionHandlerStrategies;
+        this.exceptionStrategies = exceptionStrategies;
     }
 
     @Override
@@ -35,9 +35,9 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
         ServerHttpResponse response = exchange.getResponse();
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
-        for (ExceptionHandlerStrategy strategy : exceptionHandlerStrategies) {
+        for (ExceptionStrategy strategy : exceptionStrategies) {
             if (strategy.supports(ex)) {
-                return handleException(exchange, response, strategy, ex);
+                return handleException(response, strategy, ex);
             }
         }
 
@@ -45,7 +45,7 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
         return writeErrorResponse(response, defaultErrorResponse);
     }
 
-    private Mono<Void> handleException(ServerWebExchange exchange, ServerHttpResponse response, ExceptionHandlerStrategy strategy, Throwable e) {
+    private Mono<Void> handleException(ServerHttpResponse response, ExceptionStrategy strategy, Throwable e) {
         ResponseEntity<ErrorResponse> errorResponse = strategy.handle(e);
         return writeErrorResponse(response, errorResponse);
     }

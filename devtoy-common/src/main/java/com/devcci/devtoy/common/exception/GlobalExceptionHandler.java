@@ -27,6 +27,11 @@ public class GlobalExceptionHandler {
             exception.getConstraintViolations());
     }
 
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponse> authenticationException(AuthenticationException exception) {
+        return ErrorResponse.toResponseEntity(exception.getErrorCode());
+    }
+
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ErrorResponse> handleException(ApiException exception) {
         return ErrorResponse.toResponseEntity(exception.getErrorCode());

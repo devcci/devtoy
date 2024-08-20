@@ -17,21 +17,18 @@ public class LoginResponse {
     private Set<String> role;
     @Schema(description = "사용자 AccessToken")
     private String accessToken;
-    @Schema(description = "사용자 RefreshToken")
-    private String refreshToken;
 
-    private LoginResponse(String name, Set<String> role, String accessToken, String refreshToken) {
+    private LoginResponse(String name, Set<String> role, String accessToken) {
         this.name = name;
         this.role = role;
         this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
     }
 
-    public static LoginResponse of(String name, Set<MemberRole> role, String accessToken, String refreshToken) {
+    public static LoginResponse of(String name, Set<MemberRole> role, String accessToken) {
         return new LoginResponse(
             name,
             role.stream().map(MemberRole::getValue).collect(Collectors.toSet()),
-            accessToken,
-            refreshToken);
+            accessToken
+        );
     }
 }

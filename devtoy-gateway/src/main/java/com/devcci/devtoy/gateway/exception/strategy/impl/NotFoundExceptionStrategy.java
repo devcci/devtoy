@@ -2,17 +2,16 @@ package com.devcci.devtoy.gateway.exception.strategy.impl;
 
 import com.devcci.devtoy.common.exception.ErrorCode;
 import com.devcci.devtoy.common.exception.ErrorResponse;
-import com.devcci.devtoy.gateway.exception.strategy.ExceptionHandlerStrategy;
-import org.springframework.cloud.gateway.support.NotFoundException;
+import com.devcci.devtoy.gateway.exception.strategy.ExceptionStrategy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class NotFoundExceptionHandler implements ExceptionHandlerStrategy {
+public class NotFoundExceptionStrategy implements ExceptionStrategy {
 
     @Override
     public boolean supports(Throwable e) {
-        return e instanceof NotFoundException;
+        return e instanceof org.springframework.cloud.gateway.support.NotFoundException;
     }
 
     @Override

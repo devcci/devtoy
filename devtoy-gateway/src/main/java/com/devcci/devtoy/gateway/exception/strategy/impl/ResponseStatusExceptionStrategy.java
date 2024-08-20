@@ -2,23 +2,22 @@ package com.devcci.devtoy.gateway.exception.strategy.impl;
 
 import com.devcci.devtoy.common.exception.ErrorCode;
 import com.devcci.devtoy.common.exception.ErrorResponse;
-import com.devcci.devtoy.gateway.exception.strategy.ExceptionHandlerStrategy;
+import com.devcci.devtoy.gateway.exception.strategy.ExceptionStrategy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.resource.NoResourceFoundException;
-import org.springframework.web.server.ResponseStatusException;
 
 @Component
-public class ResponseStatusExceptionHandl implements ExceptionHandlerStrategy {
+public class ResponseStatusExceptionStrategy implements ExceptionStrategy {
 
     @Override
     public boolean supports(Throwable e) {
-        return e instanceof ResponseStatusException;
+        return e instanceof org.springframework.web.server.ResponseStatusException;
     }
 
     @Override
     public ResponseEntity<ErrorResponse> handle(Throwable e) {
-        ResponseStatusException ex = (ResponseStatusException) e;
+        org.springframework.web.server.ResponseStatusException ex = (org.springframework.web.server.ResponseStatusException) e;
         if (e instanceof NoResourceFoundException) {
             return ErrorResponse.toResponseEntity(ErrorCode.NO_RESOURCE_FOUND);
         }

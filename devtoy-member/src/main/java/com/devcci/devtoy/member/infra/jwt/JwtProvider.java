@@ -52,4 +52,13 @@ public class JwtProvider {
             .signWith(secretKey)
             .compact();
     }
+
+    public String getMemberId(String token) {
+        return Jwts.parser()
+            .verifyWith(secretKey)
+            .build()
+            .parseSignedClaims(token)
+            .getPayload()
+            .getSubject();
+    }
 }

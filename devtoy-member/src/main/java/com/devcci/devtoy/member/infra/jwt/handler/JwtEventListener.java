@@ -4,7 +4,7 @@ package com.devcci.devtoy.member.infra.jwt.handler;
 import com.devcci.devtoy.common.exception.ApiException;
 import com.devcci.devtoy.common.exception.ErrorCode;
 import com.devcci.devtoy.member.infra.cache.redis.JwtRedisRepository;
-import com.devcci.devtoy.member.infra.cache.redis.dto.MemberJwtInfo;
+import com.devcci.devtoy.member.infra.cache.redis.dto.MemberRefreshToken;
 import com.devcci.devtoy.member.infra.jwt.event.JwtAdditionEvent;
 import com.devcci.devtoy.member.infra.jwt.event.JwtDeletionEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -25,7 +25,7 @@ public class JwtEventListener {
     @EventListener
     public void onJwtCreated(JwtAdditionEvent event) {
         try {
-            jwtRedisRepository.saveRedis(MemberJwtInfo.createMemberJwtInfo(event.memberId(), event.refreshToken()));
+            jwtRedisRepository.saveRedis(MemberRefreshToken.createMemberJwtInfo(event.memberId(), event.refreshToken()));
         } catch (JsonProcessingException e) {
             throw new ApiException(ErrorCode.JWT_CREATION_FAILED);
         }

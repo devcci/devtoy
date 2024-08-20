@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 1000, "서버 오류가 발생했습니다."),
     INVALID_FORMAT(HttpStatus.INTERNAL_SERVER_ERROR, 1001, "포맷 에러"),
-    API_SERVER_NOT_AVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, 1002, "API 서버 오류입니다."),
+    API_SERVER_NOT_AVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, 1002, "내부 API 서버 연결 오류입니다."),
     NO_RESOURCE_FOUND(HttpStatus.NOT_FOUND, 1003, "존재하지 않는 URL 입니다."),
 
     JWT_TOKEN_NOT_EXISTS(HttpStatus.UNAUTHORIZED, 1004, "인증 토큰이 존재하지 않습니다."),
