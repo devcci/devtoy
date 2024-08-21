@@ -87,7 +87,7 @@ public class AuthenticationService {
     public String refreshAccessToken(String auth) {
         String token = TokenUtils.extractBearerToken(auth);
         String memberId = jwtProvider.getMemberId(token);
-        if (!jwtRedisRepository.existsRefreshTokenById(memberId)) {
+        if (!jwtRedisRepository.existsById(memberId)) {
             throw new AuthenticationException(ErrorCode.JWT_TOKEN_EXPIRED);
         }
         Member member = memberRepository.findByMemberId(memberId)
