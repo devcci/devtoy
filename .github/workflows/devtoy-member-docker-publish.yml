@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'devtoy-member/**'
+      - 'devtoy-common/**'
 
 jobs:
   build-and-push:

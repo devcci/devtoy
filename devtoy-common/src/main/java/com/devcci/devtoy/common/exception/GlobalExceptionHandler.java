@@ -4,17 +4,29 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponse> noResourceFoundException(NoResourceFoundException exception) {
+        return ErrorResponse.toResponseEntity(ErrorCode.NO_RESOURCE_FOUND);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> httpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException exception) {
+        return ErrorResponse.toResponseEntity(ErrorCode.METHOD_NOT_SUPPORTED);
+    }
+
     @ExceptionHandler(
         MethodArgumentNotValidException.class)
-    protected ResponseEntity<BindErrorResponse> handleBindException(
+    public ResponseEntity<BindErrorResponse> handleBindException(
         MethodArgumentNotValidException exception) {
         return BindErrorResponse.toResponseEntity(HttpStatus.BAD_REQUEST,
             exception.getBindingResult());
