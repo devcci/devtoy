@@ -40,18 +40,21 @@ public class CategoryPriceRangeResponse {
     @Getter
     public static class LowestPriceProduct {
 
+        @JsonProperty("상품명")
+        private String productName;
         @JsonProperty("브랜드")
         private String brandName;
         @JsonProperty("가격")
         private String price;
 
-        private LowestPriceProduct(String brandName, String price) {
+        private LowestPriceProduct(String productName, String brandName, String price) {
+            this.productName = productName;
             this.brandName = brandName;
             this.price = price;
         }
 
-        public static LowestPriceProduct createLowestPriceProduct(String brandName, BigDecimal price) {
-            return new LowestPriceProduct(brandName, NumberFormatUtil.withComma(price));
+        public static LowestPriceProduct createLowestPriceProduct(String productName, String brandName, BigDecimal price) {
+            return new LowestPriceProduct(productName, brandName, NumberFormatUtil.withComma(price));
         }
     }
 
@@ -59,18 +62,21 @@ public class CategoryPriceRangeResponse {
     @Getter
     public static class HighestPriceProduct {
 
+        @JsonProperty("상품명")
+        private String productName;
         @JsonProperty("브랜드")
         private String brandName;
         @JsonProperty("가격")
         private String price;
 
-        private HighestPriceProduct(String brandName, String price) {
+        private HighestPriceProduct(String productName, String brandName, String price) {
+            this.productName = productName;
             this.brandName = brandName;
             this.price = price;
         }
 
-        public static HighestPriceProduct createHighestPriceProduct(String brandName, BigDecimal price) {
-            return new HighestPriceProduct(brandName, NumberFormatUtil.withComma(price));
+        public static HighestPriceProduct createHighestPriceProduct(String productName, String brandName, BigDecimal price) {
+            return new HighestPriceProduct(productName, brandName, NumberFormatUtil.withComma(price));
         }
     }
 }

@@ -34,6 +34,8 @@ public class LowestPriceCategoryResponse {
     @Getter
     public static class CategoryProduct {
 
+        @JsonProperty("상품명")
+        private String productName;
         @JsonProperty("카테고리")
         private String categoryName;
         @JsonProperty("브랜드")
@@ -41,17 +43,20 @@ public class LowestPriceCategoryResponse {
         @JsonProperty("가격")
         private String price;
 
-        private CategoryProduct(String categoryName, String brandName, String price) {
+        private CategoryProduct(String productName, String categoryName, String brandName, String price) {
+            this.productName = productName;
             this.categoryName = categoryName;
             this.brandName = brandName;
             this.price = price;
         }
 
         public static CategoryProduct createCategoryProduct(
-            String categoryName, String brandName,
-            BigDecimal price) {
-            return new CategoryProduct(categoryName, brandName,
-                NumberFormatUtil.withComma(price));
+            String productName,
+            String categoryName,
+            String brandName,
+            BigDecimal price
+        ) {
+            return new CategoryProduct(productName, categoryName, brandName, NumberFormatUtil.withComma(price));
         }
     }
 }

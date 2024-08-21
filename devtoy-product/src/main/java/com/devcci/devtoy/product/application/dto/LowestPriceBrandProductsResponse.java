@@ -54,18 +54,21 @@ public class LowestPriceBrandProductsResponse {
         @Getter
         public static class BrandProduct {
 
+            @JsonProperty("상품명")
+            private String productName;
             @JsonProperty("카테고리")
             private String categoryName;
             @JsonProperty("가격")
             private String price;
 
-            private BrandProduct(String categoryName, String price) {
+            private BrandProduct(String productName, String categoryName, String price) {
+                this.productName = productName;
                 this.categoryName = categoryName;
                 this.price = price;
             }
 
-            public static BrandProduct createBrandProduct(String categoryName, BigDecimal price) {
-                return new BrandProduct(categoryName, NumberFormatUtil.withComma(price));
+            public static BrandProduct createBrandProduct(String productName, String categoryName, BigDecimal price) {
+                return new BrandProduct(productName, categoryName, NumberFormatUtil.withComma(price));
             }
         }
     }

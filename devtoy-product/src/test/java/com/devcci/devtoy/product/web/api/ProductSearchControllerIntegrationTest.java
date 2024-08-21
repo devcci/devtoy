@@ -38,7 +38,7 @@ class ProductSearchControllerIntegrationTest {
         String sort = "asc";
 
         // when
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/products")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/product")
                 .param("page", page)
                 .param("size", size)
                 .param("sort", sort)
@@ -59,7 +59,7 @@ class ProductSearchControllerIntegrationTest {
     @Test
     void getLowestPriceCategory() throws Exception {
         // when
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/products/categories/lowest")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/product/categories/lowest")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andReturn();
@@ -84,7 +84,7 @@ class ProductSearchControllerIntegrationTest {
     @Test
     void getLowestPriceBrand() throws Exception {
         // when
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/products/brands/lowest")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/product/brands/lowest")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andReturn();
@@ -115,7 +115,7 @@ class ProductSearchControllerIntegrationTest {
 
         // when
         MvcResult result = mockMvc.perform(
-                MockMvcRequestBuilders.get("/products/categories/min-max-prices")
+                MockMvcRequestBuilders.get("/product/categories/min-max-prices")
                     .param("categoryName", categoryName)
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())

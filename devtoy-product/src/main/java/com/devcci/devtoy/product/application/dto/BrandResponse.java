@@ -10,11 +10,11 @@ import lombok.NoArgsConstructor;
 public class BrandResponse {
 
     private Long id;
-    private String name;
+    private String brandName;
 
-    private BrandResponse(Long id, String name) {
+    private BrandResponse(Long id, String brandName) {
         this.id = id;
-        this.name = name;
+        this.brandName = brandName;
     }
 
     public static BrandResponse of(Brand brand) {

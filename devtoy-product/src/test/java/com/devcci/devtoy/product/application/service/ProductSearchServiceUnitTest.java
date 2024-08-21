@@ -266,7 +266,7 @@ class ProductSearchServiceUnitTest {
     void getCategoryMinMaxPricesThrowsExceptionForHighestPrice() {
         // given
         String categoryName = "Category1";
-        PriceByCategoryProjection lowestPriceProjection = new PriceByCategoryProjection("brand", new BigDecimal(2000));
+        PriceByCategoryProjection lowestPriceProjection = new PriceByCategoryProjection("상품", "brand", new BigDecimal(2000));
 
         given(productRepository.findLowestPriceByCategory(categoryName)).willReturn(
             Optional.of(lowestPriceProjection));

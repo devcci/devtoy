@@ -27,8 +27,8 @@ class BrandSearchServiceIntegrationTest {
         // then
         assertThat(brandResponses).hasSize(9);
         assertThat(brandResponses.get(0).getId()).isEqualTo(1L);
-        assertThat(brandResponses.get(0).getName()).isEqualTo("A");
+        assertThat(brandResponses.get(0).getBrandName()).isEqualTo("A");
         assertThat(brandResponses.get(1).getId()).isEqualTo(2L);
-        assertThat(brandResponses.get(1).getName()).isEqualTo("B");
+        assertThat(brandResponses.get(1).getBrandName()).isEqualTo("B");
     }
 }

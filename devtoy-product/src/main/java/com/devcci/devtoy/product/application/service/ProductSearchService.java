@@ -56,6 +56,7 @@ public class ProductSearchService {
 
         List<LowestPriceCategoryResponse.CategoryProduct> categoryProducts = productsPerCategory.stream()
             .map(p -> LowestPriceCategoryResponse.CategoryProduct.createCategoryProduct(
+                p.getProductName(),
                 p.getCategoryName(),
                 p.getBrandName(),
                 p.getProductPrice()))
@@ -88,7 +89,9 @@ public class ProductSearchService {
 
         List<BrandProduct> list = lowestPriceProductByBrand.stream()
             .filter(product -> product.getBrandName().equals(minKey))
-            .map(product -> BrandProduct.createBrandProduct(product.getCategoryName(),
+            .map(product -> BrandProduct.createBrandProduct(
+                product.getProductName(),
+                product.getCategoryName(),
                 product.getProductPrice()))
             .toList();
         return LowestPriceBrandProductsResponse.createLowestPriceBrandProductsResponse(
@@ -113,6 +116,7 @@ public class ProductSearchService {
                 categoryName)
             .orElseThrow(() -> new ApiException(ErrorCode.CATEGORY_LOWEST_PRICE_PRODUCT_ERROR));
         return LowestPriceProduct.createLowestPriceProduct(
+            lowestPriceByCategory.getProductName(),
             lowestPriceByCategory.getBrandName(),
             lowestPriceByCategory.getProductPrice());
     }
@@ -122,6 +126,7 @@ public class ProductSearchService {
                 categoryName)
             .orElseThrow(() -> new ApiException(ErrorCode.CATEGORY_HIGHEST_PRICE_PRODUCT_ERROR));
         return HighestPriceProduct.createHighestPriceProduct(
+            highestPriceByCategory.getProductName(),
             highestPriceByCategory.getBrandName(),
             highestPriceByCategory.getProductPrice());
     }

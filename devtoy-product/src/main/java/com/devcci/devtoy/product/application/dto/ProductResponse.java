@@ -13,15 +13,17 @@ import lombok.NoArgsConstructor;
 public class ProductResponse {
 
     private Long productId;
+    private String productName;
     private Long brandId;
     private String brandName;
     private Long categoryId;
     private String categoryName;
     private String price;
 
-    private ProductResponse(Long productId, Long brandId, String brandName, Long categoryId,
+    private ProductResponse(Long productId, String productName, Long brandId, String brandName, Long categoryId,
                             String categoryName, String price) {
         this.productId = productId;
+        this.productName = productName;
         this.brandId = brandId;
         this.brandName = brandName;
         this.categoryId = categoryId;
@@ -34,10 +36,10 @@ public class ProductResponse {
         Category category = product.getCategory();
         return new ProductResponse(
             product.getId(),
+            product.getName(),
             brand.getId(),
             brand.getName(),
             category.getId(),
-            category.getName(),
-            NumberFormatUtil.withComma(product.getPrice()));
+            category.getName(), NumberFormatUtil.withComma(product.getPrice()));
     }
 }

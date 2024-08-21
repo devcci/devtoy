@@ -51,8 +51,8 @@ class BrandSearchServiceUnitTest {
 
         // then
         assertThat(brandResponses).hasSize(2);
-        assertThat(brandResponses.get(0).getName()).isEqualTo(brands.get(0).getName());
-        assertThat(brandResponses.get(1).getName()).isEqualTo(brands.get(1).getName());
+        assertThat(brandResponses.get(0).getBrandName()).isEqualTo(brands.get(0).getName());
+        assertThat(brandResponses.get(1).getBrandName()).isEqualTo(brands.get(1).getName());
         verify(brandRepository, times(1)).findAll();
     }
 

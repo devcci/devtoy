@@ -69,8 +69,7 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
     @Override
     public List<LowestProductByCategoryProjection> findLowestPriceProductByCategory() {
         String jpql =
-            "SELECT new com.devcci.devtoy.product.infra.persistence.projection " +
-                ".LowestProductByCategoryProjection(c.name, b.name, p.price) " +
+            "SELECT p.name, c.name, b.name, p.price " +
                 "FROM Product p " +
                 "JOIN Brand b ON p.brand.id = b.id " +
                 "JOIN Category c ON p.category.id = c.id " +
@@ -89,12 +88,12 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
     @Override
     public List<LowestProductByBrandProjection> findLowestPriceProductByBrand() {
         String jpql =
-            "SELECT new com.devcci.devtoy.product.infra.persistence.projection.LowestProductByBrandProjection(b.name, c.name, MIN(p.price)) "
+            "SELECT p.name, b.name, c.name, MIN(p.price) "
                 +
                 "FROM Product p " +
                 "JOIN Brand b ON p.brand.id = b.id " +
                 "JOIN Category c ON p.category.id = c.id " +
-                "GROUP BY b.id, c.id";
+                "GROUP BY p.id, b.id, c.id";
         TypedQuery<LowestProductByBrandProjection> query = entityManager.createQuery(jpql,
             LowestProductByBrandProjection.class);
         return query.getResultList();
@@ -102,12 +101,12 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
 
     @Override
     public Optional<PriceByCategoryProjection> findLowestPriceByCategory(String categoryName) {
-        String jpql = "SELECT b.name as brandName, MIN(p.price) as productPrice " +
+        String jpql = "SELECT p.name as productName, b.name as brandName, MIN(p.price) as productPrice " +
             "FROM Product p " +
             "JOIN Brand b ON p.brand.id = b.id " +
             "JOIN Category c ON c.id = p.category.id " +
             "WHERE c.name = :categoryName " +
-            "GROUP BY b.name " +
+            "GROUP BY p.name, b.name " +
             "ORDER BY productPrice " +
             "LIMIT 1";
         TypedQuery<PriceByCategoryProjection> query = entityManager.createQuery(jpql,
@@ -122,12 +121,12 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
 
     @Override
     public Optional<PriceByCategoryProjection> findHighestPriceByCategory(String categoryName) {
-        String jpql = "SELECT b.name as brandName, MAX(p.price) as productPrice " +
+        String jpql = "SELECT p.name as productName, b.name as brandName, MAX(p.price) as productPrice " +
             "FROM Product p " +
             "JOIN Brand b ON b.id = p.brand.id " +
             "JOIN Category c ON c.id = p.category.id " +
             "WHERE c.name = :categoryName " +
-            "GROUP BY b.name " +
+            "GROUP BY p.name, b.name " +
             "ORDER BY productPrice DESC " +
             "LIMIT 1";
         TypedQuery<PriceByCategoryProjection> query = entityManager.createQuery(jpql,
