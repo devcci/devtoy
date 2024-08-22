@@ -52,7 +52,8 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
             String path = exchange.getRequest().getURI().getPath();
             if (
                 path.startsWith("/auth/signup") ||
-                    path.startsWith("/auth/login")
+                    path.startsWith("/auth/login") ||
+                    path.startsWith("/auth/refresh")
             ) {
                 return chain.filter(exchange);
             }
