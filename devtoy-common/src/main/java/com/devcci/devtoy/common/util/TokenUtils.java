@@ -12,6 +12,9 @@ public class TokenUtils {
     public static String extractBearerToken(String header) {
         if (!StringUtils.hasText(header) || !header.startsWith(AuthConstants.BEARER))
             throw new AuthenticationException(ErrorCode.JWT_TOKEN_INVALID);
-        return header.substring(AuthConstants.BEARER.length());
+        String token = header.substring(AuthConstants.BEARER.length());
+        if (token.equals("null"))
+            throw new AuthenticationException(ErrorCode.JWT_TOKEN_INVALID);
+        return token;
     }
 }

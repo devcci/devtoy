@@ -31,7 +31,6 @@ public class CacheConfig {
             .build();
     }
 
-
     private RedisCacheConfiguration defaultRedisCacheConfiguration() {
         return RedisCacheConfiguration
             .defaultCacheConfig()
