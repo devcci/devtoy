@@ -26,18 +26,8 @@ public class BindErrorResponse {
         return (errors == null) ? new ArrayList<>() : errors;
     }
 
-    @Getter
-    public static class CustomFieldError {
+    public record CustomFieldError(String field, String value, String reason) {
 
-        private final String field;
-        private final String value;
-        private final String reason;
-
-        public CustomFieldError(String field, String value, String reason) {
-            this.field = field;
-            this.value = value;
-            this.reason = reason;
-        }
     }
 
     public static ResponseEntity<BindErrorResponse> toResponseEntity(HttpStatus status,
