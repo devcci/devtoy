@@ -1,6 +1,4 @@
 spring:
-  config:
-    import: optional:file:.env[.properties]
   application:
     name: devtoy-gateway
   main:
@@ -61,3 +59,11 @@ springdoc:
         name: product
       - url: /v3/api-docs/member
         name: member
+
+# 외부서버
+---
+spring:
+  config:
+    activate:
+      on-profile: external
+    import: optional:file:.env[.properties]

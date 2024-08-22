@@ -1,7 +1,5 @@
 # default mysql db
 spring:
-  config:
-    import: optional:file:.env[.properties]
   application:
     name: devtoy-product
   datasource:
@@ -103,5 +101,15 @@ spring:
         show_sql: true
         format_sql: true
         use_sql_comments: true
+
 kafka:
   enabled: false
+
+
+# 외부서버
+---
+spring:
+  config:
+    activate:
+      on-profile: external
+    import: optional:file:.env[.properties]

@@ -1,6 +1,4 @@
 spring:
-  config:
-    import: optional:file:.env[.properties]
   application:
     name: devtoy-eureka
 
@@ -16,3 +14,10 @@ eureka:
 server:
   port: ${SERVER_EUREKA_PORT:8070}
 
+# 외부서버
+---
+spring:
+  config:
+    activate:
+      on-profile: external
+    import: optional:file:.env[.properties]
