@@ -144,6 +144,7 @@ services:
   devtoy-product:
     image: devcci/devtoy-product:latest
     pull_policy: always
+    restart: on-failure
     container_name: devtoy-product
     ports:
       - "8081:8081"
@@ -165,6 +166,7 @@ services:
   devtoy-member:
     image: devcci/devtoy-member:latest
     pull_policy: always
+    restart: on-failure
     container_name: devtoy-member
     ports:
       - "8082:8082"
