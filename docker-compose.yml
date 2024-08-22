@@ -159,6 +159,7 @@ services:
       REDIS_PASS: devtoy
       EUREKA_URL: http://devtoy-eureka:8070/eureka
     depends_on:
+      - devtoy-gateway
       - devtoy-mysql-product
 
   devtoy-member:
@@ -178,4 +179,5 @@ services:
       REDIS_PASS: devtoy
       EUREKA_URL: http://devtoy-eureka:8070/eureka
     depends_on:
+      - devtoy-gateway
       - devtoy-mysql-member
