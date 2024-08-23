@@ -61,7 +61,7 @@ springdoc:
   swagger-ui:
     use-root-path: true
 
-# ????
+# 외부서버
 ---
 spring:
   config:

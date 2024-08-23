@@ -1,6 +1,6 @@
 package com.devcci.devtoy.member.domain.member;
 
-import com.devcci.devtoy.member.domain.BaseTimeEntity;
+import com.devcci.devtoy.common.domain.BaseTimeEntity;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;

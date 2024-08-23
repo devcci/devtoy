@@ -1,6 +1,6 @@
 package com.devcci.devtoy.order.domain.order;
 
-import com.devcci.devtoy.order.domain.BaseTimeEntity;
+import com.devcci.devtoy.common.domain.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
