@@ -41,11 +41,13 @@ public class ProductSearchController {
     )
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAllProducts(
-        @RequestParam(required = false, defaultValue = "1")
-        @Min(value = 1, message = "페이지 번호는 1 이상이어야 합니다.") Integer page,
-        @RequestParam(required = false, defaultValue = "10")
-        @Min(value = 1, message = "사이즈는 1 이상이어야 합니다.") Integer size,
-        @RequestParam(required = false) String sort) {
+        @Min(value = 1, message = "페이지 번호는 1 이상이어야 합니다.")
+        @RequestParam(name = "page", required = false, defaultValue = "1")
+        Integer page,
+        @Min(value = 1, message = "사이즈는 1 이상이어야 합니다.")
+        @RequestParam(name = "size", required = false, defaultValue = "10")
+        Integer size,
+        @RequestParam(value = "sort", required = false) String sort) {
         List<ProductResponse> allProduct = productSearchService.findAllProduct(
             PageableUtil.createPageable(page, size, sort));
         return ResponseEntity.ok().body(allProduct);

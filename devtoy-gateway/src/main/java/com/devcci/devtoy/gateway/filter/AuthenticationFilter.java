@@ -25,7 +25,7 @@ import java.util.Optional;
 @Component
 public class AuthenticationFilter extends AbstractGatewayFilterFactory<AuthenticationFilter.Config> {
 
-    private final static Logger log = LoggerFactory.getLogger(AuthenticationFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(AuthenticationFilter.class);
     private final SecretKey secretKey;
 
     public AuthenticationFilter(

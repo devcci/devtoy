@@ -60,6 +60,17 @@ springdoc:
       - url: /v3/api-docs/member
         name: member
 
+
+# Integration Test - TestContainers
+---
+spring:
+  config:
+    activate:
+      on-profile: integrationTest
+eureka:
+  client:
+    enabled: false
+
 # 외부서버
 ---
 spring:

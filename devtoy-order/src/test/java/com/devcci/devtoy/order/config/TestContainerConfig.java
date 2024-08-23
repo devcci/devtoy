@@ -1,4 +1,4 @@
-package com.devcci.devtoy.member.config;
+package com.devcci.devtoy.order.config;
 
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
@@ -9,14 +9,14 @@ import org.testcontainers.containers.wait.strategy.Wait;
 @TestConfiguration
 public class TestContainerConfig {
 
-
     @Bean
-    @ServiceConnection
+    @ServiceConnection("mysql")
     public MySQLContainer<?> mysqlContainer() {
         return new MySQLContainer<>("mysql:8.4.2")
-            .withDatabaseName("devtoy-member-test")
+            .withDatabaseName("devtoy-order-test")
             .withUsername("test")
             .withPassword("test")
             .waitingFor(Wait.forListeningPort());
     }
+
 }
