@@ -1,5 +1,7 @@
 package com.devcci.devtoy.product.domain.product;
 
+import com.devcci.devtoy.common.exception.ApiException;
+import com.devcci.devtoy.common.exception.ErrorCode;
 import com.devcci.devtoy.product.common.util.BigDecimalUtil;
 import com.devcci.devtoy.product.domain.BaseTimeEntity;
 import com.devcci.devtoy.product.domain.brand.Brand;
@@ -16,10 +18,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -48,6 +52,8 @@ public class Product extends BaseTimeEntity {
     @Column(name = "name")
     private String name;
 
+    @NotNull
+    @ColumnDefault("0")
     @Column(name = "price", nullable = false, precision = 15, scale = 0)
     private BigDecimal price;
 
@@ -63,22 +69,29 @@ public class Product extends BaseTimeEntity {
     @Column(name = "description")
     private String description;
 
+    @NotNull
+    @ColumnDefault("0")
+    @Column(name = "stock_quantity", nullable = false)
+    private Long stockQuantity;
+
     @Builder
-    private Product(String name, BigDecimal price, Brand brand, Category category, String description) {
+    private Product(String name, BigDecimal price, Brand brand, Category category, String description, Long stockQuantity) {
         this.name = name;
         this.price = price;
         this.brand = brand;
         this.category = category;
         this.description = description;
+        this.stockQuantity = stockQuantity;
     }
 
-    public static Product createProduct(String name, BigDecimal price, Brand brand, Category category, String description) {
+    public static Product createProduct(String name, BigDecimal price, Brand brand, Category category, String description, Long stockQuantity) {
         return Product.builder()
             .name(name)
             .description(description)
             .price(price)
             .brand(brand)
             .category(category)
+            .stockQuantity(stockQuantity)
             .build();
     }
 
@@ -88,6 +101,17 @@ public class Product extends BaseTimeEntity {
         this.category = product.getCategory();
         this.price = product.getPrice();
         this.description = product.getDescription();
+    }
+
+    public void modifyStockQuantity(Long quantity) {
+        this.stockQuantity = quantity;
+    }
+
+    public void removeStockQuantity(Long quantity) {
+        this.stockQuantity -= quantity;
+        if (stockQuantity < 0) {
+            throw new ApiException(ErrorCode.PRODUCT_STOCK_NOT_ENOUGH);
+        }
     }
 
     @Override

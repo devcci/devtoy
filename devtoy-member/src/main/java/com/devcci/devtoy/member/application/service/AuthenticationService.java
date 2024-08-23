@@ -16,6 +16,7 @@ import com.devcci.devtoy.member.infra.cache.redis.RedisTemplateService;
 import com.devcci.devtoy.member.infra.jwt.JwtProvider;
 import com.devcci.devtoy.member.infra.jwt.event.JwtAdditionEvent;
 import com.devcci.devtoy.member.infra.jwt.event.JwtDeletionEvent;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -70,7 +71,7 @@ public class AuthenticationService {
                 jwtProvider.generateAccessToken(member.getMemberId(), member.getRole())
             );
             String refreshToken = jwtProvider.generateRefreshAccessToken(member.getMemberId(), member.getRole());
-            eventPublisher.publishEvent(new JwtAdditionEvent(member.getMemberId(), response.getAccessToken(), refreshToken));
+            eventPublisher.publishEvent(new JwtAdditionEvent(member.getMemberId(), refreshToken));
             return response;
         } else {
             eventPublisher.publishEvent(new JwtDeletionEvent(member.getMemberId()));
@@ -87,7 +88,12 @@ public class AuthenticationService {
 
     public String refreshAccessToken(String auth) {
         String token = TokenUtils.extractBearerToken(auth);
-        String memberId = jwtProvider.getMemberId(token);
+        String memberId = null;
+        try {
+            memberId = jwtProvider.getMemberId(token);
+        } catch (ExpiredJwtException ignored) {
+            // 만료된 AccessToken에 대해서도 동작해야한다.
+        }
         String key = RedisKeyPrefix.REFRESH_TOKEN.generateKey(memberId);
         if (redisTemplateService.get(key) == null) {
             throw new AuthenticationException(ErrorCode.JWT_TOKEN_EXPIRED);

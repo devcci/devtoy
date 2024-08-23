@@ -51,8 +51,8 @@ class ProductSearchServiceUnitTest {
         Brand brand2 = Brand.createBrand("brand2");
         Category category1 = Category.createCategory("category1");
         Category category2 = Category.createCategory("category2");
-        Product product1 = Product.createProduct("상품1", new BigDecimal(1000), brand1, category1, "상품");
-        Product product2 = Product.createProduct("상품2", new BigDecimal(1000), brand2, category2, "상품2");
+        Product product1 = Product.createProduct("상품1", new BigDecimal(1000), brand1, category1, "상품", 1L);
+        Product product2 = Product.createProduct("상품2", new BigDecimal(1000), brand2, category2, "상품2", 1L);
         List<Product> products = List.of(product1, product2);
         given(productRepository.findAllFetchJoin(any(Pageable.class))).willReturn(products);
 

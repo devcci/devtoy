@@ -19,9 +19,16 @@ public class ProductResponse {
     private Long categoryId;
     private String categoryName;
     private String price;
+    private Long stockQuantity;
 
-    private ProductResponse(Long productId, String productName, Long brandId, String brandName, Long categoryId,
-                            String categoryName, String price) {
+    private ProductResponse(Long productId,
+                            String productName,
+                            Long brandId,
+                            String brandName,
+                            Long categoryId,
+                            String categoryName,
+                            String price,
+                            Long stockQuantity) {
         this.productId = productId;
         this.productName = productName;
         this.brandId = brandId;
@@ -29,6 +36,7 @@ public class ProductResponse {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
         this.price = price;
+        this.stockQuantity = stockQuantity;
     }
 
     public static ProductResponse of(Product product) {
@@ -40,6 +48,8 @@ public class ProductResponse {
             brand.getId(),
             brand.getName(),
             category.getId(),
-            category.getName(), NumberFormatUtil.withComma(product.getPrice()));
+            category.getName(),
+            NumberFormatUtil.withComma(product.getPrice()),
+            product.getStockQuantity());
     }
 }

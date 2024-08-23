@@ -145,9 +145,6 @@ services:
     image: devcci/devtoy-product:latest
     pull_policy: always
     restart: on-failure
-    container_name: devtoy-product
-    ports:
-      - "8081:8081"
     environment:
       MYSQL_PRODUCT_HOST: devtoy-mysql-product
       MYSQL_PRODUCT_PORT: 3306
@@ -167,9 +164,6 @@ services:
     image: devcci/devtoy-member:latest
     pull_policy: always
     restart: on-failure
-    container_name: devtoy-member
-    ports:
-      - "8082:8082"
     environment:
       MYSQL_MEMBER_HOST: devtoy-mysql-member
       MYSQL_MEMBER_PORT: 3306

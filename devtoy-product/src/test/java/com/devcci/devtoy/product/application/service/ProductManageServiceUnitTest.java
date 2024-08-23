@@ -60,7 +60,7 @@ class ProductManageServiceUnitTest {
     void setUp() {
         brand = Brand.createBrand("brandA");
         category = Category.createCategory("categoryA");
-        product = Product.createProduct("상품", new BigDecimal("1000"), brand, category, "상품");
+        product = Product.createProduct("상품", new BigDecimal("1000"), brand, category, "상품", 1L);
     }
 
     @DisplayName("상품 추가")
@@ -72,7 +72,7 @@ class ProductManageServiceUnitTest {
         void addProductSuccess() {
             // given
             ProductAddRequest productAddRequest = new ProductAddRequest("상품1", "brandA", "categoryA",
-                new BigDecimal(1000), "상품1");
+                new BigDecimal(1000), "상품1", 1L);
             given(brandRepository.findByName(productAddRequest.brandName())).willReturn(
                 Optional.of(brand));
             given(categoryRepository.findByName(productAddRequest.categoryName())).willReturn(
@@ -101,7 +101,7 @@ class ProductManageServiceUnitTest {
         void addProductDuplicateThrowException() {
             // given
             ProductAddRequest productAddRequest = new ProductAddRequest("상품1", "brandA", "categoryA",
-                new BigDecimal(1000), "상품1");
+                new BigDecimal(1000), "상품1", 1L);
             given(brandRepository.findByName(productAddRequest.brandName())).willReturn(
                 Optional.of(brand));
             given(categoryRepository.findByName(productAddRequest.categoryName())).willReturn(
@@ -123,7 +123,7 @@ class ProductManageServiceUnitTest {
         void addProductBrandNotFoundThrowException() {
             // given
             ProductAddRequest productAddRequest = new ProductAddRequest("상품", "ndB", "categoryA",
-                new BigDecimal(1000), "상품");
+                new BigDecimal(1000), "상품", 1L);
             given(brandRepository.findByName(productAddRequest.brandName()))
                 .willReturn(Optional.empty());
             // when
@@ -140,7 +140,7 @@ class ProductManageServiceUnitTest {
         void addProductCategoryNotFoundThrowException() {
             // given
             ProductAddRequest productAddRequest = new ProductAddRequest("상품1", "brandA", "categor",
-                new BigDecimal(1000), "상품1");
+                new BigDecimal(1000), "상품1", 1L);
             given(brandRepository.findByName(productAddRequest.brandName()))
                 .willReturn(Optional.ofNullable(product.getBrand()));
             given(categoryRepository.findByName(productAddRequest.categoryName()))
@@ -166,7 +166,7 @@ class ProductManageServiceUnitTest {
         @Test
         void updateProductNotChangedThrowException() {
             // given
-            productUpdateRequest = new ProductUpdateRequest(1L, "상품", "brandA", "categoryA", new BigDecimal("1000"), "상품");
+            productUpdateRequest = new ProductUpdateRequest(1L, "상품", "brandA", "categoryA", new BigDecimal("1000"), "상품", 1L);
             Category changeCategory = Category.createCategory("categoryA");
             Brand changeBrand = Brand.createBrand("brandA");
             given(productRepository.findByIdFetchJoin(productUpdateRequest.productId()))
@@ -190,7 +190,7 @@ class ProductManageServiceUnitTest {
         @Test
         void updateProductNotFoundThrowException() {
             // given
-            productUpdateRequest = new ProductUpdateRequest(1L, "상품1", "brandA", "categoryA", new BigDecimal(1000), "상품1");
+            productUpdateRequest = new ProductUpdateRequest(1L, "상품1", "brandA", "categoryA", new BigDecimal(1000), "상품1", 1L);
             given(productRepository.findByIdFetchJoin(productUpdateRequest.productId()))
                 .willReturn(Optional.empty());
 
@@ -208,7 +208,7 @@ class ProductManageServiceUnitTest {
         @Test
         void updateProductDuplicatedThrowException() {
             // given
-            productUpdateRequest = new ProductUpdateRequest(1L, "상품", "brandB", "categoryB", new BigDecimal(3000), "상품");
+            productUpdateRequest = new ProductUpdateRequest(1L, "상품", "brandB", "categoryB", new BigDecimal(3000), "상품", 1L);
             Category changeCategoryName = Category.createCategory("categoryB");
             Brand changeBrandName = Brand.createBrand("brandB");
             given(productRepository.findByIdFetchJoin(productUpdateRequest.productId()))
@@ -234,7 +234,7 @@ class ProductManageServiceUnitTest {
         @Test
         void updateProductBrandNotFoundThrowException() {
             // given
-            productUpdateRequest = new ProductUpdateRequest(1L, "상품", "brandr", "categoryB", new BigDecimal(3000), "상품");
+            productUpdateRequest = new ProductUpdateRequest(1L, "상품", "brandr", "categoryB", new BigDecimal(3000), "상품", 1L);
             given(productRepository.findByIdFetchJoin(productUpdateRequest.productId()))
                 .willReturn(Optional.of(product));
             given(brandRepository.findByName(productUpdateRequest.brandName()))
@@ -254,7 +254,7 @@ class ProductManageServiceUnitTest {
         @Test
         void updateProductCategoryNotFoundThrowException() {
             // given
-            productUpdateRequest = new ProductUpdateRequest(1L, "상품", "brandB", "caryB", new BigDecimal(3000), "상품");
+            productUpdateRequest = new ProductUpdateRequest(1L, "상품", "brandB", "caryB", new BigDecimal(3000), "상품", 1L);
             given(productRepository.findByIdFetchJoin(productUpdateRequest.productId()))
                 .willReturn(Optional.ofNullable(product));
             given(brandRepository.findByName(productUpdateRequest.brandName()))
@@ -276,7 +276,7 @@ class ProductManageServiceUnitTest {
         @Test
         void updateProductPriceOnlyChangedUpdatePrice() {
             // given
-            productUpdateRequest = new ProductUpdateRequest(1L, "상품", "brandA", "categoryA", new BigDecimal(1500), "상품");
+            productUpdateRequest = new ProductUpdateRequest(1L, "상품", "brandA", "categoryA", new BigDecimal(1500), "상품", 1L);
             Category changeCategory = Category.createCategory("categoryA");
             Brand changeBrand = Brand.createBrand("brandA");
             given(productRepository.findByIdFetchJoin(productUpdateRequest.productId()))
@@ -302,7 +302,7 @@ class ProductManageServiceUnitTest {
         @Test
         void updateProductSuccess() {
             // given
-            productUpdateRequest = new ProductUpdateRequest(1L, "상품", "brandB", "categoryB", new BigDecimal(3000), "상품");
+            productUpdateRequest = new ProductUpdateRequest(1L, "상품", "brandB", "categoryB", new BigDecimal(3000), "상품", 1L);
             Category changeCategoryName = Category.createCategory("categoryB");
             Brand changeBrandName = Brand.createBrand("brandB");
             given(productRepository.findByIdFetchJoin(productUpdateRequest.productId()))
@@ -373,9 +373,9 @@ class ProductManageServiceUnitTest {
             Brand brand2 = Brand.createBrand("brandB");
             Category category2 = Category.createCategory("categoryB");
             Product product1 =
-                Product.createProduct("상품1", new BigDecimal(1000), brand1, category1, "상품1");
+                Product.createProduct("상품1", new BigDecimal(1000), brand1, category1, "상품1", 1L);
             Product product2 =
-                Product.createProduct("상품2", new BigDecimal(2000), brand2, category2, "상품2");
+                Product.createProduct("상품2", new BigDecimal(2000), brand2, category2, "상품2", 1L);
             List<Product> products = List.of(product1, product2);
             given(productRepository.findAllByBrandId(brandId)).willReturn(products);
 

@@ -36,6 +36,7 @@ public enum ErrorCode {
     PRODUCT_NOT_FOUND(HttpStatus.BAD_REQUEST, 2302, "존재하지 않는 상품입니다."),
     PRODUCT_NOT_CHANGED(HttpStatus.OK, 2303, "상품의 변경 내용이 없습니다."),
     PRODUCT_LIST_NOT_LOADED(HttpStatus.INTERNAL_SERVER_ERROR, 2351, "상품 목록 조회에 오류가 있습니다."),
+    PRODUCT_STOCK_NOT_ENOUGH(HttpStatus.CONFLICT, 2370, "상품 재고가 부족합니다."),
 
     MEMBER_ID_ALREADY_EXISTS(HttpStatus.CONFLICT, 3001, "이미 등록된 사용자 ID 입니다."),
     MEMBER_EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, 3002, "이미 등록된 이메일입니다."),

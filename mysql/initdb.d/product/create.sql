@@ -22,14 +22,15 @@ create table category
 
 create table product
 (
-    price       decimal(15, 0) not null,
-    brand_id    bigint,
-    category_id bigint,
-    created_at  datetime(6),
-    id          bigint         not null auto_increment,
-    modified_at datetime(6),
-    description varchar(255) comment '상품의 간략한 설명',
-    name        varchar(255),
+    price          decimal(15, 0) not null,
+    brand_id       bigint,
+    category_id    bigint,
+    created_at     datetime(6),
+    id             bigint         not null auto_increment,
+    modified_at    datetime(6),
+    description    varchar(255) comment '상품의 간략한 설명',
+    name           varchar(255),
+    stock_quantity bigint         not null,
     primary key (id)
 ) engine = InnoDB
   DEFAULT CHARACTER SET utf8

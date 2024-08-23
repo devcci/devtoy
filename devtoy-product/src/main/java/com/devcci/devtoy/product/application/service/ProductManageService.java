@@ -46,7 +46,7 @@ public class ProductManageService {
         Brand brand = findBrandByName(request.brandName());
         Category category = findCategoryByName(request.categoryName());
         Product newProduct = Product.createProduct(
-            request.productName(), request.price(), brand, category, request.description()
+            request.productName(), request.price(), brand, category, request.description(), request.stockQuantity()
         );
         checkDuplicateProduct(request.productName(), brand.getName(), category.getName());
         Product product = productRepository.save(newProduct);
@@ -59,7 +59,7 @@ public class ProductManageService {
         Product originProduct = fetchProduct(request.productId());
         Brand brand = findBrandByName(request.brandName());
         Category category = findCategoryByName(request.categoryName());
-        Product updatedProduct = Product.createProduct(request.productName(), request.price(), brand, category, request.description());
+        Product updatedProduct = Product.createProduct(request.productName(), request.price(), brand, category, request.description(), request.stockQuantity());
 
         if (!isChanged(originProduct, updatedProduct)) {
             throw new ApiException(ErrorCode.PRODUCT_NOT_CHANGED);

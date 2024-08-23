@@ -2,8 +2,10 @@ package com.devcci.devtoy.product.web.api;
 
 
 import com.devcci.devtoy.product.application.service.ProductManageService;
+import com.devcci.devtoy.product.application.service.ProductStockManageService;
 import com.devcci.devtoy.product.web.dto.ProductAddRequest;
 import com.devcci.devtoy.product.web.dto.ProductUpdateRequest;
+import com.devcci.devtoy.product.web.dto.StockModifyRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -25,10 +27,12 @@ import java.net.URI;
 public class ProductManageController {
 
     private final ProductManageService productManageService;
+    private final ProductStockManageService productStockManageService;
 
     @Autowired
-    public ProductManageController(ProductManageService productManageService) {
+    public ProductManageController(ProductManageService productManageService, ProductStockManageService productStockManageService) {
         this.productManageService = productManageService;
+        this.productStockManageService = productStockManageService;
     }
 
     @Operation(summary = "상품 추가")
@@ -51,6 +55,13 @@ public class ProductManageController {
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
         productManageService.deleteProduct(productId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "상품 재고 수정")
+    @PutMapping("/stock/{productId}")
+    public ResponseEntity<Void> modifyStockQuantity(@PathVariable("productId") Long productId, @Valid @RequestBody StockModifyRequest stockModifyRequest) {
+        productStockManageService.modifyStockQuantity(productId, stockModifyRequest.quantity());
         return ResponseEntity.noContent().build();
     }
 }
