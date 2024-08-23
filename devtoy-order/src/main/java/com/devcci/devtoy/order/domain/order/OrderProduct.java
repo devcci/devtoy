@@ -33,21 +33,21 @@ public class OrderProduct extends BaseTimeEntity {
 
     @NotNull
     @ColumnDefault("1")
-    @Column(name = "order_quantity", nullable = false)
-    private Long orderQuantity;
+    @Column(name = "product_quantity", nullable = false)
+    private Long productQuantity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", foreignKey = @ForeignKey(name = "order_fk"))
     private Order order;
 
-    private OrderProduct(Long productId, Long orderQuantity, Order order) {
+    private OrderProduct(Long productId, Long productQuantity, Order order) {
         this.productId = productId;
-        this.orderQuantity = orderQuantity;
+        this.productQuantity = productQuantity;
         this.order = order;
     }
 
-    public static OrderProduct createOrderProduct(Long productId, Long orderQuantity, Order order) {
-        return new OrderProduct(productId, orderQuantity, order);
+    public static OrderProduct createOrderProduct(Long productId, Long productQuantity, Order order) {
+        return new OrderProduct(productId, productQuantity, order);
     }
 
 }
