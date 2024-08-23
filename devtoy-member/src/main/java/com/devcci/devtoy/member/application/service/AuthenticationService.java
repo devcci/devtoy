@@ -88,10 +88,11 @@ public class AuthenticationService {
 
     public String refreshAccessToken(String auth) {
         String token = TokenUtils.extractBearerToken(auth);
-        String memberId = null;
+        String memberId;
         try {
             memberId = jwtProvider.getMemberId(token);
-        } catch (ExpiredJwtException ignored) {
+        } catch (ExpiredJwtException ex) {
+            memberId = ex.getClaims().getSubject();
             // 만료된 AccessToken에 대해서도 동작해야한다.
         }
         String key = RedisKeyPrefix.REFRESH_TOKEN.generateKey(memberId);
