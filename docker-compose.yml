@@ -15,11 +15,27 @@ services:
       - ./docker_volume/mysql/product/data:/var/lib/mysql
       - ./mysql/initdb.d/product:/docker-entrypoint-initdb.d
 
+  devtoy-mysql-order:
+    image: mysql:8.4.2
+    container_name: devtoy-mysql-order
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: devtoy_order
+      MYSQL_USER: devtoy_order
+      MYSQL_PASSWORD: devtoy_order
+      TZ: Asia/Seoul
+    volumes:
+      - ./mysql/conf.d:/etc/mysql/conf.d
+      - ./docker_volume/mysql/order/data:/var/lib/mysql
+      - ./mysql/initdb.d/order:/docker-entrypoint-initdb.d
+
   devtoy-mysql-member:
     image: mysql:8.4.2
     container_name: devtoy-mysql-member
     ports:
-      - "3307:3306"
+      - "3308:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: devtoy_member
@@ -159,6 +175,25 @@ services:
     depends_on:
       - devtoy-gateway
       - devtoy-mysql-product
+
+  devtoy-order:
+    image: devcci/devtoy-order:latest
+    pull_policy: always
+    restart: on-failure
+    environment:
+      MYSQL_ORDER_HOST: devtoy-mysql-order
+      MYSQL_ORDER_PORT: 3306
+      MYSQL_ORDER_DB: devtoy_order
+      MYSQL_ORDER_USER: devtoy_order
+      MYSQL_ORDER_PASS: devtoy_order
+      KAFKA_BOOTSTRAP_SERVERS: devtoy-kafka-01:9092,devtoy-kafka-02:9093,devtoy-kafka-03:9094
+      REDIS_HOST: devtoy-redis
+      REDIS_PORT: 6379
+      REDIS_PASS: devtoy
+      EUREKA_URL: http://devtoy-eureka:8070/eureka
+    depends_on:
+      - devtoy-gateway
+      - devtoy-mysql-order
 
   devtoy-member:
     image: devcci/devtoy-member:latest
