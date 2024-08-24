@@ -1,4 +1,4 @@
-package com.devcci.devtoy.common.util;
+package com.devcci.devtoy.gateway.util;
 
 import com.devcci.devtoy.common.exception.AuthenticationException;
 import com.devcci.devtoy.common.exception.ErrorCode;

@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -37,6 +38,12 @@ public class GlobalExceptionHandler {
         ConstraintViolationException exception) {
         return BindErrorResponse.toResponseEntity(HttpStatus.BAD_REQUEST,
             exception.getConstraintViolations());
+    }
+
+    @ExceptionHandler(value = MissingRequestHeaderException.class)
+    public ResponseEntity<ErrorResponse> missingRequestHeaderException(
+        MissingRequestHeaderException exception) {
+        return ErrorResponse.toResponseEntity(ErrorCode.MISSING_REQUEST_HEADER);
     }
 
     @ExceptionHandler(AuthenticationException.class)

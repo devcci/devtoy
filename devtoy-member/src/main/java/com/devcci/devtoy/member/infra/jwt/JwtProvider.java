@@ -1,6 +1,6 @@
 package com.devcci.devtoy.member.infra.jwt;
 
-import com.devcci.devtoy.common.Constans.AuthConstants;
+import com.devcci.devtoy.common.constans.AuthConstants;
 import com.devcci.devtoy.member.domain.member.MemberRole;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -53,12 +53,4 @@ public class JwtProvider {
             .compact();
     }
 
-    public String getMemberId(String token) {
-        return Jwts.parser()
-            .verifyWith(secretKey)
-            .build()
-            .parseSignedClaims(token)
-            .getPayload()
-            .getSubject();
-    }
 }

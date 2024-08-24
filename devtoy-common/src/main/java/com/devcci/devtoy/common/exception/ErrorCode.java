@@ -10,6 +10,7 @@ public enum ErrorCode {
     API_SERVER_NOT_AVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, 1002, "내부 API 서버 연결 오류입니다."),
     NO_RESOURCE_FOUND(HttpStatus.NOT_FOUND, 1003, "존재하지 않는 URL 입니다."),
     METHOD_NOT_SUPPORTED(HttpStatus.METHOD_NOT_ALLOWED, 1004, "지원되지 않는 HTTP Method 입니다."),
+    MISSING_REQUEST_HEADER(HttpStatus.BAD_REQUEST, 1005, "필수 헤더가 누락되었습니다."),
 
     JWT_TOKEN_NOT_EXISTS(HttpStatus.UNAUTHORIZED, 1100, "인증 토큰이 존재하지 않습니다."),
     JWT_TOKEN_INVALID(HttpStatus.UNAUTHORIZED, 1101, "잘못된 토큰입니다."),
@@ -43,7 +44,6 @@ public enum ErrorCode {
     MEMBER_EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, 3002, "이미 등록된 이메일입니다."),
     MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, 3003, "존재하지 않는 사용자입니다."),
     MEMBER_PASSWORD_INCORRECT(HttpStatus.BAD_REQUEST, 3004, "잘못된 패스워드입니다."),
-
     ;
 
     ErrorCode(HttpStatus status, int code, String message) {

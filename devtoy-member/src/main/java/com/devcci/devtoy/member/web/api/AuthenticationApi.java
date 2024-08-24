@@ -1,12 +1,11 @@
 package com.devcci.devtoy.member.web.api;
 
+import com.devcci.devtoy.common.constans.DevtoyHeaders;
 import com.devcci.devtoy.member.application.dto.LoginRequest;
 import com.devcci.devtoy.member.application.dto.LoginResponse;
 import com.devcci.devtoy.member.application.dto.SignUpRequest;
 import com.devcci.devtoy.member.application.service.AuthenticationService;
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
-@Slf4j
 @RequestMapping("/auth")
 @RestController
 public class AuthenticationApi {
@@ -39,15 +37,15 @@ public class AuthenticationApi {
         return ResponseEntity.ok().body(login);
     }
 
-    @GetMapping("/logout")
-    public ResponseEntity<Void> memberLogout(@RequestHeader(HttpHeaders.AUTHORIZATION) String auth) {
-        authenticationService.logout(auth);
+    @PostMapping("/logout")
+    public ResponseEntity<Void> memberLogout(@RequestHeader(DevtoyHeaders.MEMBER_ID) String memberId) {
+        authenticationService.logout(memberId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/refresh")
-    public ResponseEntity<Map<String, String>> refresh(@RequestHeader(HttpHeaders.AUTHORIZATION) String auth) {
-        String accessToken = authenticationService.refreshAccessToken(auth);
+    public ResponseEntity<Map<String, String>> refresh(@RequestHeader(DevtoyHeaders.MEMBER_ID) String memberId) {
+        String accessToken = authenticationService.refreshAccessToken(memberId);
         return ResponseEntity.ok()
             .body(Map.of("accessToken", accessToken));
     }
