@@ -1,7 +1,6 @@
 package com.devcci.devtoy.gateway.config;
 
 import org.junit.jupiter.api.Tag;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -13,7 +12,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Tag(TestConstants.INTEGRATION_TEST)
-@AutoConfigureMockMvc
 @ActiveProfiles(TestConstants.INTEGRATION_TEST)
 @SpringBootTest
 public @interface IntegrationTest {

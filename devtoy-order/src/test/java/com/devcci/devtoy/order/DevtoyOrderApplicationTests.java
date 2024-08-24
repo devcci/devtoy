@@ -1,9 +1,9 @@
 package com.devcci.devtoy.order;
 
+import com.devcci.devtoy.order.config.IntegrationTest;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+@IntegrationTest
 class DevtoyOrderApplicationTests {
 
     @Test
