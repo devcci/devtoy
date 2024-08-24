@@ -7,7 +7,11 @@
 - Gradle 8.8
 - Multi-Module Project
 
-### 라이브러리
+## 프로젝트 구조
+
+![devtoy-architecture.drawio.png](img/devtoy-architecture.drawio.png)
+
+## 라이브러리
 
 | 라이브러리                         | 용도                                          |
 |-------------------------------|---------------------------------------------|
