@@ -104,6 +104,9 @@ public class Product extends BaseTimeEntity {
     }
 
     public void modifyStockQuantity(Long quantity) {
+        if (quantity < 0) {
+            throw new ApiException(ErrorCode.PRODUCT_STOCK_QUANTITY_INVALID);
+        }
         this.stockQuantity = quantity;
     }
 
