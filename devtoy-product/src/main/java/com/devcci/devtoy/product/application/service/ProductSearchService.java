@@ -9,6 +9,7 @@ import com.devcci.devtoy.product.application.dto.LowestPriceBrandProductsRespons
 import com.devcci.devtoy.product.application.dto.LowestPriceBrandProductsResponse.LowestPriceBrandProduct;
 import com.devcci.devtoy.product.application.dto.LowestPriceBrandProductsResponse.LowestPriceBrandProduct.BrandProduct;
 import com.devcci.devtoy.product.application.dto.LowestPriceCategoryResponse;
+import com.devcci.devtoy.product.application.dto.ProductBulkResponse;
 import com.devcci.devtoy.product.application.dto.ProductResponse;
 import com.devcci.devtoy.product.domain.product.Product;
 import com.devcci.devtoy.product.domain.product.ProductRepository;
@@ -24,6 +25,7 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -129,5 +131,16 @@ public class ProductSearchService {
             highestPriceByCategory.getProductName(),
             highestPriceByCategory.getBrandName(),
             highestPriceByCategory.getProductPrice());
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductBulkResponse> findProductsByIds(Set<Long> productIds) {
+        List<Product> products = productRepository.findAllById(productIds);
+        if (products.isEmpty()) {
+            throw new ApiException(ErrorCode.PRODUCT_NOT_FOUND);
+        }
+        return products.stream()
+            .map(ProductBulkResponse::of)
+            .toList();
     }
 }

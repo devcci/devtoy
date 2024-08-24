@@ -13,13 +13,16 @@ import java.util.List;
 public class GatewayRouteLocateConfig {
 
     private final String devtoyProductUri;
+    private final String devtoyOrderUri;
     private final String devtoyMemberUri;
 
     public GatewayRouteLocateConfig(
         @Value("${service.uri.product}") String devtoyProductUri,
+        @Value("${service.uri.order}") String devtoyOrderUri,
         @Value("${service.uri.member}") String devtoyMemberUri
     ) {
         this.devtoyProductUri = devtoyProductUri;
+        this.devtoyOrderUri = devtoyOrderUri;
         this.devtoyMemberUri = devtoyMemberUri;
     }
 
@@ -39,6 +42,9 @@ public class GatewayRouteLocateConfig {
             .route("product-route", r -> r.path("/product/**", "/brand/**")
                 .filters(f -> f.filter(authenticationFilter.apply(config -> config.setRoles(List.of("MEMBER", "ADMIN")))))
                 .uri(devtoyProductUri))
+            .route("order-route", r -> r.path("/order/**")
+                .filters(f -> f.filter(authenticationFilter.apply(config -> config.setRoles(List.of("MEMBER", "ADMIN")))))
+                .uri(devtoyOrderUri))
             .build();
     }
 }

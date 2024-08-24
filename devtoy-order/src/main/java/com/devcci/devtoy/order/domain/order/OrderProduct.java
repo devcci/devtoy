@@ -11,43 +11,52 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
+
+import java.math.BigDecimal;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-@Table(name = "order_product")
+@Table(name = "order_product",
+    uniqueConstraints = {
+        @UniqueConstraint(name = "order_product_uq", columnNames = {"order_id", "product_id"})
+    })
 public class OrderProduct extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", foreignKey = @ForeignKey(name = "order_fk"))
+    private Order order;
+
     @NotNull
     @Column(name = "product_id", nullable = false)
     private Long productId;
 
     @NotNull
-    @ColumnDefault("1")
-    @Column(name = "product_quantity", nullable = false)
-    private Long productQuantity;
+    @Column(name = "quantity", nullable = false)
+    private Long quantity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", foreignKey = @ForeignKey(name = "order_fk"))
-    private Order order;
+    @NotNull
+    @Column(name = "price", nullable = false, precision = 15, scale = 0)
+    private BigDecimal price;
 
-    private OrderProduct(Long productId, Long productQuantity, Order order) {
+    private OrderProduct(Order order, Long productId, Long quantity, BigDecimal price) {
         this.productId = productId;
-        this.productQuantity = productQuantity;
         this.order = order;
+        this.quantity = quantity;
+        this.price = price;
     }
 
-    public static OrderProduct createOrderProduct(Long productId, Long productQuantity, Order order) {
-        return new OrderProduct(productId, productQuantity, order);
+    public static OrderProduct createOrderProduct(Order order, Long productId, Long quantity, BigDecimal price) {
+        return new OrderProduct(order, productId, quantity, price);
     }
 
 }

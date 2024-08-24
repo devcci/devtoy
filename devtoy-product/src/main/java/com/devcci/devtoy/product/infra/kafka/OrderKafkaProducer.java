@@ -8,19 +8,19 @@ import org.springframework.stereotype.Component;
 
 @ConditionalOnProperty(value = "kafka.enabled", matchIfMissing = true)
 @Component
-public class KafkaProducer {
-    private final KafkaTemplate<String, Object> productKafkaTemplate;
+public class OrderKafkaProducer {
+    private final KafkaTemplate<String, Object> orderKafkaTemplate;
     private final String topic;
 
-    public KafkaProducer(
-        @Qualifier("productKafkaTemplate") KafkaTemplate<String, Object> productKafkaTemplate,
-        @Value("${kafka.product.topic.delete}") String topic
+    public OrderKafkaProducer(
+        @Qualifier("orderKafkaTemplate") KafkaTemplate<String, Object> orderKafkaTemplate,
+        @Value("${topic.order.fail}") String topic
     ) {
-        this.productKafkaTemplate = productKafkaTemplate;
+        this.orderKafkaTemplate = orderKafkaTemplate;
         this.topic = topic;
     }
 
     public void send(String message) {
-        productKafkaTemplate.send(topic, message);
+        orderKafkaTemplate.send(topic, message);
     }
 }

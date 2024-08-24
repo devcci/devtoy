@@ -28,6 +28,7 @@ spring:
 service:
   uri:
     product: "lb://DEVTOY-PRODUCT"
+    order: "lb://DEVTOY-ORDER"
     member: "lb://DEVTOY-MEMBER"
 
 jwt:
@@ -57,6 +58,8 @@ springdoc:
     urls:
       - url: /v3/api-docs/product
         name: product
+      - url: /v3/api-docs/order
+        name: order
       - url: /v3/api-docs/member
         name: member
 

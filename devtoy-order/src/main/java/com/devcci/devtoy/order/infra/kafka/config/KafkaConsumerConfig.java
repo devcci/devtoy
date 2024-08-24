@@ -1,4 +1,4 @@
-package com.devcci.devtoy.product.infra.kafka.config;
+package com.devcci.devtoy.order.infra.kafka.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -43,7 +43,7 @@ public class KafkaConsumerConfig {
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 1000);
         props.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, 5000);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "devtoy-order-create-group");
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "devtoy-order-fail-group");
         return new DefaultKafkaConsumerFactory<>(props);
     }
 

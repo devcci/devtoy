@@ -3,6 +3,7 @@ package com.devcci.devtoy.product.web.api;
 import com.devcci.devtoy.product.application.dto.CategoryPriceRangeResponse;
 import com.devcci.devtoy.product.application.dto.LowestPriceBrandProductsResponse;
 import com.devcci.devtoy.product.application.dto.LowestPriceCategoryResponse;
+import com.devcci.devtoy.product.application.dto.ProductBulkResponse;
 import com.devcci.devtoy.product.application.dto.ProductResponse;
 import com.devcci.devtoy.product.application.service.ProductSearchService;
 import com.devcci.devtoy.product.common.util.PageableUtil;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Set;
 
 @Tag(name = "상품 조회 API")
 @Validated
@@ -31,6 +33,12 @@ public class ProductSearchController {
 
     public ProductSearchController(ProductSearchService productSearchService) {
         this.productSearchService = productSearchService;
+    }
+
+    @Operation(summary = "상품 Bulk 조회")
+    @GetMapping("/bulk")
+    public ResponseEntity<List<ProductBulkResponse>> getProductsByIds(@RequestParam("productIds") Set<Long> productIds) {
+        return ResponseEntity.ok(productSearchService.findProductsByIds(productIds));
     }
 
     @Operation(summary = "상품 목록 조회")

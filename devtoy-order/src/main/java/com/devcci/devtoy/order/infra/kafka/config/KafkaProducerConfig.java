@@ -1,4 +1,4 @@
-package com.devcci.devtoy.product.infra.kafka.config;
+package com.devcci.devtoy.order.infra.kafka.config;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;

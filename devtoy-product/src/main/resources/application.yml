@@ -25,13 +25,13 @@ spring:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
       password: ${REDIS_PASS:devtoy}
-
-kafka:
-  enabled: true
-  product:
+  kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092,localhost:9093,localhost:9094}
-    topic:
-      delete: devtoy-product-delete
+
+topic:
+  order:
+    create: devtoy-order-create
+    fail: devtoy-order-fail
 
 eureka:
   client:

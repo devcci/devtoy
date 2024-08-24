@@ -11,10 +11,10 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(value = "kafka.enabled", matchIfMissing = true)
 @Slf4j
 @Component
-public class KafkaConsumer implements AcknowledgingMessageListener<String, String> {
+public class OrderKafkaConsumer implements AcknowledgingMessageListener<String, String> {
 
     @Override
-    @KafkaListener(topics = "${kafka.product.topic.delete}", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "${topic.order.create}", containerFactory = "kafkaListenerContainerFactory")
     public void onMessage(ConsumerRecord<String, String> data, Acknowledgment acknowledgment) {
         try {
             log.info("topic: {} key: {} value: {}", data.topic(), data.key(), data.value());
