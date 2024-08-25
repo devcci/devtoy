@@ -107,9 +107,6 @@ spring:
       host: localhost
       port: 6379
 
-kafka:
-  enabled: false
-
 eureka:
   client:
     enabled: false
