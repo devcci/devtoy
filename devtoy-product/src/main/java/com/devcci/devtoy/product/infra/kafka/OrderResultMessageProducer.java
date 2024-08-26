@@ -1,6 +1,6 @@
 package com.devcci.devtoy.product.infra.kafka;
 
-import com.devcci.devtoy.product.infra.kafka.dto.OrderResultMessage;
+import com.devcci.devtoy.common.infra.kafka.dto.OrderResultMessage;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;

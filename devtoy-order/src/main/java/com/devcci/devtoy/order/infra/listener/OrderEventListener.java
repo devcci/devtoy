@@ -1,13 +1,13 @@
 package com.devcci.devtoy.order.infra.listener;
 
+import com.devcci.devtoy.common.infra.kafka.dto.OrderMessage;
+import com.devcci.devtoy.common.infra.kafka.dto.OrderMessage.OrderProductMessage;
 import com.devcci.devtoy.order.application.service.OrderService;
 import com.devcci.devtoy.order.domain.order.Order;
 import com.devcci.devtoy.order.domain.order.event.OrderCompletedEvent;
 import com.devcci.devtoy.order.domain.order.event.OrderCreatedEvent;
 import com.devcci.devtoy.order.domain.order.event.OrderFailedEvent;
 import com.devcci.devtoy.order.infra.kafka.OrderKafkaProducer;
-import com.devcci.devtoy.order.infra.kafka.dto.OrderMessage;
-import com.devcci.devtoy.order.infra.kafka.dto.OrderMessage.OrderProductMessage;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;

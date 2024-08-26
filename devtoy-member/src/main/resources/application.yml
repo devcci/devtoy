@@ -37,6 +37,8 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: ${EUREKA_URL:http://localhost:8070/eureka}
+    registry-fetch-interval-seconds: 5
+    disable-delta: true
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 

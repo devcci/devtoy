@@ -1,4 +1,4 @@
-package com.devcci.devtoy.order.infra.kafka.dto;
+package com.devcci.devtoy.common.infra.kafka.dto;
 
 import java.math.BigDecimal;
 import java.util.List;

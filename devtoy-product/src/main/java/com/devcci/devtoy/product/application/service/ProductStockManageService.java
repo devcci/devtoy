@@ -2,11 +2,11 @@ package com.devcci.devtoy.product.application.service;
 
 import com.devcci.devtoy.common.exception.ApiException;
 import com.devcci.devtoy.common.exception.ErrorCode;
+import com.devcci.devtoy.common.infra.kafka.dto.OrderMessage;
+import com.devcci.devtoy.common.infra.kafka.dto.OrderResultMessage;
 import com.devcci.devtoy.product.domain.product.Product;
 import com.devcci.devtoy.product.domain.product.ProductRepository;
 import com.devcci.devtoy.product.infra.kafka.OrderResultMessageProducer;
-import com.devcci.devtoy.product.infra.kafka.dto.OrderMessage;
-import com.devcci.devtoy.product.infra.kafka.dto.OrderResultMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

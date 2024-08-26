@@ -1,9 +1,9 @@
 package com.devcci.devtoy.product.infra.kafka;
 
 import com.devcci.devtoy.common.exception.ApiException;
+import com.devcci.devtoy.common.infra.kafka.dto.OrderMessage;
+import com.devcci.devtoy.common.infra.kafka.dto.OrderResultMessage;
 import com.devcci.devtoy.product.application.service.ProductStockManageService;
-import com.devcci.devtoy.product.infra.kafka.dto.OrderMessage;
-import com.devcci.devtoy.product.infra.kafka.dto.OrderResultMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;

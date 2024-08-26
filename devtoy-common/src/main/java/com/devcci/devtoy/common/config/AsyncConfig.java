@@ -1,21 +1,22 @@
-package com.devcci.devtoy.product.common.config;
+package com.devcci.devtoy.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @Configuration
-public class TaskExecutorConfig {
+@EnableAsync
+public class AsyncConfig {
 
-    @Bean("kafkaExecutor")
-    public ThreadPoolTaskExecutor executor() {
+    @Bean(name = "asyncExecutor")
+    public ThreadPoolTaskExecutor getAsyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         int processors = Runtime.getRuntime().availableProcessors();
         executor.setCorePoolSize(processors);
         executor.setMaxPoolSize(processors * 2);
         executor.setQueueCapacity(25);
-        executor.setThreadFactory(new CustomizableThreadFactory("kafka-thread-"));
+        executor.setThreadNamePrefix("async-thread-");
         executor.setWaitForTasksToCompleteOnShutdown(true);
         executor.setAwaitTerminationSeconds(2);
         executor.initialize();

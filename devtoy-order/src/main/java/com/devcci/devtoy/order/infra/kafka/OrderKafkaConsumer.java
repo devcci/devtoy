@@ -1,8 +1,8 @@
 package com.devcci.devtoy.order.infra.kafka;
 
+import com.devcci.devtoy.common.infra.kafka.dto.OrderResultMessage;
 import com.devcci.devtoy.order.domain.order.event.OrderCompletedEvent;
 import com.devcci.devtoy.order.domain.order.event.OrderFailedEvent;
-import com.devcci.devtoy.order.infra.kafka.dto.OrderResultMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.context.ApplicationEventPublisher;
