@@ -1,5 +1,7 @@
 package com.devcci.devtoy.order.application.service;
 
+import com.devcci.devtoy.common.exception.ApiException;
+import com.devcci.devtoy.common.exception.ErrorCode;
 import com.devcci.devtoy.order.domain.order.Order;
 import com.devcci.devtoy.order.domain.order.OrderProduct;
 import com.devcci.devtoy.order.domain.order.OrderRepository;
@@ -58,14 +60,15 @@ public class OrderService {
     @Transactional
     public void completeOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
-            .orElseThrow(() -> new IllegalArgumentException("주문이 존재하지 않습니다."));
+            .orElseThrow(() -> new ApiException(ErrorCode.ORDER_NOT_FOUND));
         order.complete();
     }
 
     @Transactional
     public void cancelOrder(Long orderId, String reason) {
         Order order = orderRepository.findById(orderId)
-            .orElseThrow(() -> new IllegalArgumentException("주문이 존재하지 않습니다."));
+            .orElseThrow(() -> new ApiException(ErrorCode.ORDER_NOT_FOUND));
         order.cancel(reason);
     }
+
 }

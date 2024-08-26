@@ -33,6 +33,8 @@ public class GatewayRouteLocateConfig {
                 .uri(devtoyProductUri))
             .route("swagger-route-member", r -> r.path("/v3/api-docs/member/**")
                 .uri(devtoyMemberUri))
+            .route("swagger-route-order", r -> r.path("/v3/api-docs/order/**")
+                .uri(devtoyOrderUri))
             .route("auth-route", r -> r.path("/auth/**")
                 .filters(f -> f.filter(authenticationFilter.apply(config -> config.setRoles(List.of("MEMBER", "ADMIN")))))
                 .uri(devtoyMemberUri))

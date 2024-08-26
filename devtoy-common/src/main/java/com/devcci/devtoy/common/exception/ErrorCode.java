@@ -41,10 +41,12 @@ public enum ErrorCode {
     PRODUCT_STOCK_NOT_ENOUGH(HttpStatus.CONFLICT, 2371, "상품 재고가 부족합니다."),
     PRODUCT_PRICE_INVALID(HttpStatus.BAD_REQUEST, 2372, "잘못된 상품 가격 가격 입니다."),
 
-    MEMBER_ID_ALREADY_EXISTS(HttpStatus.CONFLICT, 3001, "이미 등록된 사용자 ID 입니다."),
-    MEMBER_EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, 3002, "이미 등록된 이메일입니다."),
-    MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, 3003, "존재하지 않는 사용자입니다."),
-    MEMBER_PASSWORD_INCORRECT(HttpStatus.BAD_REQUEST, 3004, "잘못된 패스워드입니다."),
+    ORDER_NOT_FOUND(HttpStatus.BAD_REQUEST, 2400, "존재하지 않는 주문요청입니다."),
+
+    MEMBER_ID_ALREADY_EXISTS(HttpStatus.CONFLICT, 4001, "이미 등록된 사용자 ID 입니다."),
+    MEMBER_EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, 4002, "이미 등록된 이메일입니다."),
+    MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, 4003, "존재하지 않는 사용자입니다."),
+    MEMBER_PASSWORD_INCORRECT(HttpStatus.BAD_REQUEST, 4004, "잘못된 패스워드입니다."),
     ;
 
     ErrorCode(HttpStatus status, int code, String message) {
