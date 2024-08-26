@@ -6,6 +6,7 @@ import com.devcci.devtoy.common.exception.AuthenticationException;
 import com.devcci.devtoy.common.exception.ErrorCode;
 import com.devcci.devtoy.gateway.util.TokenUtils;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -51,8 +52,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
             String path = exchange.getRequest().getURI().getPath();
             if (
                 path.startsWith("/auth/signup") ||
-                    path.startsWith("/auth/login") ||
-                    path.startsWith("/auth/refresh")
+                    path.startsWith("/auth/login")
             ) {
                 return chain.filter(exchange);
             }
@@ -60,12 +60,20 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
             if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION))
                 throw new AuthenticationException(ErrorCode.JWT_TOKEN_NOT_EXISTS);
             String token = parse(request);
-            Claims payload = verifyAndGetPayload(token);
+            Claims payload;
+            try {
+                payload = verifyAndGetPayload(token);
+            } catch (ExpiredJwtException ex) {
+                if (!path.startsWith("/auth/refresh")) {
+                    throw ex;
+                }
+                payload = ex.getClaims();
+            }
             List<String> roles = getMemberRole(payload);
             checkMemberRole(roles, config.getRoles());
             String memberId = getMemberId(payload);
             String rolesString = String.join(",", roles);
-            
+
             exchange = exchange.mutate()
                 .request(r -> r
                     .header(DevtoyHeaders.MEMBER_ID, memberId)
