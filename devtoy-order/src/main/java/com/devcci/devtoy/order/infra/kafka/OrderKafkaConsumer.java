@@ -1,7 +1,11 @@
 package com.devcci.devtoy.order.infra.kafka;
 
+import com.devcci.devtoy.order.domain.order.event.OrderCompletedEvent;
+import com.devcci.devtoy.order.domain.order.event.OrderFailedEvent;
+import com.devcci.devtoy.order.infra.kafka.dto.OrderResultMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.listener.AcknowledgingMessageListener;
 import org.springframework.kafka.support.Acknowledgment;
@@ -9,13 +13,22 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class OrderKafkaConsumer implements AcknowledgingMessageListener<String, String> {
+public class OrderKafkaConsumer implements AcknowledgingMessageListener<String, OrderResultMessage> {
+    private final ApplicationEventPublisher eventPublisher;
+
+    public OrderKafkaConsumer(ApplicationEventPublisher eventPublisher) {
+        this.eventPublisher = eventPublisher;
+    }
 
     @Override
-    @KafkaListener(topics = "${topic.order.fail}", containerFactory = "kafkaListenerContainerFactory")
-    public void onMessage(ConsumerRecord<String, String> data, Acknowledgment acknowledgment) {
+    @KafkaListener(topics = "${topic.order.result}", containerFactory = "orderResultMessageListenerFactory")
+    public void onMessage(ConsumerRecord<String, OrderResultMessage> msg, Acknowledgment acknowledgment) {
         try {
-            log.info("topic: {} key: {} value: {}", data.topic(), data.key(), data.value());
+            if (msg.value().status().equals("COMPLETED")) {
+                eventPublisher.publishEvent(new OrderCompletedEvent(Long.valueOf(msg.value().orderId())));
+            } else {
+                eventPublisher.publishEvent(new OrderFailedEvent(Long.valueOf(msg.value().orderId()), msg.value().reason()));
+            }
             acknowledgment.acknowledge();
         } catch (NullPointerException e) {
             log.error(e.getMessage());

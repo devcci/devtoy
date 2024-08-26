@@ -1,7 +1,5 @@
 package com.devcci.devtoy.order.application.service;
 
-import com.devcci.devtoy.common.exception.ApiException;
-import com.devcci.devtoy.common.exception.ErrorCode;
 import com.devcci.devtoy.order.domain.order.Order;
 import com.devcci.devtoy.order.domain.order.OrderProduct;
 import com.devcci.devtoy.order.domain.order.OrderRepository;
@@ -48,22 +46,26 @@ public class OrderService {
 
         for (OrderProductRequest productRequest : request.orderProductRequests()) {
             ProductBulkResponse product = productMap.get(productRequest.productId());
-            if (product.stockQuantity() < productRequest.quantity()) {
-                throw new ApiException(ErrorCode.PRODUCT_STOCK_NOT_ENOUGH);
-            }
             OrderProduct orderProduct = OrderProduct.createOrderProduct(
                 order, productRequest.productId(), productRequest.quantity(), product.price());
             order.addOrderProduct(orderProduct);
         }
-
         orderRepository.save(order);
-        eventPublisher.publishEvent(new OrderCreatedEvent(order.getId(), request));
+        eventPublisher.publishEvent(new OrderCreatedEvent(order));
         return order.getId();
     }
 
     @Transactional
-    public void cancelOrder(Long orderId) {
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("주문이 존재하지 않습니다."));
-        order.cancel();
+    public void completeOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new IllegalArgumentException("주문이 존재하지 않습니다."));
+        order.complete();
+    }
+
+    @Transactional
+    public void cancelOrder(Long orderId, String reason) {
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new IllegalArgumentException("주문이 존재하지 않습니다."));
+        order.cancel(reason);
     }
 }

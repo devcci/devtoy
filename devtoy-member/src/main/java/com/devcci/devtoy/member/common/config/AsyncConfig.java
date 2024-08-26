@@ -13,12 +13,14 @@ public class AsyncConfig {
 
     @Bean(name = "asyncExecutor")
     public Executor getAsyncExecutor() {
-        int processors = Runtime.getRuntime().availableProcessors();
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        int processors = Runtime.getRuntime().availableProcessors();
         executor.setCorePoolSize(processors);
         executor.setMaxPoolSize(processors * 2);
         executor.setQueueCapacity(25);
         executor.setThreadNamePrefix("AsyncExecutor-");
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.setAwaitTerminationSeconds(2);
         executor.initialize();
         return executor;
     }

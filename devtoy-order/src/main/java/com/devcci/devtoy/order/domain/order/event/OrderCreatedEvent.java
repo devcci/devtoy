@@ -1,6 +1,6 @@
 package com.devcci.devtoy.order.domain.order.event;
 
-import com.devcci.devtoy.order.web.dto.OrderRequest;
+import com.devcci.devtoy.order.domain.order.Order;
 
-public record OrderCreatedEvent(Long memberId, OrderRequest orderRequests) {
+public record OrderCreatedEvent(Order order) {
 }

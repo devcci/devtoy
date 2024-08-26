@@ -30,7 +30,7 @@ spring:
 topic:
   order:
     create: devtoy-order-create
-    fail: devtoy-order-fail
+    result: devtoy-order-result
 
 eureka:
   client:

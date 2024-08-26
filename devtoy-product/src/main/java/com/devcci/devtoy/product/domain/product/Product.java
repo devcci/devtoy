@@ -117,6 +117,13 @@ public class Product extends BaseTimeEntity {
         }
     }
 
+    public boolean validatePrice(BigDecimal price) {
+        if (!this.price.equals(price)) {
+            throw new ApiException(ErrorCode.PRODUCT_PRICE_INVALID);
+        }
+        return true;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -132,4 +139,5 @@ public class Product extends BaseTimeEntity {
     public int hashCode() {
         return Objects.hash(name, price, brand, category, description);
     }
+
 }

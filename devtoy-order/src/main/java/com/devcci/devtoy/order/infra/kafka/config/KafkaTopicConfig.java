@@ -10,7 +10,7 @@ public class KafkaTopicConfig {
     @Bean
     public KafkaAdmin.NewTopics newTopics() {
         String devtoyOrderCreate = "devtoy-order-create";
-        String devtoyOrderFail = "devtoy-order-fail";
+        String devtoyOrderResult = "devtoy-order-result";
         int partitionCount = 3;
         int replicaCount = 3;
         return new KafkaAdmin.NewTopics(
@@ -19,7 +19,7 @@ public class KafkaTopicConfig {
                 .replicas(replicaCount)
                 .build(),
 
-            TopicBuilder.name(devtoyOrderFail)
+            TopicBuilder.name(devtoyOrderResult)
                 .partitions(partitionCount)
                 .replicas(replicaCount)
                 .build()

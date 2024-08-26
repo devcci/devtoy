@@ -39,12 +39,15 @@ public class Order extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
+    @Column(name = "status_reason")
+    private String statusReason;
+
     @NotNull
     @Column(name = "total_price", nullable = false, precision = 15, scale = 0)
     private BigDecimal totalPrice;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<OrderProduct> orderProduct = new ArrayList<>();
+    private List<OrderProduct> orderProducts = new ArrayList<>();
 
     private Order(String memberId, OrderStatus status) {
         this.memberId = memberId;
@@ -56,26 +59,22 @@ public class Order extends BaseTimeEntity {
         return new Order(memberId, status);
     }
 
-
-    public void order() {
-        this.status = OrderStatus.ORDERED;
-    }
-
     public void complete() {
         this.status = OrderStatus.COMPLETED;
     }
 
-    public void cancel() {
+    public void cancel(String reason) {
         this.status = OrderStatus.CANCELED;
+        this.statusReason = reason;
     }
 
     public void addOrderProduct(OrderProduct orderProduct) {
-        this.orderProduct.add(orderProduct);
+        this.orderProducts.add(orderProduct);
         calculateTotalPrice();
     }
 
     private void calculateTotalPrice() {
-        this.totalPrice = orderProduct.stream()
+        this.totalPrice = orderProducts.stream()
             .map(op -> op.getPrice().multiply(BigDecimal.valueOf(op.getQuantity())))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     }

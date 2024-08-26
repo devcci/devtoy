@@ -2,7 +2,8 @@ create table orders
 (
     id          bigint auto_increment primary key,
     member_id   varchar(255)                                         not null,
-    status      enum ('CREATED', 'ORDERED', 'CANCELED', 'COMPLETED') not null,
+    status      enum ('CREATED', 'CANCELED', 'COMPLETED') not null,
+    status_reason varchar(255)                                        null,
     total_price decimal(15, 0)                                       not null,
     created_at  datetime(6)                                          null,
     modified_at datetime(6)                                          null

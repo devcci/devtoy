@@ -10,6 +10,6 @@ import org.springframework.context.annotation.Configuration;
 public class FeignClientConfig {
     @Bean
     public Retryer feignRetryer() {
-        return new Retryer.Default(1000, 2000, 3);
+        return new Retryer.Default(500, 2000, 3);
     }
 }
