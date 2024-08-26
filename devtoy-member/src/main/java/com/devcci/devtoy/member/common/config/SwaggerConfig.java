@@ -10,7 +10,7 @@ import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@OpenAPIDefinition(info = @Info(title = "[DEV TOY - MEMBER] 혼자 놀아보기", description = "서비스의 API 명세입니다.",
+@OpenAPIDefinition(info = @Info(title = "[DEV TOY - MEMBER] 회원 서비스", description = "서비스의 API 명세입니다.",
     version = "v1.0.0"))
 @Configuration
 public class SwaggerConfig {
