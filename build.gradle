@@ -2,13 +2,41 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.2'
     id 'io.spring.dependency-management' version '1.1.6'
+    id 'org.sonarqube' version "4.4.1.3373"
 }
 
 repositories {
     mavenCentral()
 }
 
+allprojects {
+    apply plugin: 'jacoco'
+}
 subprojects {
+
+    jacocoTestReport {
+        reports {
+            xml.required.set(true) // XML 리포트 활성화 및 경로 지정
+            html.required.set(true) // HTML 리포트 활성화 및 경로 지정
+            csv.required.set(false) // CSV 리포트 비활성화
+        }
+    }
+
+    tasks.withType(Test).configureEach { testTask ->
+        testTask.useJUnitPlatform() // JUnit5 사용 설정
+        testTask.finalizedBy(tasks.named("jacocoTestReport"))
+    }
+}
+
+sonar {
+    properties {
+        property "sonar.projectKey", "devcci_devtoy"
+        property "sonar.organization", "devcci"
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.coverage.jacoco.xmlReportPaths", subprojects.collect {
+            it.layout.buildDirectory.file("reports/jacoco/test/jacocoTestReport.xml").get().asFile.absolutePath
+        }.join(',')
+    }
 }
 jar {
     enabled = true
