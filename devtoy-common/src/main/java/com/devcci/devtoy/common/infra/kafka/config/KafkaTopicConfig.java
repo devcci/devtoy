@@ -1,10 +1,12 @@
-package com.devcci.devtoy.order.infra.kafka.config;
+package com.devcci.devtoy.common.infra.kafka.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.KafkaAdmin;
 
+@Profile("!integrationTest")
 @Configuration
 public class KafkaTopicConfig {
     @Bean

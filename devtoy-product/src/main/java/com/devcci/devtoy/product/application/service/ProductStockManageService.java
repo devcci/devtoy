@@ -31,7 +31,7 @@ public class ProductStockManageService {
     public void removeStockQuantity(OrderMessage orderMessage) {
         orderMessage.orderProducts().forEach(
             orderProductMessage -> {
-                Product product = productRepository.findById(orderProductMessage.productId())
+                Product product = productRepository.findByIdWithPessimisticLock(orderProductMessage.productId())
                     .orElseThrow(() -> new ApiException(ErrorCode.PRODUCT_NOT_FOUND));
                 product.validatePrice(orderProductMessage.price());
                 product.removeStockQuantity(orderProductMessage.quantity());

@@ -4,13 +4,16 @@ import com.devcci.devtoy.common.exception.ApiException;
 import com.devcci.devtoy.common.infra.kafka.dto.OrderMessage;
 import com.devcci.devtoy.common.infra.kafka.dto.OrderResultMessage;
 import com.devcci.devtoy.product.application.service.ProductStockManageService;
+import com.devcci.devtoy.product.infra.kafka.config.KafkaConsumerConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.listener.AcknowledgingMessageListener;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
 
+@ConditionalOnBean(KafkaConsumerConfig.class)
 @Slf4j
 @Component
 public class OrderMessageConsumer implements AcknowledgingMessageListener<String, OrderMessage> {
