@@ -1,7 +1,7 @@
 package com.devcci.devtoy.gateway.filter;
 
-import com.devcci.devtoy.common.constans.AuthConstants;
-import com.devcci.devtoy.common.constans.DevtoyHeaders;
+import com.devcci.devtoy.common.constants.AuthConstants;
+import com.devcci.devtoy.common.constants.DevtoyHeaders;
 import com.devcci.devtoy.common.exception.AuthenticationException;
 import com.devcci.devtoy.common.exception.ErrorCode;
 import com.devcci.devtoy.gateway.util.TokenUtils;

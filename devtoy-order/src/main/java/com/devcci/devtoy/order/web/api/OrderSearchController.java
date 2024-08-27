@@ -1,6 +1,6 @@
 package com.devcci.devtoy.order.web.api;
 
-import com.devcci.devtoy.common.constans.DevtoyHeaders;
+import com.devcci.devtoy.common.constants.DevtoyHeaders;
 import com.devcci.devtoy.order.application.dto.OrderResponse;
 import com.devcci.devtoy.order.application.service.OrderSearchService;
 import io.swagger.v3.oas.annotations.Operation;

@@ -22,7 +22,6 @@ public class TestContainerConfig {
             .waitingFor(Wait.forListeningPort());
     }
 
-    //  ServiceConnection으로 실행하면 호스트를 제대로 찾았다가 못찾았다 계속 바뀐다.. 예전 방식으로 대체함
     static {
         GenericContainer<?> redis =
             new GenericContainer<>(DockerImageName.parse("redis:7.4")).withExposedPorts(6379);

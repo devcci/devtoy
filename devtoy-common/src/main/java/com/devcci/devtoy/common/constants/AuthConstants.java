@@ -1,4 +1,4 @@
-package com.devcci.devtoy.common.constans;
+package com.devcci.devtoy.common.constants;
 
 public class AuthConstants {
     public static final String ROLES = "roles";

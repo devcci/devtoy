@@ -1,6 +1,6 @@
 package com.devcci.devtoy.member.web.api;
 
-import com.devcci.devtoy.common.constans.DevtoyHeaders;
+import com.devcci.devtoy.common.constants.DevtoyHeaders;
 import com.devcci.devtoy.member.application.dto.LoginRequest;
 import com.devcci.devtoy.member.application.dto.LoginResponse;
 import com.devcci.devtoy.member.application.dto.SignUpRequest;

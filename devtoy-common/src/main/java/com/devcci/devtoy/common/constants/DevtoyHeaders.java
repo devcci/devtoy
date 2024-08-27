@@ -1,4 +1,4 @@
-package com.devcci.devtoy.common.constans;
+package com.devcci.devtoy.common.constants;
 
 public class DevtoyHeaders {
     public static final String MEMBER_ID = "Devtoy-Member-Id";

@@ -1,6 +1,6 @@
 package com.devcci.devtoy.gateway.util;
 
-import com.devcci.devtoy.common.constans.AuthConstants;
+import com.devcci.devtoy.common.constants.AuthConstants;
 import com.devcci.devtoy.common.exception.AuthenticationException;
 import com.devcci.devtoy.common.exception.ErrorCode;
 import org.springframework.util.StringUtils;
