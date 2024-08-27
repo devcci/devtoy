@@ -63,7 +63,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception exception) {
-        log.error("error message: {}, cause: {}", exception.getMessage(), exception.getCause());
+        log.error("error message: {}", exception.getMessage(), exception);
         return ErrorResponse.toResponseEntity(ErrorCode.INTERNAL_SERVER_ERROR, exception.getMessage());
     }
 }

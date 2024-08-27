@@ -8,7 +8,7 @@ import com.devcci.devtoy.order.domain.order.OrderRepository;
 import com.devcci.devtoy.order.domain.order.OrderStatus;
 import com.devcci.devtoy.order.domain.order.event.OrderCreatedEvent;
 import com.devcci.devtoy.order.infra.client.ProductBulkResponse;
-import com.devcci.devtoy.order.infra.client.ProductClient;
+import com.devcci.devtoy.order.infra.client.ProductFeignClient;
 import com.devcci.devtoy.order.web.dto.OrderRequest;
 import com.devcci.devtoy.order.web.dto.OrderRequest.OrderProductRequest;
 import org.springframework.context.ApplicationEventPublisher;
@@ -24,15 +24,15 @@ import java.util.stream.Collectors;
 public class OrderService {
     private final ApplicationEventPublisher eventPublisher;
     private final OrderRepository orderRepository;
-    private final ProductClient productClient;
+    private final ProductFeignClient productFeignClient;
 
     public OrderService(
         OrderRepository orderRepository,
         ApplicationEventPublisher eventPublisher,
-        ProductClient productClient) {
+        ProductFeignClient productFeignClient) {
         this.orderRepository = orderRepository;
         this.eventPublisher = eventPublisher;
-        this.productClient = productClient;
+        this.productFeignClient = productFeignClient;
     }
 
     @Transactional
@@ -40,7 +40,7 @@ public class OrderService {
         Set<Long> productIds = request.orderProductRequests().stream()
             .map(OrderProductRequest::productId).collect(Collectors.toSet());
 
-        List<ProductBulkResponse> products = productClient.getProductsByIds(productIds);
+        List<ProductBulkResponse> products = productFeignClient.getProductsByIds(productIds);
         Map<Long, ProductBulkResponse> productMap = products.stream()
             .collect(Collectors.toMap(ProductBulkResponse::productId, product -> product));
 

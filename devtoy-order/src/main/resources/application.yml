@@ -28,6 +28,10 @@ spring:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092,localhost:9093,localhost:9094}
     consumer:
       group-id: devtoy-order-group
+  cloud:
+    loadbalancer:
+      retry:
+        enabled: false
 
 topic:
   order:
@@ -62,6 +66,10 @@ springdoc:
   swagger-ui:
     use-root-path: true
 
+logging:
+  level:
+    com.devcci.devtoy: debug
+    org.hibernate.SQL: debug
 
 # Integration Test - TestContainers
 ---

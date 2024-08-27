@@ -41,7 +41,7 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
             }
         }
 
-        ResponseEntity<ErrorResponse> defaultErrorResponse = ErrorResponse.toResponseEntity(ErrorCode.INTERNAL_SERVER_ERROR);
+        ResponseEntity<ErrorResponse> defaultErrorResponse = ErrorResponse.toResponseEntity(ErrorCode.INTERNAL_SERVER_ERROR, ex.getMessage());
         return writeErrorResponse(response, defaultErrorResponse);
     }
 

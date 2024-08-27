@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 import java.util.Set;
 
-@FeignClient(name = "DEVTOY-PRODUCT")
-public interface ProductClient {
+@FeignClient(name = "DEVTOY-PRODUCT", configuration = FeignClientConfig.class)
+public interface ProductFeignClient {
 
     @GetMapping("/product/bulk")
     List<ProductBulkResponse> getProductsByIds(@RequestParam("productIds") Set<Long> productIds);
