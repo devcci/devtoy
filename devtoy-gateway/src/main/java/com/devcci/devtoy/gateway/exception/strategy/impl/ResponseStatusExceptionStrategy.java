@@ -21,6 +21,6 @@ public class ResponseStatusExceptionStrategy implements ExceptionStrategy {
         if (e instanceof NoResourceFoundException) {
             return ErrorResponse.toResponseEntity(ErrorCode.NO_RESOURCE_FOUND);
         }
-        return ErrorResponse.toResponseEntity(ErrorCode.INTERNAL_SERVER_ERROR, ex.getReason());
+        return ErrorResponse.toResponseEntity(ex.getStatusCode().value(), ErrorCode.INTERNAL_SERVER_ERROR.getCode(), ex.getReason() + ex.getMessage());
     }
 }

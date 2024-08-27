@@ -51,6 +51,11 @@ public class GlobalExceptionHandler {
         return ErrorResponse.toResponseEntity(exception.getErrorCode());
     }
 
+    @ExceptionHandler(ClientException.class)
+    public ResponseEntity<ErrorResponse> clientException(ClientException exception) {
+        return ErrorResponse.toResponseEntity(exception.getErrorCode(), exception.getMessage());
+    }
+
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ErrorResponse> handleException(ApiException exception) {
         return ErrorResponse.toResponseEntity(exception.getErrorCode());
@@ -58,8 +63,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception exception) {
-        log.error("error", exception);
-        return ErrorResponse.toResponseEntity(ErrorCode.INTERNAL_SERVER_ERROR,
-            exception.getMessage());
+        log.error("error message: {}, cause: {}", exception.getMessage(), exception.getCause());
+        return ErrorResponse.toResponseEntity(ErrorCode.INTERNAL_SERVER_ERROR, exception.getMessage());
     }
 }
