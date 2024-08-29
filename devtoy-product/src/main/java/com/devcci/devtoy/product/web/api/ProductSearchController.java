@@ -16,6 +16,7 @@ import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,9 +36,17 @@ public class ProductSearchController {
         this.productSearchService = productSearchService;
     }
 
+    @Operation(summary = "상품 조회")
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductResponse> getProductById(
+        @PathVariable("productId") Long productId) {
+        return ResponseEntity.ok(productSearchService.findProductById(productId));
+    }
+
     @Operation(summary = "상품 Bulk 조회")
     @GetMapping("/bulk")
-    public ResponseEntity<List<ProductBulkResponse>> getProductsByIds(@RequestParam("productIds") Set<Long> productIds) {
+    public ResponseEntity<List<ProductBulkResponse>> getProductsByIds(
+        @RequestParam("productIds") Set<Long> productIds) {
         return ResponseEntity.ok(productSearchService.findProductsByIds(productIds));
     }
 

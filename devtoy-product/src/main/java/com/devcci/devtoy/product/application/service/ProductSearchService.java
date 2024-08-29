@@ -13,10 +13,12 @@ import com.devcci.devtoy.product.application.dto.ProductBulkResponse;
 import com.devcci.devtoy.product.application.dto.ProductResponse;
 import com.devcci.devtoy.product.domain.product.Product;
 import com.devcci.devtoy.product.domain.product.ProductRepository;
+import com.devcci.devtoy.product.domain.product.event.ProductViewEvent;
 import com.devcci.devtoy.product.infra.persistence.projection.LowestProductByBrandProjection;
 import com.devcci.devtoy.product.infra.persistence.projection.LowestProductByCategoryProjection;
 import com.devcci.devtoy.product.infra.persistence.projection.PriceByCategoryProjection;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,9 +34,31 @@ import java.util.stream.Collectors;
 public class ProductSearchService {
 
     private final ProductRepository productRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public ProductSearchService(ProductRepository productRepository) {
+    public ProductSearchService(ProductRepository productRepository,
+        ApplicationEventPublisher eventPublisher) {
         this.productRepository = productRepository;
+        this.eventPublisher = eventPublisher;
+    }
+
+    @Transactional(readOnly = true)
+    public ProductResponse findProductById(Long productId) {
+        Product product = productRepository.findByIdFetchJoin(productId)
+            .orElseThrow(() -> new ApiException(ErrorCode.PRODUCT_NOT_FOUND));
+        eventPublisher.publishEvent(new ProductViewEvent(productId));
+        return ProductResponse.of(product);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductBulkResponse> findProductsByIds(Set<Long> productIds) {
+        List<Product> products = productRepository.findAllById(productIds);
+        if (products.isEmpty()) {
+            throw new ApiException(ErrorCode.PRODUCT_NOT_FOUND);
+        }
+        return products.stream()
+            .map(ProductBulkResponse::of)
+            .toList();
     }
 
     @Transactional(readOnly = true)
@@ -131,16 +155,5 @@ public class ProductSearchService {
             highestPriceByCategory.getProductName(),
             highestPriceByCategory.getBrandName(),
             highestPriceByCategory.getProductPrice());
-    }
-
-    @Transactional(readOnly = true)
-    public List<ProductBulkResponse> findProductsByIds(Set<Long> productIds) {
-        List<Product> products = productRepository.findAllById(productIds);
-        if (products.isEmpty()) {
-            throw new ApiException(ErrorCode.PRODUCT_NOT_FOUND);
-        }
-        return products.stream()
-            .map(ProductBulkResponse::of)
-            .toList();
     }
 }

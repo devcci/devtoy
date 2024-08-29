@@ -7,18 +7,22 @@ import com.devcci.devtoy.product.application.dto.LowestPriceBrandProductsRespons
 import com.devcci.devtoy.product.application.dto.LowestPriceBrandProductsResponse.LowestPriceBrandProduct.BrandProduct;
 import com.devcci.devtoy.product.application.dto.LowestPriceCategoryResponse;
 import com.devcci.devtoy.product.application.dto.ProductResponse;
+import com.devcci.devtoy.product.common.util.NumberFormatUtil;
 import com.devcci.devtoy.product.config.UnitTest;
 import com.devcci.devtoy.product.domain.brand.Brand;
 import com.devcci.devtoy.product.domain.category.Category;
 import com.devcci.devtoy.product.domain.product.Product;
 import com.devcci.devtoy.product.domain.product.ProductRepository;
+import com.devcci.devtoy.product.domain.product.event.ProductViewEvent;
 import com.devcci.devtoy.product.infra.persistence.projection.LowestProductByBrandProjection;
 import com.devcci.devtoy.product.infra.persistence.projection.LowestProductByCategoryProjection;
 import com.devcci.devtoy.product.infra.persistence.projection.PriceByCategoryProjection;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
@@ -40,55 +44,100 @@ class ProductSearchServiceUnitTest {
     @Mock
     private ProductRepository productRepository;
 
+    @Mock
+    private ApplicationEventPublisher eventPublisher;
+
     @InjectMocks
     private ProductSearchService productSearchService;
 
-    @DisplayName("성공 - 상품 목록 조회")
-    @Test
-    void findAllProduct() {
-        // given
-        Brand brand1 = Brand.createBrand("brand1");
-        Brand brand2 = Brand.createBrand("brand2");
-        Category category1 = Category.createCategory("category1");
-        Category category2 = Category.createCategory("category2");
-        Product product1 = Product.createProduct("상품1", new BigDecimal(1000), brand1, category1, "상품", 1L);
-        Product product2 = Product.createProduct("상품2", new BigDecimal(1000), brand2, category2, "상품2", 1L);
-        List<Product> products = List.of(product1, product2);
-        given(productRepository.findAllFetchJoin(any(Pageable.class))).willReturn(products);
+    @DisplayName("상품 조회")
+    @Nested
+    class ProductSearch {
 
-        // when
-        List<ProductResponse> productResponses = productSearchService.findAllProduct(
-            Pageable.unpaged());
+        @DisplayName("성공 - 상품 단건 조회")
+        @Test
+        void findProductById() {
+            // given
+            Long productId = 1L;
+            Product product = Product.createProduct("상품", new BigDecimal(1000), Brand.createBrand("브랜드"),
+                Category.createCategory("카테고리"), "상품", 1L);
+            given(productRepository.findByIdFetchJoin(productId)).willReturn(Optional.of(product));
 
-        // then
-        verify(productRepository, times(1)).findAllFetchJoin(any(Pageable.class));
-        assertThat(productResponses).hasSize(2);
-        assertThat(productResponses.get(0).getBrandName()).isEqualTo(
-            products.get(0).getBrand().getName());
-        assertThat(productResponses.get(0).getCategoryName()).isEqualTo(
-            products.get(0).getCategory().getName());
-        assertThat(productResponses.get(1).getBrandName()).isEqualTo(
-            products.get(1).getBrand().getName());
-        assertThat(productResponses.get(1).getCategoryName()).isEqualTo(
-            products.get(1).getCategory().getName());
-    }
+            // when
+            ProductResponse productResponse = productSearchService.findProductById(productId);
 
-    @DisplayName("실패 - 상품 목록 조회")
-    @Test
-    void findAllProductNotFoundList() {
-        // given
-        given(productRepository.findAllFetchJoin(any(Pageable.class))).willReturn(
-            Collections.emptyList());
+            // then
+            assertThat(productResponse).isNotNull();
+            assertThat(productResponse.getProductName()).isEqualTo(product.getName());
+            assertThat((productResponse.getPrice())).isEqualTo(NumberFormatUtil.withComma(product.getPrice()));
+            assertThat(productResponse.getBrandName()).isEqualTo(product.getBrand().getName());
+            assertThat(productResponse.getCategoryName()).isEqualTo(product.getCategory().getName());
+            verify(eventPublisher).publishEvent(any(ProductViewEvent.class));
+        }
 
-        // when
-        Throwable throwable = catchThrowable(() -> productSearchService.findAllProduct(
-            Pageable.unpaged()));
+        @DisplayName("실패 - 상품 단건 조회")
+        @Test
+        void findProductByIdThrowsException() {
+            // given
+            Long productId = 1L;
+            given(productRepository.findByIdFetchJoin(productId)).willReturn(Optional.empty());
 
-        // then
-        verify(productRepository, times(1)).findAllFetchJoin(any(Pageable.class));
-        assertThat(throwable)
-            .isInstanceOf(ApiException.class)
-            .hasMessageContaining(ErrorCode.PRODUCT_LIST_NOT_LOADED.getMessage());
+            // when
+            Throwable throwable = catchThrowable(() -> productSearchService.findProductById(productId));
+
+            // then
+            assertThat(throwable)
+                .isInstanceOf(ApiException.class)
+                .hasMessageContaining(ErrorCode.PRODUCT_NOT_FOUND.getMessage());
+        }
+
+        @DisplayName("성공 - 상품 목록 조회")
+        @Test
+        void findAllProduct() {
+            // given
+            Brand brand1 = Brand.createBrand("brand1");
+            Brand brand2 = Brand.createBrand("brand2");
+            Category category1 = Category.createCategory("category1");
+            Category category2 = Category.createCategory("category2");
+            Product product1 = Product.createProduct("상품1", new BigDecimal(1000), brand1, category1, "상품", 1L);
+            Product product2 = Product.createProduct("상품2", new BigDecimal(1000), brand2, category2, "상품2", 1L);
+            List<Product> products = List.of(product1, product2);
+            given(productRepository.findAllFetchJoin(any(Pageable.class))).willReturn(products);
+
+            // when
+            List<ProductResponse> productResponses = productSearchService.findAllProduct(
+                Pageable.unpaged());
+
+            // then
+            verify(productRepository, times(1)).findAllFetchJoin(any(Pageable.class));
+            assertThat(productResponses).hasSize(2);
+            assertThat(productResponses.get(0).getBrandName()).isEqualTo(
+                products.get(0).getBrand().getName());
+            assertThat(productResponses.get(0).getCategoryName()).isEqualTo(
+                products.get(0).getCategory().getName());
+            assertThat(productResponses.get(1).getBrandName()).isEqualTo(
+                products.get(1).getBrand().getName());
+            assertThat(productResponses.get(1).getCategoryName()).isEqualTo(
+                products.get(1).getCategory().getName());
+        }
+
+        @DisplayName("실패 - 상품 목록 조회")
+        @Test
+        void findAllProductNotFoundList() {
+            // given
+            given(productRepository.findAllFetchJoin(any(Pageable.class))).willReturn(
+                Collections.emptyList());
+
+            // when
+            Throwable throwable = catchThrowable(() -> productSearchService.findAllProduct(
+                Pageable.unpaged()));
+
+            // then
+            verify(productRepository, times(1)).findAllFetchJoin(any(Pageable.class));
+            assertThat(throwable)
+                .isInstanceOf(ApiException.class)
+                .hasMessageContaining(ErrorCode.PRODUCT_LIST_NOT_LOADED.getMessage());
+        }
     }
 
     @DisplayName("성공 - 카테고리별 최저가 상품")
@@ -266,7 +315,8 @@ class ProductSearchServiceUnitTest {
     void getCategoryMinMaxPricesThrowsExceptionForHighestPrice() {
         // given
         String categoryName = "Category1";
-        PriceByCategoryProjection lowestPriceProjection = new PriceByCategoryProjection("상품", "brand", new BigDecimal(2000));
+        PriceByCategoryProjection lowestPriceProjection = new PriceByCategoryProjection("상품", "brand",
+            new BigDecimal(2000));
 
         given(productRepository.findLowestPriceByCategory(categoryName)).willReturn(
             Optional.of(lowestPriceProjection));

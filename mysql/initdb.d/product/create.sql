@@ -31,6 +31,7 @@ create table product
     description    varchar(255) comment '상품의 간략한 설명',
     name           varchar(255),
     stock_quantity bigint         not null,
+    view_count     bigint         not null,
     primary key (id)
 ) engine = InnoDB
   DEFAULT CHARACTER SET utf8

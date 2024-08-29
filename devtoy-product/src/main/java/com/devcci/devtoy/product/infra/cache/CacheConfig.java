@@ -49,9 +49,11 @@ public class CacheConfig {
         for (CacheProps cacheProps : CacheProps.values()) {
             cacheConfigurations.put(cacheProps.getName(),
                 defaultRedisCacheConfiguration()
-                    .entryTtl(Duration.ofMinutes(cacheProps.getExpiredTime()))
-                    .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-                    .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new Jackson2JsonRedisSerializer<>(cacheProps.getType())))
+                    .entryTtl(cacheProps.getExpiredTime())
+                    .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(
+                        new StringRedisSerializer()))
+                    .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(
+                        new Jackson2JsonRedisSerializer<>(cacheProps.getType())))
             );
         }
         return cacheConfigurations;

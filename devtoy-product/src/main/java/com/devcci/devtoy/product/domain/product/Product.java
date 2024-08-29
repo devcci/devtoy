@@ -74,17 +74,25 @@ public class Product extends BaseTimeEntity {
     @Column(name = "stock_quantity", nullable = false)
     private Long stockQuantity;
 
+    @NotNull
+    @ColumnDefault("0")
+    @Column(name = "view_count")
+    private Long viewCount;
+
     @Builder
-    private Product(String name, BigDecimal price, Brand brand, Category category, String description, Long stockQuantity) {
+    private Product(String name, BigDecimal price, Brand brand, Category category, String description,
+        Long stockQuantity, Long viewCount) {
         this.name = name;
         this.price = price;
         this.brand = brand;
         this.category = category;
         this.description = description;
         this.stockQuantity = stockQuantity;
+        this.viewCount = viewCount;
     }
 
-    public static Product createProduct(String name, BigDecimal price, Brand brand, Category category, String description, Long stockQuantity) {
+    public static Product createProduct(String name, BigDecimal price, Brand brand, Category category,
+        String description, Long stockQuantity) {
         return Product.builder()
             .name(name)
             .description(description)
@@ -92,6 +100,7 @@ public class Product extends BaseTimeEntity {
             .brand(brand)
             .category(category)
             .stockQuantity(stockQuantity)
+            .viewCount(0L)
             .build();
     }
 
@@ -117,17 +126,20 @@ public class Product extends BaseTimeEntity {
         }
     }
 
-    public boolean validatePrice(BigDecimal price) {
+    public void validatePrice(BigDecimal price) {
         if (!this.price.equals(price)) {
             throw new ApiException(ErrorCode.PRODUCT_PRICE_INVALID);
         }
-        return true;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Product product)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Product product)) {
+            return false;
+        }
         return Objects.equals(name, product.name) &&
             BigDecimalUtil.equals(price, product.price) &&
             Objects.equals(brand, product.brand) &&
@@ -140,4 +152,7 @@ public class Product extends BaseTimeEntity {
         return Objects.hash(name, price, brand, category, description);
     }
 
+    public void increaseViewCount(Long count) {
+        this.viewCount += count;
+    }
 }

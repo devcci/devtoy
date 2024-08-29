@@ -5,6 +5,8 @@ import com.devcci.devtoy.product.application.dto.LowestPriceBrandProductsRespons
 import com.devcci.devtoy.product.application.dto.LowestPriceCategoryResponse;
 import lombok.Getter;
 
+import java.time.Duration;
+
 @Getter
 public enum CacheProps {
     LOWEST_PRICE_CATEGORY("lowestPriceCategory", 10, LowestPriceCategoryResponse.class),
@@ -12,12 +14,12 @@ public enum CacheProps {
     CATEGORY_MIN_MAX_PRICE("categoryMinMaxPrice", 10, CategoryPriceRangeResponse.class);
 
     private final String name;
-    private final int expiredTime;
+    private final Duration expiredTime;
     private final Class<?> type;
 
     CacheProps(String name, int expiredTime, Class<?> type) {
         this.name = name;
-        this.expiredTime = expiredTime;
+        this.expiredTime = Duration.ofMinutes(expiredTime);
         this.type = type;
     }
 }
