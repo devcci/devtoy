@@ -5,11 +5,12 @@ import com.devcci.devtoy.product.config.IntegrationTest;
 import com.devcci.devtoy.product.infra.kafka.OrderResultMessageProducer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.kafka.support.SendResult;
-import org.testcontainers.containers.KafkaContainer;
 
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,7 +22,7 @@ class DevtoyProductApplicationTests {
     @Autowired
     private OrderResultMessageProducer orderResultMessageProducer;
     @Autowired
-    private KafkaContainer kafkaContainer;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Test
     void testKafkaProducer() throws InterruptedException, ExecutionException {
@@ -35,5 +36,14 @@ class DevtoyProductApplicationTests {
         String query = "SELECT 1";
         Integer result = jdbcTemplate.queryForObject(query, Integer.class);
         assertThat(result).isEqualTo(1);
+    }
+
+    @Test
+    void testRedisTemplateService() {
+        String key = "test";
+        String value = "test";
+        redisTemplate.opsForValue().set(key, value, 100L, TimeUnit.SECONDS);
+        String retrievedValue = (String) redisTemplate.opsForValue().get(key);
+        assertThat(retrievedValue).isEqualTo(value);
     }
 }

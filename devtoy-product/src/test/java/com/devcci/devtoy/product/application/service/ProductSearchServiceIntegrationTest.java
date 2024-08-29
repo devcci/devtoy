@@ -1,5 +1,6 @@
 package com.devcci.devtoy.product.application.service;
 
+import com.devcci.devtoy.common.infra.redis.RedisTemplateService;
 import com.devcci.devtoy.product.application.dto.CategoryPriceRangeResponse;
 import com.devcci.devtoy.product.application.dto.LowestPriceBrandProductsResponse;
 import com.devcci.devtoy.product.application.dto.LowestPriceBrandProductsResponse.LowestPriceBrandProduct.BrandProduct;
@@ -7,15 +8,22 @@ import com.devcci.devtoy.product.application.dto.LowestPriceCategoryResponse;
 import com.devcci.devtoy.product.application.dto.LowestPriceCategoryResponse.CategoryProduct;
 import com.devcci.devtoy.product.application.dto.ProductResponse;
 import com.devcci.devtoy.product.config.IntegrationTest;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,21 +34,94 @@ class ProductSearchServiceIntegrationTest {
     @Autowired
     private ProductSearchService productSearchService;
 
-    @DisplayName("성공 - 상품 목록 조회")
-    @Test
-    void findAllProductSuccess() {
-        // given
-        Pageable pageable = PageRequest.of(0, 10, Sort.by(Direction.ASC, "id"));
+    @Autowired
+    private RedisTemplateService redisTemplateService;
 
-        // when
-        List<ProductResponse> productResponses = productSearchService.findAllProduct(pageable);
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
-        // then
-        assertThat(productResponses).hasSize(10);
-        ProductResponse product = productResponses.get(0);
-        assertThat(product.getCategoryName()).isEqualTo("상의");
-        assertThat(product.getBrandName()).isEqualTo("A");
-        assertThat(product.getPrice()).isEqualTo("11,200");
+    @AfterEach
+    public void clearRedis() {
+        Objects.requireNonNull(redisTemplate.getConnectionFactory()).getConnection().serverCommands().flushDb();
+    }
+
+    @DisplayName("상품 조회")
+    @Nested
+    class ProductSearch {
+
+        @DisplayName("성공 - 상품 단건 조회")
+        @Test
+        void findProductById() {
+            // given
+            Long productId = 1L;
+
+            // when
+            ProductResponse productResponse = productSearchService.findProductById(productId);
+
+            // then
+            assertThat(productResponse).isNotNull();
+            assertThat(productResponse.getCategoryName()).isEqualTo("상의");
+            assertThat(productResponse.getBrandName()).isEqualTo("A");
+            assertThat(productResponse.getPrice()).isEqualTo("11,200");
+            Double viewCount = redisTemplateService.getProductViewCount(productId);
+            assertThat(viewCount).isEqualTo(1);
+        }
+
+        @DisplayName("성공 - 상품 단건 조회 - 레디스 스레드세이프")
+        @Test
+        void findProductByIdWithMultiThread() throws InterruptedException {
+            // given
+            int threadCount = 50;
+            ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
+            CountDownLatch readyLatch = new CountDownLatch(threadCount);
+            CountDownLatch startLatch = new CountDownLatch(1);
+            CountDownLatch doneLatch = new CountDownLatch(threadCount);
+
+            Long productId = 1L;
+
+            // when
+            Runnable task = () -> {
+                try {
+                    readyLatch.countDown();
+                    startLatch.await();
+                    productSearchService.findProductById(productId);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                } finally {
+                    doneLatch.countDown();
+                }
+            };
+
+            for (int i = 0; i < threadCount; i++) {
+                executorService.execute(task);
+            }
+
+            readyLatch.await();
+            startLatch.countDown();
+            doneLatch.await();
+            executorService.shutdown();
+
+            // then
+            Double viewCount = redisTemplateService.getProductViewCount(productId);
+            assertThat(viewCount).isGreaterThanOrEqualTo(50);
+        }
+
+        @DisplayName("성공 - 상품 목록 조회")
+        @Test
+        void findAllProductSuccess() {
+            // given
+            Pageable pageable = PageRequest.of(0, 10, Sort.by(Direction.ASC, "id"));
+
+            // when
+            List<ProductResponse> productResponses = productSearchService.findAllProduct(pageable);
+
+            // then
+            assertThat(productResponses).hasSize(10);
+            ProductResponse product = productResponses.get(0);
+            assertThat(product.getCategoryName()).isEqualTo("상의");
+            assertThat(product.getBrandName()).isEqualTo("A");
+            assertThat(product.getPrice()).isEqualTo("11,200");
+        }
     }
 
     @DisplayName("성공 - 카테고리별 최저가 상품")

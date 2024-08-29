@@ -11,7 +11,8 @@ public class NotFoundExceptionStrategy implements ExceptionStrategy {
 
     @Override
     public boolean supports(Throwable e) {
-        return e instanceof org.springframework.cloud.gateway.support.NotFoundException;
+        return e instanceof org.springframework.cloud.gateway.support.NotFoundException
+            || e instanceof java.net.ConnectException;
     }
 
     @Override

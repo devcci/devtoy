@@ -13,9 +13,9 @@ public class AsyncConfig {
     public ThreadPoolTaskExecutor getAsyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         int processors = Runtime.getRuntime().availableProcessors();
-        executor.setCorePoolSize(processors);
-        executor.setMaxPoolSize(processors * 2);
-        executor.setQueueCapacity(25);
+        executor.setCorePoolSize(processors * 2);
+        executor.setMaxPoolSize(processors * 4);
+        executor.setQueueCapacity(100);
         executor.setThreadNamePrefix("async-thread-");
         executor.setWaitForTasksToCompleteOnShutdown(true);
         executor.setAwaitTerminationSeconds(2);

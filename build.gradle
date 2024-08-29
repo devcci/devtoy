@@ -16,14 +16,14 @@ subprojects {
 
     jacocoTestReport {
         reports {
-            xml.required.set(true) // XML 리포트 활성화 및 경로 지정
-            html.required.set(true) // HTML 리포트 활성화 및 경로 지정
-            csv.required.set(false) // CSV 리포트 비활성화
+            xml.required.set(true)
+            html.required.set(true)
+            csv.required.set(false)
         }
     }
 
     tasks.withType(Test).configureEach { testTask ->
-        testTask.useJUnitPlatform() // JUnit5 사용 설정
+        testTask.useJUnitPlatform()
         testTask.finalizedBy(tasks.named("jacocoTestReport"))
     }
 }

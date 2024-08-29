@@ -7,7 +7,6 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
-import org.testcontainers.utility.DockerImageName;
 
 @TestConfiguration
 public class TestContainerConfig {
@@ -22,12 +21,16 @@ public class TestContainerConfig {
             .waitingFor(Wait.forListeningPort());
     }
 
-    static {
-        GenericContainer<?> redis =
-            new GenericContainer<>(DockerImageName.parse("redis:7.4")).withExposedPorts(6379);
-        redis.start();
-        System.setProperty("spring.data.redis.host", redis.getHost());
-        System.setProperty("spring.data.redis.port", redis.getMappedPort(6379).toString());
+    @Bean
+    @ServiceConnection("redis")
+    public GenericContainer<?> redisContainer() {
+        GenericContainer redisContainer = new GenericContainer("redis:7.4");
+        redisContainer.withExposedPorts(6379);
+        redisContainer.waitingFor(Wait.forListeningPort());
+        redisContainer.start();
+        System.setProperty("spring.data.redis.host", redisContainer.getHost());
+        System.setProperty("spring.data.redis.port", String.valueOf(redisContainer.getMappedPort(6379)));
+        return redisContainer;
     }
 
     // https://java.testcontainers.org/modules/kafka/
