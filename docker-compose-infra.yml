@@ -68,7 +68,6 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
       KAFKA_DEFAULT_REPLICATION_FACTOR: 3
       KAFKA_MIN_INSYNC_REPLICAS: 2
-      KAFKA_CREATE_TOPICS: "devtoy-order-create:3:3,devtoy-order-fail:3:3"
 
   devtoy-kafka-02:
     image: confluentinc/cp-kafka:7.7.0
@@ -91,7 +90,6 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
       KAFKA_DEFAULT_REPLICATION_FACTOR: 3
       KAFKA_MIN_INSYNC_REPLICAS: 2
-      KAFKA_CREATE_TOPICS: "devtoy-order-create:3:3,devtoy-order-fail:3:3"
 
   devtoy-kafka-03:
     image: confluentinc/cp-kafka:7.7.0
@@ -115,7 +113,6 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
       KAFKA_DEFAULT_REPLICATION_FACTOR: 3
       KAFKA_MIN_INSYNC_REPLICAS: 2
-      KAFKA_CREATE_TOPICS: "devtoy-order-create:3:3,devtoy-order-fail:3:3"
 
   devtoy-kafka-ui:
     image: provectuslabs/kafka-ui:v0.7.2

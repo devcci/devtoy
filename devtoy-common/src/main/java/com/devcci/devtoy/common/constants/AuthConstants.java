@@ -1,6 +1,10 @@
 package com.devcci.devtoy.common.constants;
 
 public class AuthConstants {
+    private AuthConstants() {
+        throw new IllegalStateException("Constants class");
+    }
+
     public static final String ROLES = "roles";
     public static final String BEARER = "Bearer ";
     public static final String TYPE = "type";
