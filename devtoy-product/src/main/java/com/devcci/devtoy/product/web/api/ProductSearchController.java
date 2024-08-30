@@ -4,7 +4,8 @@ import com.devcci.devtoy.product.application.dto.CategoryPriceRangeResponse;
 import com.devcci.devtoy.product.application.dto.LowestPriceBrandProductsResponse;
 import com.devcci.devtoy.product.application.dto.LowestPriceCategoryResponse;
 import com.devcci.devtoy.product.application.dto.ProductBulkResponse;
-import com.devcci.devtoy.product.application.dto.ProductResponse;
+import com.devcci.devtoy.product.application.dto.ProductInfo;
+import com.devcci.devtoy.product.application.dto.ProductInfos;
 import com.devcci.devtoy.product.application.service.ProductSearchService;
 import com.devcci.devtoy.product.common.util.PageableUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,7 +39,7 @@ public class ProductSearchController {
 
     @Operation(summary = "상품 조회")
     @GetMapping("/{productId}")
-    public ResponseEntity<ProductResponse> getProductById(
+    public ResponseEntity<ProductInfo> getProductById(
         @PathVariable("productId") Long productId) {
         return ResponseEntity.ok(productSearchService.findProductById(productId));
     }
@@ -57,7 +58,7 @@ public class ProductSearchController {
         @Parameter(name = "sort", description = "결과 문서 정렬 방식 ASC | DESC")}
     )
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProducts(
+    public ResponseEntity<ProductInfos> getAllProducts(
         @Min(value = 1, message = "페이지 번호는 1 이상이어야 합니다.")
         @RequestParam(name = "page", required = false, defaultValue = "1")
         Integer page,
@@ -65,7 +66,7 @@ public class ProductSearchController {
         @RequestParam(name = "size", required = false, defaultValue = "10")
         Integer size,
         @RequestParam(value = "sort", required = false) String sort) {
-        List<ProductResponse> allProduct = productSearchService.findAllProduct(
+        ProductInfos allProduct = productSearchService.findAllProduct(
             PageableUtil.createPageable(page, size, sort));
         return ResponseEntity.ok().body(allProduct);
     }

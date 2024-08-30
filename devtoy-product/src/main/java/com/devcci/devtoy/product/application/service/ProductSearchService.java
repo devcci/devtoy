@@ -10,13 +10,16 @@ import com.devcci.devtoy.product.application.dto.LowestPriceBrandProductsRespons
 import com.devcci.devtoy.product.application.dto.LowestPriceBrandProductsResponse.LowestPriceBrandProduct.BrandProduct;
 import com.devcci.devtoy.product.application.dto.LowestPriceCategoryResponse;
 import com.devcci.devtoy.product.application.dto.ProductBulkResponse;
-import com.devcci.devtoy.product.application.dto.ProductResponse;
+import com.devcci.devtoy.product.application.dto.ProductInfo;
+import com.devcci.devtoy.product.application.dto.ProductInfos;
 import com.devcci.devtoy.product.domain.product.Product;
 import com.devcci.devtoy.product.domain.product.ProductRepository;
 import com.devcci.devtoy.product.domain.product.event.ProductViewEvent;
+import com.devcci.devtoy.product.domain.product.event.ProductViewWithCachingEvent;
 import com.devcci.devtoy.product.infra.persistence.projection.LowestProductByBrandProjection;
 import com.devcci.devtoy.product.infra.persistence.projection.LowestProductByCategoryProjection;
 import com.devcci.devtoy.product.infra.persistence.projection.PriceByCategoryProjection;
+import com.devcci.devtoy.product.infra.redis.ProductInfoRedisService;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,20 +38,30 @@ import java.util.stream.Collectors;
 public class ProductSearchService {
 
     private final ProductRepository productRepository;
+    private final ProductInfoRedisService productInfoRedisService;
     private final ApplicationEventPublisher eventPublisher;
 
-    public ProductSearchService(ProductRepository productRepository,
+    public ProductSearchService(ProductRepository productRepository
+        , ProductInfoRedisService productInfoRedisService,
         ApplicationEventPublisher eventPublisher) {
         this.productRepository = productRepository;
+        this.productInfoRedisService = productInfoRedisService;
         this.eventPublisher = eventPublisher;
     }
 
     @Transactional(readOnly = true)
-    public ProductResponse findProductById(Long productId) {
+    public ProductInfo findProductById(Long productId) {
+        ProductInfo cachedProductInfo = productInfoRedisService.get(
+            productId.toString());
+        if (cachedProductInfo != null) {
+            eventPublisher.publishEvent(new ProductViewEvent(productId));
+            return cachedProductInfo;
+        }
         Product product = productRepository.findByIdFetchJoin(productId)
             .orElseThrow(() -> new ApiException(ErrorCode.PRODUCT_NOT_FOUND));
-        eventPublisher.publishEvent(new ProductViewEvent(productId));
-        return ProductResponse.of(product);
+        ProductInfo productInfo = ProductInfo.of(product);
+        eventPublisher.publishEvent(new ProductViewWithCachingEvent(productInfo));
+        return productInfo;
     }
 
     @Transactional(readOnly = true)
@@ -61,15 +75,16 @@ public class ProductSearchService {
             .toList();
     }
 
+    @Cacheable(value = "productInfoList")
     @Transactional(readOnly = true)
-    public List<ProductResponse> findAllProduct(Pageable pageable) {
+    public ProductInfos findAllProduct(Pageable pageable) {
         List<Product> products = productRepository.findAllFetchJoin(pageable);
         if (products.isEmpty()) {
             throw new ApiException(ErrorCode.PRODUCT_LIST_NOT_LOADED);
         }
-        return products.stream()
-            .map(ProductResponse::of)
-            .toList();
+        return ProductInfos.createProductInfos(products.stream()
+            .map(ProductInfo::of)
+            .collect(Collectors.toList()));
     }
 
     @Cacheable(value = "lowestPriceCategory")
@@ -119,6 +134,7 @@ public class ProductSearchService {
                 product.getProductName(),
                 product.getCategoryName(),
                 product.getProductPrice()))
+            .sorted(Comparator.comparing(el -> new BigDecimal(el.getPrice().replace(",", ""))))
             .toList();
         return LowestPriceBrandProductsResponse.createLowestPriceBrandProductsResponse(
             LowestPriceBrandProduct.createLowestPriceBrandProducts(minKey, list,

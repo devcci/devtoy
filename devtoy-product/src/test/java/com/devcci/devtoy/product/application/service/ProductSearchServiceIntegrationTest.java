@@ -1,13 +1,14 @@
 package com.devcci.devtoy.product.application.service;
 
-import com.devcci.devtoy.common.infra.redis.RedisTemplateService;
 import com.devcci.devtoy.product.application.dto.CategoryPriceRangeResponse;
 import com.devcci.devtoy.product.application.dto.LowestPriceBrandProductsResponse;
 import com.devcci.devtoy.product.application.dto.LowestPriceBrandProductsResponse.LowestPriceBrandProduct.BrandProduct;
 import com.devcci.devtoy.product.application.dto.LowestPriceCategoryResponse;
 import com.devcci.devtoy.product.application.dto.LowestPriceCategoryResponse.CategoryProduct;
-import com.devcci.devtoy.product.application.dto.ProductResponse;
+import com.devcci.devtoy.product.application.dto.ProductInfo;
+import com.devcci.devtoy.product.application.dto.ProductInfos;
 import com.devcci.devtoy.product.config.IntegrationTest;
+import com.devcci.devtoy.product.infra.redis.ProductViewRedisService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -35,10 +36,10 @@ class ProductSearchServiceIntegrationTest {
     private ProductSearchService productSearchService;
 
     @Autowired
-    private RedisTemplateService redisTemplateService;
+    private ProductViewRedisService productViewRedisService;
 
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
 
     @AfterEach
     public void clearRedis() {
@@ -56,14 +57,14 @@ class ProductSearchServiceIntegrationTest {
             Long productId = 1L;
 
             // when
-            ProductResponse productResponse = productSearchService.findProductById(productId);
+            ProductInfo productInfo = productSearchService.findProductById(productId);
 
             // then
-            assertThat(productResponse).isNotNull();
-            assertThat(productResponse.getCategoryName()).isEqualTo("상의");
-            assertThat(productResponse.getBrandName()).isEqualTo("A");
-            assertThat(productResponse.getPrice()).isEqualTo("11,200");
-            Double viewCount = redisTemplateService.getProductViewCount(productId);
+            assertThat(productInfo).isNotNull();
+            assertThat(productInfo.getCategoryName()).isEqualTo("상의");
+            assertThat(productInfo.getBrandName()).isEqualTo("A");
+            assertThat(productInfo.getPrice()).isEqualTo("11,200");
+            Double viewCount = productViewRedisService.getProductViewCount(productId);
             assertThat(viewCount).isEqualTo(1);
         }
 
@@ -102,7 +103,7 @@ class ProductSearchServiceIntegrationTest {
             executorService.shutdown();
 
             // then
-            Double viewCount = redisTemplateService.getProductViewCount(productId);
+            Double viewCount = productViewRedisService.getProductViewCount(productId);
             assertThat(viewCount).isGreaterThanOrEqualTo(50);
         }
 
@@ -113,11 +114,11 @@ class ProductSearchServiceIntegrationTest {
             Pageable pageable = PageRequest.of(0, 10, Sort.by(Direction.ASC, "id"));
 
             // when
-            List<ProductResponse> productResponses = productSearchService.findAllProduct(pageable);
+            ProductInfos productInfos = productSearchService.findAllProduct(pageable);
 
             // then
-            assertThat(productResponses).hasSize(10);
-            ProductResponse product = productResponses.get(0);
+            assertThat(productInfos.getProductInfos()).hasSize(10);
+            ProductInfo product = productInfos.getProductInfos().get(0);
             assertThat(product.getCategoryName()).isEqualTo("상의");
             assertThat(product.getBrandName()).isEqualTo("A");
             assertThat(product.getPrice()).isEqualTo("11,200");
@@ -159,8 +160,8 @@ class ProductSearchServiceIntegrationTest {
         List<BrandProduct> brandProducts = response.getLowestPriceBrandProduct()
             .getBrandProducts();
         assertThat(brandProducts).hasSize(8);
-        assertThat(brandProducts.get(0).getCategoryName()).isEqualTo("상의");
-        assertThat(brandProducts.get(0).getPrice()).isEqualTo("10,100");
+        assertThat(brandProducts.get(0).getCategoryName()).isEqualTo("모자");
+        assertThat(brandProducts.get(0).getPrice()).isEqualTo("1,500");
     }
 
     @DisplayName("성공 - 카테고리의 최고가, 최저가 상품")

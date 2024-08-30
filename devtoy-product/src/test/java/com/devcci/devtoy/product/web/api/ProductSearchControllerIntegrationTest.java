@@ -4,7 +4,7 @@ import com.devcci.devtoy.product.application.dto.CategoryPriceRangeResponse;
 import com.devcci.devtoy.product.application.dto.LowestPriceBrandProductsResponse;
 import com.devcci.devtoy.product.application.dto.LowestPriceBrandProductsResponse.LowestPriceBrandProduct.BrandProduct;
 import com.devcci.devtoy.product.application.dto.LowestPriceCategoryResponse;
-import com.devcci.devtoy.product.application.dto.ProductResponse;
+import com.devcci.devtoy.product.application.dto.ProductInfos;
 import com.devcci.devtoy.product.config.IntegrationTest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -49,10 +49,10 @@ class ProductSearchControllerIntegrationTest {
         // then
         String content = result.getResponse().getContentAsString();
         assertThat(content).isNotBlank();
-        List<ProductResponse> productList = objectMapper.readValue(content,
+        ProductInfos productList = objectMapper.readValue(content,
             new TypeReference<>() {
             });
-        assertThat(productList).isNotEmpty().hasSize(10);
+        assertThat(productList.getProductInfos()).isNotEmpty().hasSize(10);
     }
 
     @DisplayName("카테고리별 최저가 상품 조회")
@@ -101,10 +101,10 @@ class ProductSearchControllerIntegrationTest {
             response.getLowestPriceBrandProduct()
                 .getBrandProducts();
         assertThat(products).isNotEmpty();
-        assertThat(products.get(0).getCategoryName()).isEqualTo("상의");
-        assertThat(products.get(0).getPrice()).isEqualTo("10,100");
-        assertThat(products.get(1).getCategoryName()).isEqualTo("아우터");
-        assertThat(products.get(1).getPrice()).isEqualTo("5,100");
+        assertThat(products.get(0).getCategoryName()).isEqualTo("모자");
+        assertThat(products.get(0).getPrice()).isEqualTo("1,500");
+        assertThat(products.get(1).getCategoryName()).isEqualTo("액세서리");
+        assertThat(products.get(1).getPrice()).isEqualTo("2,000");
     }
 
     @DisplayName("카테고리의 최저가, 최고가 상품 조회")

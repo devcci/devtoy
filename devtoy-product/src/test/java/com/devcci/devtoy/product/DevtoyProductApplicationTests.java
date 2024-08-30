@@ -22,7 +22,7 @@ class DevtoyProductApplicationTests {
     @Autowired
     private OrderResultMessageProducer orderResultMessageProducer;
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
 
     @Test
     void testKafkaProducer() throws InterruptedException, ExecutionException {
@@ -43,7 +43,7 @@ class DevtoyProductApplicationTests {
         String key = "test";
         String value = "test";
         redisTemplate.opsForValue().set(key, value, 100L, TimeUnit.SECONDS);
-        String retrievedValue = (String) redisTemplate.opsForValue().get(key);
+        String retrievedValue = redisTemplate.opsForValue().get(key);
         assertThat(retrievedValue).isEqualTo(value);
     }
 }

@@ -10,7 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.Optional;
 
@@ -22,8 +21,6 @@ class BrandManageServiceIntegrationTest {
 
     @Autowired
     BrandRepository brandRepository;
-    @Autowired
-    ApplicationEventPublisher eventPublisher;
     @Autowired
     BrandManageService brandManageService;
 
