@@ -3,7 +3,6 @@ package com.devcci.devtoy.product.application.service;
 import com.devcci.devtoy.product.application.dto.BrandResponse;
 import com.devcci.devtoy.product.config.IntegrationTest;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,7 +10,6 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
-@Nested
 @IntegrationTest
 class BrandSearchServiceIntegrationTest {
 

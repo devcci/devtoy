@@ -7,26 +7,23 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
-@EnableRedisRepositories
-public class RedisConfig {
+public class CommonRedisConfig {
 
     private final String host;
     private final int port;
     private final String password;
 
-    public RedisConfig(
+    public CommonRedisConfig(
         @Value("${spring.data.redis.host}")
         String host,
         @Value("${spring.data.redis.port}")
         int port,
         @Value("${spring.data.redis.password}")
         String password
-
     ) {
         this.host = host;
         this.port = port;
@@ -42,15 +39,15 @@ public class RedisConfig {
         return new LettuceConnectionFactory(configuration);
     }
 
-    @Bean
-    public RedisTemplate<String, Object> redisTemplate(
-        RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
+
+    public <T> RedisTemplate<String, T> createRedisTemplate(RedisConnectionFactory redisConnectionFactory,
+        Class<T> clazz) {
+        RedisTemplate<String, T> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
         template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new Jackson2JsonRedisSerializer<>(Object.class));
+        template.setValueSerializer(new Jackson2JsonRedisSerializer<>(clazz));
         template.setHashKeySerializer(new StringRedisSerializer());
-        template.setHashValueSerializer(new Jackson2JsonRedisSerializer<>(Object.class));
+        template.setHashValueSerializer(new Jackson2JsonRedisSerializer<>(clazz));
         return template;
     }
 }

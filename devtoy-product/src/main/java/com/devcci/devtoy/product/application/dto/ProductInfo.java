@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class ProductResponse {
+public class ProductInfo {
 
     private Long productId;
     private String productName;
@@ -21,14 +21,14 @@ public class ProductResponse {
     private String price;
     private Long stockQuantity;
 
-    private ProductResponse(Long productId,
-                            String productName,
-                            Long brandId,
-                            String brandName,
-                            Long categoryId,
-                            String categoryName,
-                            String price,
-                            Long stockQuantity) {
+    private ProductInfo(Long productId,
+        String productName,
+        Long brandId,
+        String brandName,
+        Long categoryId,
+        String categoryName,
+        String price,
+        Long stockQuantity) {
         this.productId = productId;
         this.productName = productName;
         this.brandId = brandId;
@@ -39,10 +39,10 @@ public class ProductResponse {
         this.stockQuantity = stockQuantity;
     }
 
-    public static ProductResponse of(Product product) {
+    public static ProductInfo of(Product product) {
         Brand brand = product.getBrand();
         Category category = product.getCategory();
-        return new ProductResponse(
+        return new ProductInfo(
             product.getId(),
             product.getName(),
             brand.getId(),

@@ -1,0 +1,25 @@
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = '0.8.12'
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+        csv.required.set(true)
+    }
+}
+tasks.withType(Test).configureEach { testTask ->
+    testTask.useJUnitPlatform()
+    testTask.finalizedBy(tasks.named("jacocoTestReport"))
+}
+
+sonar {
+    properties {
+        property("sonar.java.binaries", layout.buildDirectory.dir("classes").get().asFile.absolutePath)
+        property("sonar.coverage.jacoco.xmlReportPaths", layout.buildDirectory.file("reports/jacoco/test/jacocoTestReport.xml").get().asFile.absolutePath)
+    }
+}

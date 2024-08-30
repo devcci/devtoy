@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 @Getter
 public enum RedisKey {
     REFRESH_TOKEN("refreshToken", 24L, TimeUnit.HOURS),
-    PRODUCT_INFO("product:info", null, TimeUnit.HOURS),
+    PRODUCT_INFO("product:info", 6L, TimeUnit.HOURS),
     PRODUCT_VIEW_COUNT("product:viewCount", null, TimeUnit.HOURS);
 
     private final String key;

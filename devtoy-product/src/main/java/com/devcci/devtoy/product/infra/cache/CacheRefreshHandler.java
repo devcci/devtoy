@@ -19,7 +19,8 @@ public class CacheRefreshHandler {
     @Caching(evict = {
         @CacheEvict(value = "lowestPriceBrand", allEntries = true),
         @CacheEvict(value = "lowestPriceCategory", allEntries = true),
-        @CacheEvict(value = "categoryMinMaxPrice", allEntries = true)
+        @CacheEvict(value = "categoryMinMaxPrice", allEntries = true),
+        @CacheEvict(value = "productInfoList", allEntries = true),
     })
     public void refreshProductCache() {
         cacheManager.getCacheNames().forEach(name -> log.info("Refresh cache: {}", name));

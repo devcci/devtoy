@@ -4,7 +4,6 @@ import com.devcci.devtoy.common.exception.ApiException;
 import com.devcci.devtoy.common.exception.AuthenticationException;
 import com.devcci.devtoy.common.exception.ErrorCode;
 import com.devcci.devtoy.common.infra.redis.RedisKey;
-import com.devcci.devtoy.common.infra.redis.RedisTemplateService;
 import com.devcci.devtoy.member.application.dto.LoginRequest;
 import com.devcci.devtoy.member.application.dto.LoginResponse;
 import com.devcci.devtoy.member.application.dto.SignUpRequest;
@@ -15,6 +14,7 @@ import com.devcci.devtoy.member.domain.member.MemberRole;
 import com.devcci.devtoy.member.infra.jwt.JwtProvider;
 import com.devcci.devtoy.member.infra.jwt.event.JwtAdditionEvent;
 import com.devcci.devtoy.member.infra.jwt.event.JwtDeletionEvent;
+import com.devcci.devtoy.member.infra.redis.JwtRedisTemplateService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,7 +32,7 @@ public class AuthenticationService {
     private final JwtProvider jwtProvider;
     private final List<SignUpValidator> signUpValidators;
     private final ApplicationEventPublisher eventPublisher;
-    private final RedisTemplateService redisTemplateService;
+    private final JwtRedisTemplateService jwtRedisTemplateService;
 
     public AuthenticationService(
         MemberRepository memberRepository,
@@ -40,14 +40,14 @@ public class AuthenticationService {
         JwtProvider jwtProvider,
         List<SignUpValidator> signUpValidators,
         ApplicationEventPublisher eventPublisher,
-        RedisTemplateService redisTemplateService
+        JwtRedisTemplateService jwtRedisTemplateService
     ) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtProvider = jwtProvider;
         this.signUpValidators = signUpValidators;
         this.eventPublisher = eventPublisher;
-        this.redisTemplateService = redisTemplateService;
+        this.jwtRedisTemplateService = jwtRedisTemplateService;
     }
 
     @Transactional
@@ -86,7 +86,7 @@ public class AuthenticationService {
 
     public String refreshAccessToken(String memberId) {
         String key = RedisKey.REFRESH_TOKEN.generate(memberId);
-        if (redisTemplateService.get(key) == null) {
+        if (jwtRedisTemplateService.get(key) == null) {
             throw new AuthenticationException(ErrorCode.JWT_TOKEN_EXPIRED);
         }
         Member member = memberRepository.findByMemberId(memberId)

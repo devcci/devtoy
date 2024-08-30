@@ -6,17 +6,19 @@ import com.devcci.devtoy.product.application.dto.CategoryPriceRangeResponse;
 import com.devcci.devtoy.product.application.dto.LowestPriceBrandProductsResponse;
 import com.devcci.devtoy.product.application.dto.LowestPriceBrandProductsResponse.LowestPriceBrandProduct.BrandProduct;
 import com.devcci.devtoy.product.application.dto.LowestPriceCategoryResponse;
-import com.devcci.devtoy.product.application.dto.ProductResponse;
+import com.devcci.devtoy.product.application.dto.ProductInfo;
+import com.devcci.devtoy.product.application.dto.ProductInfos;
 import com.devcci.devtoy.product.common.util.NumberFormatUtil;
 import com.devcci.devtoy.product.config.UnitTest;
 import com.devcci.devtoy.product.domain.brand.Brand;
 import com.devcci.devtoy.product.domain.category.Category;
 import com.devcci.devtoy.product.domain.product.Product;
 import com.devcci.devtoy.product.domain.product.ProductRepository;
-import com.devcci.devtoy.product.domain.product.event.ProductViewEvent;
+import com.devcci.devtoy.product.domain.product.event.ProductViewWithCachingEvent;
 import com.devcci.devtoy.product.infra.persistence.projection.LowestProductByBrandProjection;
 import com.devcci.devtoy.product.infra.persistence.projection.LowestProductByCategoryProjection;
 import com.devcci.devtoy.product.infra.persistence.projection.PriceByCategoryProjection;
+import com.devcci.devtoy.product.infra.redis.ProductInfoRedisService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -46,6 +48,8 @@ class ProductSearchServiceUnitTest {
 
     @Mock
     private ApplicationEventPublisher eventPublisher;
+    @Mock
+    private ProductInfoRedisService productInfoRedisService;
 
     @InjectMocks
     private ProductSearchService productSearchService;
@@ -64,15 +68,15 @@ class ProductSearchServiceUnitTest {
             given(productRepository.findByIdFetchJoin(productId)).willReturn(Optional.of(product));
 
             // when
-            ProductResponse productResponse = productSearchService.findProductById(productId);
+            ProductInfo productInfo = productSearchService.findProductById(productId);
 
             // then
-            assertThat(productResponse).isNotNull();
-            assertThat(productResponse.getProductName()).isEqualTo(product.getName());
-            assertThat((productResponse.getPrice())).isEqualTo(NumberFormatUtil.withComma(product.getPrice()));
-            assertThat(productResponse.getBrandName()).isEqualTo(product.getBrand().getName());
-            assertThat(productResponse.getCategoryName()).isEqualTo(product.getCategory().getName());
-            verify(eventPublisher).publishEvent(any(ProductViewEvent.class));
+            assertThat(productInfo).isNotNull();
+            assertThat(productInfo.getProductName()).isEqualTo(product.getName());
+            assertThat((productInfo.getPrice())).isEqualTo(NumberFormatUtil.withComma(product.getPrice()));
+            assertThat(productInfo.getBrandName()).isEqualTo(product.getBrand().getName());
+            assertThat(productInfo.getCategoryName()).isEqualTo(product.getCategory().getName());
+            verify(eventPublisher).publishEvent(any(ProductViewWithCachingEvent.class));
         }
 
         @DisplayName("실패 - 상품 단건 조회")
@@ -105,19 +109,19 @@ class ProductSearchServiceUnitTest {
             given(productRepository.findAllFetchJoin(any(Pageable.class))).willReturn(products);
 
             // when
-            List<ProductResponse> productResponses = productSearchService.findAllProduct(
+            ProductInfos productInfos = productSearchService.findAllProduct(
                 Pageable.unpaged());
 
             // then
             verify(productRepository, times(1)).findAllFetchJoin(any(Pageable.class));
-            assertThat(productResponses).hasSize(2);
-            assertThat(productResponses.get(0).getBrandName()).isEqualTo(
+            assertThat(productInfos.getProductInfos()).hasSize(2);
+            assertThat(productInfos.getProductInfos().get(0).getBrandName()).isEqualTo(
                 products.get(0).getBrand().getName());
-            assertThat(productResponses.get(0).getCategoryName()).isEqualTo(
+            assertThat(productInfos.getProductInfos().get(0).getCategoryName()).isEqualTo(
                 products.get(0).getCategory().getName());
-            assertThat(productResponses.get(1).getBrandName()).isEqualTo(
+            assertThat(productInfos.getProductInfos().get(1).getBrandName()).isEqualTo(
                 products.get(1).getBrand().getName());
-            assertThat(productResponses.get(1).getCategoryName()).isEqualTo(
+            assertThat(productInfos.getProductInfos().get(1).getCategoryName()).isEqualTo(
                 products.get(1).getCategory().getName());
         }
 
