@@ -1,6 +1,7 @@
 package com.devcci.devtoy.order.domain.order;
 
 import com.devcci.devtoy.common.domain.BaseTimeEntity;
+import com.devcci.devtoy.common.domain.OrderStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,6 +27,7 @@ import java.util.List;
 @Entity
 @Table(name = "orders")
 public class Order extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

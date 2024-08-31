@@ -104,6 +104,17 @@ public class Product extends BaseTimeEntity {
             .build();
     }
 
+    public static Product changeProduct(String name, BigDecimal price, Brand brand, Category category,
+        String description) {
+        return Product.builder()
+            .name(name)
+            .description(description)
+            .price(price)
+            .brand(brand)
+            .category(category)
+            .build();
+    }
+
     public void update(Product product) {
         this.name = product.getName();
         this.brand = product.getBrand();

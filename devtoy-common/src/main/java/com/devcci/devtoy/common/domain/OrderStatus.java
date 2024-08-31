@@ -1,4 +1,4 @@
-package com.devcci.devtoy.order.domain.order;
+package com.devcci.devtoy.common.domain;
 
 import lombok.Getter;
 

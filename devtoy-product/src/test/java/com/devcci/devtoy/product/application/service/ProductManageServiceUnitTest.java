@@ -166,7 +166,8 @@ class ProductManageServiceUnitTest {
         @Test
         void updateProductNotChangedThrowException() {
             // given
-            productUpdateRequest = new ProductUpdateRequest(1L, "상품", "brandA", "categoryA", new BigDecimal("1000"), "상품", 1L);
+            productUpdateRequest = new ProductUpdateRequest(1L, "상품", "brandA", "categoryA", new BigDecimal("1000"),
+                "상품");
             Category changeCategory = Category.createCategory("categoryA");
             Brand changeBrand = Brand.createBrand("brandA");
             given(productRepository.findByIdFetchJoin(productUpdateRequest.productId()))
@@ -190,7 +191,8 @@ class ProductManageServiceUnitTest {
         @Test
         void updateProductNotFoundThrowException() {
             // given
-            productUpdateRequest = new ProductUpdateRequest(1L, "상품1", "brandA", "categoryA", new BigDecimal(1000), "상품1", 1L);
+            productUpdateRequest = new ProductUpdateRequest(1L, "상품1", "brandA", "categoryA", new BigDecimal(1000),
+                "상품1");
             given(productRepository.findByIdFetchJoin(productUpdateRequest.productId()))
                 .willReturn(Optional.empty());
 
@@ -208,7 +210,8 @@ class ProductManageServiceUnitTest {
         @Test
         void updateProductDuplicatedThrowException() {
             // given
-            productUpdateRequest = new ProductUpdateRequest(1L, "상품", "brandB", "categoryB", new BigDecimal(3000), "상품", 1L);
+            productUpdateRequest = new ProductUpdateRequest(1L, "상품", "brandB", "categoryB", new BigDecimal(3000),
+                "상품");
             Category changeCategoryName = Category.createCategory("categoryB");
             Brand changeBrandName = Brand.createBrand("brandB");
             given(productRepository.findByIdFetchJoin(productUpdateRequest.productId()))
@@ -234,7 +237,8 @@ class ProductManageServiceUnitTest {
         @Test
         void updateProductBrandNotFoundThrowException() {
             // given
-            productUpdateRequest = new ProductUpdateRequest(1L, "상품", "brandr", "categoryB", new BigDecimal(3000), "상품", 1L);
+            productUpdateRequest = new ProductUpdateRequest(1L, "상품", "brandr", "categoryB", new BigDecimal(3000),
+                "상품");
             given(productRepository.findByIdFetchJoin(productUpdateRequest.productId()))
                 .willReturn(Optional.of(product));
             given(brandRepository.findByName(productUpdateRequest.brandName()))
@@ -254,7 +258,7 @@ class ProductManageServiceUnitTest {
         @Test
         void updateProductCategoryNotFoundThrowException() {
             // given
-            productUpdateRequest = new ProductUpdateRequest(1L, "상품", "brandB", "caryB", new BigDecimal(3000), "상품", 1L);
+            productUpdateRequest = new ProductUpdateRequest(1L, "상품", "brandB", "caryB", new BigDecimal(3000), "상품");
             given(productRepository.findByIdFetchJoin(productUpdateRequest.productId()))
                 .willReturn(Optional.ofNullable(product));
             given(brandRepository.findByName(productUpdateRequest.brandName()))
@@ -276,7 +280,8 @@ class ProductManageServiceUnitTest {
         @Test
         void updateProductPriceOnlyChangedUpdatePrice() {
             // given
-            productUpdateRequest = new ProductUpdateRequest(1L, "상품", "brandA", "categoryA", new BigDecimal(1500), "상품", 1L);
+            productUpdateRequest = new ProductUpdateRequest(1L, "상품", "brandA", "categoryA", new BigDecimal(1500),
+                "상품");
             Category changeCategory = Category.createCategory("categoryA");
             Brand changeBrand = Brand.createBrand("brandA");
             given(productRepository.findByIdFetchJoin(productUpdateRequest.productId()))
@@ -302,7 +307,8 @@ class ProductManageServiceUnitTest {
         @Test
         void updateProductSuccess() {
             // given
-            productUpdateRequest = new ProductUpdateRequest(1L, "상품", "brandB", "categoryB", new BigDecimal(3000), "상품", 1L);
+            productUpdateRequest = new ProductUpdateRequest(1L, "상품", "brandB", "categoryB", new BigDecimal(3000),
+                "상품");
             Category changeCategoryName = Category.createCategory("categoryB");
             Brand changeBrandName = Brand.createBrand("brandB");
             given(productRepository.findByIdFetchJoin(productUpdateRequest.productId()))

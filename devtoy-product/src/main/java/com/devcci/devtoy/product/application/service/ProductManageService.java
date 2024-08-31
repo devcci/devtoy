@@ -59,7 +59,8 @@ public class ProductManageService {
         Product originProduct = fetchProduct(request.productId());
         Brand brand = findBrandByName(request.brandName());
         Category category = findCategoryByName(request.categoryName());
-        Product updatedProduct = Product.createProduct(request.productName(), request.price(), brand, category, request.description(), request.stockQuantity());
+        Product updatedProduct = Product.changeProduct(request.productName(), request.price(), brand, category,
+            request.description());
 
         if (!isChanged(originProduct, updatedProduct)) {
             throw new ApiException(ErrorCode.PRODUCT_NOT_CHANGED);

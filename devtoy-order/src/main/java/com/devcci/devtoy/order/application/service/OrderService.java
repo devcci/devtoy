@@ -1,11 +1,11 @@
 package com.devcci.devtoy.order.application.service;
 
+import com.devcci.devtoy.common.domain.OrderStatus;
 import com.devcci.devtoy.common.exception.ApiException;
 import com.devcci.devtoy.common.exception.ErrorCode;
 import com.devcci.devtoy.order.domain.order.Order;
 import com.devcci.devtoy.order.domain.order.OrderProduct;
 import com.devcci.devtoy.order.domain.order.OrderRepository;
-import com.devcci.devtoy.order.domain.order.OrderStatus;
 import com.devcci.devtoy.order.domain.order.event.OrderCreatedEvent;
 import com.devcci.devtoy.order.infra.client.ProductBulkResponse;
 import com.devcci.devtoy.order.infra.client.ProductFeignClient;
@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
+
     private final ApplicationEventPublisher eventPublisher;
     private final OrderRepository orderRepository;
     private final ProductFeignClient productFeignClient;

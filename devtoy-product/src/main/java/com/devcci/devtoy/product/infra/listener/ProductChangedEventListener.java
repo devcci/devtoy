@@ -26,7 +26,7 @@ public class ProductChangedEventListener {
         this.productInfoRedisService = productInfoRedisService;
     }
 
-    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onProductDeleted(ProductDeletionEvent event) {
         cacheRefreshHandler.refreshProductCache();
         productInfoRedisService.delete(event.productId().toString());
