@@ -12,8 +12,7 @@ public record ProductUpdateRequest(
     @NotBlank @Size(max = 20, message = "20글자 이하로 작성해주세요.") String brandName,
     @NotBlank @Size(max = 20, message = "20글자 이하로 작성해주세요.") String categoryName,
     @NotNull BigDecimal price,
-    String description,
-    @NotNull Long stockQuantity
+    String description
 ) {
 
 }

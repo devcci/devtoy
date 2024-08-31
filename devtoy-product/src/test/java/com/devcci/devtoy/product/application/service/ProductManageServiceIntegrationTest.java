@@ -102,7 +102,8 @@ class ProductManageServiceIntegrationTest {
         @Test
         void addProductCategoryNotFoundThrowException() {
             // given
-            ProductAddRequest productAddRequest = new ProductAddRequest("상품", "A", "마마", new BigDecimal(1000), "상품", 1L);
+            ProductAddRequest productAddRequest = new ProductAddRequest("상품", "A", "마마", new BigDecimal(1000), "상품",
+                1L);
 
             // when
             Throwable throwable = catchThrowable(
@@ -124,7 +125,7 @@ class ProductManageServiceIntegrationTest {
         void updateProductNotChangedThrowException() {
             // given
             ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest(1L, "상품", "A", "상의",
-                new BigDecimal(11200), "상품", 1L);
+                new BigDecimal(11200), "상품");
 
             // when
             Throwable thrown = catchThrowable(
@@ -142,7 +143,7 @@ class ProductManageServiceIntegrationTest {
             // given
             ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest(155L, "상품", "K",
                 "상의",
-                new BigDecimal(1000), "상품", 1L);
+                new BigDecimal(1000), "상품");
 
             // when
             Throwable thrown = catchThrowable(
@@ -159,7 +160,7 @@ class ProductManageServiceIntegrationTest {
         void updateProductDuplicatedThrowException() {
             // given
             ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest(1L, "상품", "C",
-                "상의", new BigDecimal(3000), "상품", 1L);
+                "상의", new BigDecimal(3000), "상품");
 
             // when
             Throwable thrown = catchThrowable(
@@ -176,7 +177,7 @@ class ProductManageServiceIntegrationTest {
         void updateProductBrandNotFoundThrowException() {
             // given
             ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest(1L, "상품", "r",
-                "상의", new BigDecimal(3000), "상품", 1L);
+                "상의", new BigDecimal(3000), "상품");
 
             // when
             Throwable thrown = catchThrowable(
@@ -193,7 +194,7 @@ class ProductManageServiceIntegrationTest {
         void updateProductCategoryNotFoundThrowException() {
             // given
             ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest(1L, "상품", "A", "마바",
-                new BigDecimal(3000), "상품", 1L);
+                new BigDecimal(3000), "상품");
 
             // when
             Throwable thrown = catchThrowable(
@@ -210,7 +211,7 @@ class ProductManageServiceIntegrationTest {
         void updateProductPriceOnlyChangedUpdatePrice() {
             // given
             ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest(1L, "상품", "A", "상의",
-                new BigDecimal(1500), "상품", 1L);
+                new BigDecimal(1500), "상품");
 
             // when
             productManageService.updateProduct(productUpdateRequest);
@@ -234,7 +235,7 @@ class ProductManageServiceIntegrationTest {
         void updateProductSuccess() {
             // given
             ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest(1L, "상품", "A",
-                "상의", new BigDecimal(3000), "상품", 1L);
+                "상의", new BigDecimal(3000), "상품");
 
             // when
             productManageService.updateProduct(productUpdateRequest);

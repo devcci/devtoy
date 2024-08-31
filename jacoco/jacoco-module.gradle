@@ -12,8 +12,8 @@ jacocoTestReport {
         csv.required.set(true)
     }
 }
-tasks.withType(Test).configureEach { testTask ->
-    testTask.useJUnitPlatform()
+
+tasks.named('test', Test).configure { testTask ->
     testTask.finalizedBy(tasks.named("jacocoTestReport"))
 }
 
