@@ -15,11 +15,9 @@ import com.devcci.devtoy.product.application.dto.ProductInfos;
 import com.devcci.devtoy.product.domain.product.Product;
 import com.devcci.devtoy.product.domain.product.ProductRepository;
 import com.devcci.devtoy.product.domain.product.event.ProductViewEvent;
-import com.devcci.devtoy.product.domain.product.event.ProductViewWithCachingEvent;
 import com.devcci.devtoy.product.infra.persistence.projection.LowestProductByBrandProjection;
 import com.devcci.devtoy.product.infra.persistence.projection.LowestProductByCategoryProjection;
 import com.devcci.devtoy.product.infra.persistence.projection.PriceByCategoryProjection;
-import com.devcci.devtoy.product.infra.redis.ProductInfoRedisService;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
@@ -38,30 +36,20 @@ import java.util.stream.Collectors;
 public class ProductSearchService {
 
     private final ProductRepository productRepository;
-    private final ProductInfoRedisService productInfoRedisService;
     private final ApplicationEventPublisher eventPublisher;
 
-    public ProductSearchService(ProductRepository productRepository
-        , ProductInfoRedisService productInfoRedisService,
-        ApplicationEventPublisher eventPublisher) {
+    public ProductSearchService(ProductRepository productRepository, ApplicationEventPublisher eventPublisher) {
         this.productRepository = productRepository;
-        this.productInfoRedisService = productInfoRedisService;
         this.eventPublisher = eventPublisher;
     }
 
+    @Cacheable(value = "productInfo")
     @Transactional(readOnly = true)
     public ProductInfo findProductById(Long productId) {
-        ProductInfo cachedProductInfo = productInfoRedisService.get(
-            productId.toString());
-        if (cachedProductInfo != null) {
-            eventPublisher.publishEvent(new ProductViewEvent(productId));
-            return cachedProductInfo;
-        }
         Product product = productRepository.findByIdFetchJoin(productId)
             .orElseThrow(() -> new ApiException(ErrorCode.PRODUCT_NOT_FOUND));
-        ProductInfo productInfo = ProductInfo.of(product);
-        eventPublisher.publishEvent(new ProductViewWithCachingEvent(productInfo));
-        return productInfo;
+        eventPublisher.publishEvent(new ProductViewEvent(productId));
+        return ProductInfo.of(product);
     }
 
     @Transactional(readOnly = true)

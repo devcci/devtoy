@@ -1,7 +1,9 @@
 package com.devcci.devtoy.product.infra.cache;
 
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CachingConfigurer;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.interceptor.CacheErrorHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.CacheKeyPrefix;
@@ -18,7 +20,13 @@ import java.util.Map;
 
 @EnableCaching
 @Configuration
-public class CacheConfig {
+public class CacheConfig implements CachingConfigurer {
+
+    @Override
+    @Bean
+    public CacheErrorHandler errorHandler() {
+        return new ProductCacheErrorHandler();  // Custom CacheErrorHandler
+    }
 
     @Bean
     public CacheManager cacheManager(

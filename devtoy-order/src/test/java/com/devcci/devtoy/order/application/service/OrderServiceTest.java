@@ -11,6 +11,7 @@ import com.devcci.devtoy.order.infra.client.ProductBulkResponse;
 import com.devcci.devtoy.order.infra.client.ProductFeignClient;
 import com.devcci.devtoy.order.web.dto.OrderRequest;
 import com.devcci.devtoy.order.web.dto.OrderRequest.OrderProductRequest;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -42,6 +43,7 @@ class OrderServiceTest {
     @InjectMocks
     private OrderService orderService;
 
+    @DisplayName("주문 생성")
     @Test
     void createOrder() {
         // given
@@ -66,6 +68,7 @@ class OrderServiceTest {
         verify(eventPublisher).publishEvent(any(OrderCreatedEvent.class));
     }
 
+    @DisplayName("주문 생성 - 상품 없음")
     @Test
     void createOrderProductNotFound() {
         // given
@@ -86,6 +89,7 @@ class OrderServiceTest {
             .isEqualTo("존재하지 않는 상품 ID: [2]");
     }
 
+    @DisplayName("주문 완료")
     @Test
     void completeOrder() {
         // given
@@ -101,6 +105,7 @@ class OrderServiceTest {
         assertThat(order.getStatus()).isEqualTo(OrderStatus.COMPLETED);
     }
 
+    @DisplayName("주문 완료 - 주문 상태 변경 불가")
     @Test
     void completeOrderOrderNotFound() {
         // given
@@ -113,6 +118,7 @@ class OrderServiceTest {
             .hasMessageContaining(ErrorCode.ORDER_NOT_FOUND.getMessage());
     }
 
+    @DisplayName("주문 취소")
     @Test
     void cancelOrder() {
         // given
@@ -129,6 +135,7 @@ class OrderServiceTest {
         assertThat(order.getStatus()).isEqualTo(OrderStatus.CANCELED);
     }
 
+    @DisplayName("주문 취소 - 주문 상태 변경 불가")
     @Test
     void cancelOrderOrderNotFound() {
         // given

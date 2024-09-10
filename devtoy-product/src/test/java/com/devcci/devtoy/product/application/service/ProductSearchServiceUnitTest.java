@@ -14,11 +14,10 @@ import com.devcci.devtoy.product.domain.brand.Brand;
 import com.devcci.devtoy.product.domain.category.Category;
 import com.devcci.devtoy.product.domain.product.Product;
 import com.devcci.devtoy.product.domain.product.ProductRepository;
-import com.devcci.devtoy.product.domain.product.event.ProductViewWithCachingEvent;
+import com.devcci.devtoy.product.domain.product.event.ProductViewEvent;
 import com.devcci.devtoy.product.infra.persistence.projection.LowestProductByBrandProjection;
 import com.devcci.devtoy.product.infra.persistence.projection.LowestProductByCategoryProjection;
 import com.devcci.devtoy.product.infra.persistence.projection.PriceByCategoryProjection;
-import com.devcci.devtoy.product.infra.redis.ProductInfoRedisService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -48,8 +47,6 @@ class ProductSearchServiceUnitTest {
 
     @Mock
     private ApplicationEventPublisher eventPublisher;
-    @Mock
-    private ProductInfoRedisService productInfoRedisService;
 
     @InjectMocks
     private ProductSearchService productSearchService;
@@ -76,7 +73,7 @@ class ProductSearchServiceUnitTest {
             assertThat((productInfo.getPrice())).isEqualTo(NumberFormatUtil.withComma(product.getPrice()));
             assertThat(productInfo.getBrandName()).isEqualTo(product.getBrand().getName());
             assertThat(productInfo.getCategoryName()).isEqualTo(product.getCategory().getName());
-            verify(eventPublisher).publishEvent(any(ProductViewWithCachingEvent.class));
+            verify(eventPublisher).publishEvent(any(ProductViewEvent.class));
         }
 
         @DisplayName("실패 - 상품 단건 조회")

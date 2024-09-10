@@ -31,13 +31,13 @@ public class BrandChangedEventListener {
     }
 
     @EventListener
-    public void onBrandModified(BrandModificationEvent event) {
-        cacheRefreshHandler.refreshProductCache();
+    public void onBrandModified(BrandModificationEvent ignoredEvent) {
+        cacheRefreshHandler.clearProductCacheEntries();
     }
 
     @EventListener
-    public void onBrandAdded(BrandAdditionEvent event) {
-        cacheRefreshHandler.refreshProductCache();
+    public void onBrandAdded(BrandAdditionEvent ignoredEvent) {
+        cacheRefreshHandler.clearProductCacheEntries();
     }
 
 }
