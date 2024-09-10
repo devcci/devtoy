@@ -25,8 +25,10 @@ import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 
 
 @IntegrationTest
@@ -64,8 +66,10 @@ class ProductSearchServiceIntegrationTest {
             assertThat(productInfo.getCategoryName()).isEqualTo("상의");
             assertThat(productInfo.getBrandName()).isEqualTo("A");
             assertThat(productInfo.getPrice()).isEqualTo("11,200");
-            Double viewCount = productViewRedisService.getProductViewCount(productId);
-            assertThat(viewCount).isEqualTo(1);
+            await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+                Double viewCount = productViewRedisService.getProductViewCount(productId);
+                assertThat(viewCount).isEqualTo(1);
+            });
         }
 
         @DisplayName("성공 - 상품 단건 조회 - 레디스 스레드세이프")
@@ -103,8 +107,11 @@ class ProductSearchServiceIntegrationTest {
             executorService.shutdown();
 
             // then
-            Double viewCount = productViewRedisService.getProductViewCount(productId);
-            assertThat(viewCount).isGreaterThanOrEqualTo(50);
+
+            await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+                Double viewCount = productViewRedisService.getProductViewCount(productId);
+                assertThat(viewCount).isGreaterThanOrEqualTo(50);
+            });
         }
 
         @DisplayName("성공 - 상품 목록 조회")

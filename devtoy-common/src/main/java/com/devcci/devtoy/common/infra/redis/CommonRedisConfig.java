@@ -5,10 +5,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import java.time.Duration;
 
 @Configuration
 public class CommonRedisConfig {
@@ -36,7 +39,11 @@ public class CommonRedisConfig {
         configuration.setHostName(host);
         configuration.setPort(port);
         configuration.setPassword(password);
-        return new LettuceConnectionFactory(configuration);
+        LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
+            .shutdownTimeout(Duration.ofSeconds(2))
+            .commandTimeout(Duration.ofMillis(500))
+            .build();
+        return new LettuceConnectionFactory(configuration, clientConfig);
     }
 
 

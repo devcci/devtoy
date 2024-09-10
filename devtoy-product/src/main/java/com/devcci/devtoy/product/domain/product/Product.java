@@ -54,7 +54,7 @@ public class Product extends BaseTimeEntity {
 
     @NotNull
     @ColumnDefault("0")
-    @Column(name = "price", nullable = false, precision = 15, scale = 0)
+    @Column(name = "price", nullable = false, precision = 15)
     private BigDecimal price;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -161,6 +161,10 @@ public class Product extends BaseTimeEntity {
     @Override
     public int hashCode() {
         return Objects.hash(name, price, brand, category, description);
+    }
+
+    public void increaseViewCount() {
+        this.viewCount++;
     }
 
     public void increaseViewCount(Long count) {
