@@ -50,8 +50,8 @@ public enum ErrorCode {
 
     HTTP_CLIENT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 9000, "클라이언트에 문제가 있습니다. 점검이 필요합니다."),
     HTTP_CLIENT_SERVICE_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, 9001, "서버가 일시적으로 중단되었습니다. 잠시 후 다시 시도해 주세요."),
-    INVALID_HTTP_REQUEST(HttpStatus.BAD_REQUEST, 9001, "내부 서버 요청 입력값 오류"),
-    HTTP_CLIENT_NOT_FOUND(HttpStatus.NOT_FOUND, 9002, "내부 서버 연결에 문제가 있습니다.");
+    INVALID_HTTP_REQUEST(HttpStatus.BAD_REQUEST, 9002, "내부 서버 요청 입력값 오류"),
+    HTTP_CLIENT_NOT_FOUND(HttpStatus.NOT_FOUND, 9003, "내부 서버 연결에 문제가 있습니다.");
 
     ErrorCode(HttpStatus status, int code, String message) {
         this.status = status;

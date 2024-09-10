@@ -19,22 +19,26 @@ public class ErrorResponse {
     private final int code;
     @Schema(description = "에러메시지")
     private final String message;
+    @Schema(description = "추가정보")
+    private final String details;
 
     public static ResponseEntity<ErrorResponse> toResponseEntity(ErrorCode errorCode) {
         return ResponseEntity
             .status(errorCode.getStatus())
             .body(new ErrorResponse(
                 errorCode.getCode(),
-                errorCode.getMessage()
+                errorCode.getMessage(),
+                null
             ));
     }
 
-    public static ResponseEntity<ErrorResponse> toResponseEntity(ErrorCode errorCode, String message) {
+    public static ResponseEntity<ErrorResponse> toResponseEntity(ErrorCode errorCode, String details) {
         return ResponseEntity
             .status(errorCode.getStatus())
             .body(new ErrorResponse(
                 errorCode.getCode(),
-                message
+                errorCode.getMessage(),
+                details
             ));
     }
 
@@ -43,7 +47,8 @@ public class ErrorResponse {
             .status(status)
             .body(new ErrorResponse(
                 errorCode,
-                message
+                message,
+                null
             ));
     }
 }

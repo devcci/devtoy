@@ -21,7 +21,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<ErrorResponse> httpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException exception) {
+    public ResponseEntity<ErrorResponse> httpRequestMethodNotSupportedException(
+        HttpRequestMethodNotSupportedException exception) {
         return ErrorResponse.toResponseEntity(ErrorCode.METHOD_NOT_SUPPORTED);
     }
 
@@ -53,12 +54,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ClientException.class)
     public ResponseEntity<ErrorResponse> clientException(ClientException exception) {
-        return ErrorResponse.toResponseEntity(exception.getErrorCode(), exception.getMessage());
+        return ErrorResponse.toResponseEntity(exception.getErrorCode(), exception.getDetails());
     }
 
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ErrorResponse> handleException(ApiException exception) {
-        return ErrorResponse.toResponseEntity(exception.getErrorCode());
+        return ErrorResponse.toResponseEntity(exception.getErrorCode(), exception.getDetails());
     }
 
     @ExceptionHandler(Exception.class)

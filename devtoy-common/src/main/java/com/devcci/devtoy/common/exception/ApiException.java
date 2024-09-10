@@ -6,14 +6,16 @@ import lombok.Getter;
 public class ApiException extends RuntimeException {
 
     private final ErrorCode errorCode;
+    private String details;
 
     public ApiException(ErrorCode errorCode) {
         super(errorCode.getMessage());
         this.errorCode = errorCode;
     }
 
-    public ApiException(ErrorCode errorCode, String message) {
-        super(message);
+    public ApiException(ErrorCode errorCode, String details) {
+        super(errorCode.getMessage());
         this.errorCode = errorCode;
+        this.details = details;
     }
 }
