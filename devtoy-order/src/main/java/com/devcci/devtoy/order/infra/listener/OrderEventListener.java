@@ -15,6 +15,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 public class OrderEventListener {
+
     private final OrderKafkaProducer orderKafkaProducer;
     private final OrderService orderService;
 

@@ -27,6 +27,7 @@ import java.math.BigDecimal;
         @UniqueConstraint(name = "order_product_uq", columnNames = {"order_id", "product_id"})
     })
 public class OrderProduct extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

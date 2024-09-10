@@ -15,7 +15,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -41,14 +40,21 @@ public class OrderService {
         Set<Long> productIds = request.orderProductRequests().stream()
             .map(OrderProductRequest::productId).collect(Collectors.toSet());
 
-        List<ProductBulkResponse> products = productFeignClient.getProductsByIds(productIds);
-        Map<Long, ProductBulkResponse> productMap = products.stream()
+        Map<Long, ProductBulkResponse> productBulkResponseMap = productFeignClient.getProductsByIds(productIds).stream()
             .collect(Collectors.toMap(ProductBulkResponse::productId, product -> product));
+
+        if (request.orderProductRequests().size() != productBulkResponseMap.size()) {
+            Set<Long> missingProductIds = productIds.stream()
+                .filter(id -> !productBulkResponseMap.containsKey(id))
+                .collect(Collectors.toSet());
+            throw new ApiException(ErrorCode.PRODUCT_LIST_NOT_LOADED,
+                "존재하지 않는 상품 ID: " + missingProductIds);
+        }
 
         Order order = Order.createOrder(memberId, OrderStatus.CREATED);
 
         for (OrderProductRequest productRequest : request.orderProductRequests()) {
-            ProductBulkResponse product = productMap.get(productRequest.productId());
+            ProductBulkResponse product = productBulkResponseMap.get(productRequest.productId());
             OrderProduct orderProduct = OrderProduct.createOrderProduct(
                 order, productRequest.productId(), productRequest.quantity(), product.price());
             order.addOrderProduct(orderProduct);
@@ -71,5 +77,4 @@ public class OrderService {
             .orElseThrow(() -> new ApiException(ErrorCode.ORDER_NOT_FOUND));
         order.cancel(reason);
     }
-
 }

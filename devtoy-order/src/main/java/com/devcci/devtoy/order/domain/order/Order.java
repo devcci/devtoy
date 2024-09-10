@@ -20,6 +20,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -49,7 +50,7 @@ public class Order extends BaseTimeEntity {
     private BigDecimal totalPrice;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<OrderProduct> orderProducts = new ArrayList<>();
+    private final List<OrderProduct> orderProducts = new ArrayList<>();
 
     private Order(String memberId, OrderStatus status) {
         this.memberId = memberId;
@@ -70,13 +71,17 @@ public class Order extends BaseTimeEntity {
         this.statusReason = reason;
     }
 
+    public List<OrderProduct> getOrderProducts() {
+        return Collections.unmodifiableList(orderProducts);
+    }
+
     public void addOrderProduct(OrderProduct orderProduct) {
         this.orderProducts.add(orderProduct);
         calculateTotalPrice();
     }
 
     private void calculateTotalPrice() {
-        this.totalPrice = orderProducts.stream()
+        this.totalPrice = this.orderProducts.stream()
             .map(op -> op.getPrice().multiply(BigDecimal.valueOf(op.getQuantity())))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
