@@ -5,10 +5,11 @@ jacoco {
 }
 
 def exclusionPatterns = [
-        'com/devcci/devtoy/common/**',
+        '**/devtoy/common/**',
         '**/config/**',
-        '**/common/aspect/**',
-        '**/infra/cache/**'
+        '**/exception/**',
+        '**/aspect/**',
+        '**/*Config.java'
 ]
 
 jacocoTestReport {
