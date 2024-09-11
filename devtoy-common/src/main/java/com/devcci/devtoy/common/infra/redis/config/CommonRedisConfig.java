@@ -1,4 +1,4 @@
-package com.devcci.devtoy.common.infra.redis;
+package com.devcci.devtoy.common.infra.redis.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

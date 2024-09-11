@@ -1,6 +1,6 @@
 package com.devcci.devtoy.product.infra.redis.config;
 
-import com.devcci.devtoy.common.infra.redis.CommonRedisConfig;
+import com.devcci.devtoy.common.infra.redis.config.CommonRedisConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
