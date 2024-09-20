@@ -1,5 +1,6 @@
 package com.devcci.devtoy.product.infra.kafka;
 
+import com.devcci.devtoy.common.domain.OrderStatus;
 import com.devcci.devtoy.common.exception.ApiException;
 import com.devcci.devtoy.common.infra.kafka.dto.OrderMessage;
 import com.devcci.devtoy.common.infra.kafka.dto.OrderResultMessage;
@@ -11,33 +12,41 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.listener.AcknowledgingMessageListener;
 import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 @ConditionalOnBean(KafkaConsumerConfig.class)
 @Slf4j
 @Component
 public class OrderMessageConsumer implements AcknowledgingMessageListener<String, OrderMessage> {
+
     private final ProductStockManageService productStockManageService;
     private final OrderResultMessageProducer orderResultMessageProducer;
 
-    public OrderMessageConsumer(ProductStockManageService productStockManageService, OrderResultMessageProducer orderResultMessageProducer) {
+    public OrderMessageConsumer(ProductStockManageService productStockManageService,
+        OrderResultMessageProducer orderResultMessageProducer) {
         this.productStockManageService = productStockManageService;
         this.orderResultMessageProducer = orderResultMessageProducer;
     }
 
     @Override
     @KafkaListener(topics = "${topic.order.create}", containerFactory = "orderCreatedMessageListenerFactory")
-    public void onMessage(ConsumerRecord<String, OrderMessage> msg, Acknowledgment acknowledgment) {
+    public void onMessage(@NonNull ConsumerRecord<String, OrderMessage> msg, Acknowledgment acknowledgment) {
         try {
             productStockManageService.removeStockQuantity(msg.value());
-            acknowledgment.acknowledge();
         } catch (ApiException e) {
             OrderResultMessage orderResultMessage =
-                new OrderResultMessage(msg.value().orderId().toString(), "FAILED", e.getErrorCode().getMessage());
+                OrderResultMessage.of(msg.value().orderId().toString(), OrderStatus.CANCELED,
+                    e.getErrorCode().getMessage());
             orderResultMessageProducer.send(orderResultMessage.orderId(), orderResultMessage);
-            acknowledgment.acknowledge();
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             log.error(e.getMessage());
+            OrderResultMessage orderResultMessage =
+                OrderResultMessage.of(msg.value().orderId().toString(), OrderStatus.CANCELED,
+                    e.getMessage());
+            orderResultMessageProducer.send(orderResultMessage.orderId(), orderResultMessage);
+        } finally {
+            acknowledgment.acknowledge();
         }
     }
 }

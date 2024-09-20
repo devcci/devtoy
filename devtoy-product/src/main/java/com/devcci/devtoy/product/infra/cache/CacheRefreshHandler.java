@@ -16,9 +16,12 @@ public class CacheRefreshHandler {
         @CacheEvict(value = "productInfoList", allEntries = true),
     })
     public void clearProductCacheEntries() {
+        log.info("Clearing all product-related cache entries.");
     }
 
     @CacheEvict(value = "productInfo", key = "#p0")
     public void evictProductInfoCache(Long ignoredProductId) {
+        log.info("Evicting cache for productInfo with productId: {}", ignoredProductId);
+
     }
 }
