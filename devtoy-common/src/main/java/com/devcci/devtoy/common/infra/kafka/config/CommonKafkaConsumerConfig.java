@@ -39,6 +39,11 @@ public class CommonKafkaConsumerConfig {
         props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 1000);
         props.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, 2000);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroupId);
+        props.put(ConsumerConfig.RECONNECT_BACKOFF_MS_CONFIG, 5000);
+        props.put(ConsumerConfig.RECONNECT_BACKOFF_MAX_MS_CONFIG, 10000);
+        props.put(ConsumerConfig.HEARTBEAT_INTERVAL_MS_CONFIG, 3000);
+        props.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, 10000);
+        props.put(ConsumerConfig.REQUEST_TIMEOUT_MS_CONFIG, 15000);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
         props.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, StringDeserializer.class);
@@ -62,8 +67,9 @@ public class CommonKafkaConsumerConfig {
 
     private DefaultErrorHandler retryHandler() {
         DefaultErrorHandler errorHandler = new DefaultErrorHandler((consumerRecord, e) ->
-            log.error("{} consume Failure. cause: {} message key: {} message value: {}", consumerRecord.topic(), e.getMessage(), consumerRecord.key(), consumerRecord.value()),
-            new FixedBackOff(1000L, 2L));
+            log.error("{} consume Failure. cause: {} message key: {} message value: {}", consumerRecord.topic(),
+                e.getMessage(), consumerRecord.key(), consumerRecord.value()),
+            new FixedBackOff(3000L, 3L));
         errorHandler.addNotRetryableExceptions(IllegalAccessException.class);
         return errorHandler;
     }

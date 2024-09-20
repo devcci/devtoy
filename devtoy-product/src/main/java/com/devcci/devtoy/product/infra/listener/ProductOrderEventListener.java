@@ -7,6 +7,8 @@ import com.devcci.devtoy.product.domain.product.event.ProductOrderEvent;
 import com.devcci.devtoy.product.infra.cache.CacheRefreshHandler;
 import com.devcci.devtoy.product.infra.kafka.OrderResultMessageProducer;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
@@ -22,11 +24,12 @@ public class ProductOrderEventListener {
         this.cacheRefreshHandler = cacheRefreshHandler;
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onProductOrderEvent(ProductOrderEvent event) {
         OrderMessage orderMessage = event.orderMessage();
         orderResultMessageProducer.send(orderMessage.orderId().toString(),
-            new OrderResultMessage(orderMessage.orderId().toString(), OrderStatus.COMPLETED.name(), null));
+            OrderResultMessage.of(orderMessage.orderId().toString(), OrderStatus.COMPLETED, null));
 
         cacheRefreshHandler.clearProductCacheEntries();
         orderMessage.orderProducts().forEach(product -> cacheRefreshHandler.evictProductInfoCache(product.productId()));

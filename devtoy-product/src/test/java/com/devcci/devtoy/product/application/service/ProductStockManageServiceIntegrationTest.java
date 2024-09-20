@@ -1,5 +1,6 @@
 package com.devcci.devtoy.product.application.service;
 
+import com.devcci.devtoy.common.domain.OrderStatus;
 import com.devcci.devtoy.common.infra.kafka.dto.OrderMessage;
 import com.devcci.devtoy.common.infra.kafka.dto.OrderResultMessage;
 import com.devcci.devtoy.product.config.IntegrationTest;
@@ -20,7 +21,8 @@ import java.util.concurrent.Executors;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @IntegrationTest
-public class ProductStockManageServiceIntegrationTest {
+class ProductStockManageServiceIntegrationTest {
+
     @Autowired
     private ProductStockManageService productStockManageService;
 
@@ -59,7 +61,7 @@ public class ProductStockManageServiceIntegrationTest {
             OrderMessage.of(1L, "tester1",
                 List.of(OrderMessage.OrderProductMessage.of(1L, 1L, new BigDecimal("11200"))))
         );
-        OrderResultMessage message = new OrderResultMessage("1", "COMPLETED", null);
+        OrderResultMessage message = new OrderResultMessage("1", OrderStatus.COMPLETED, null);
 
         Runnable task = () -> {
             try {
