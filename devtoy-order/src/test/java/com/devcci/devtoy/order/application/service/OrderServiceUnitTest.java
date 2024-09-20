@@ -29,7 +29,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 @UnitTest
-class OrderServiceTest {
+class OrderServiceUnitTest {
 
     @Mock
     private OrderRepository orderRepository;
@@ -55,16 +55,13 @@ class OrderServiceTest {
         ProductBulkResponse product1 = new ProductBulkResponse(1L, BigDecimal.valueOf(100), 100L);
         ProductBulkResponse product2 = new ProductBulkResponse(2L, BigDecimal.valueOf(200), 100L);
 
-        Order order = Order.createOrder(memberId, OrderStatus.CREATED);
-
         given(productFeignClient.getProductsByIds(Set.of(1L, 2L))).willReturn(List.of(product1, product2));
-        given(orderRepository.save(any(Order.class))).willReturn(order);
 
         // when
         orderService.createOrder(memberId, orderRequest);
 
         // then
-        verify(orderRepository).save(any(Order.class));
+        verify(orderRepository).saveWithBulk(any(Order.class));
         verify(eventPublisher).publishEvent(any(OrderCreatedEvent.class));
     }
 

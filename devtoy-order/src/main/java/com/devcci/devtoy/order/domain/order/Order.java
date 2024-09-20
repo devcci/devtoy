@@ -2,7 +2,6 @@ package com.devcci.devtoy.order.domain.order;
 
 import com.devcci.devtoy.common.domain.BaseTimeEntity;
 import com.devcci.devtoy.common.domain.OrderStatus;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -46,10 +45,10 @@ public class Order extends BaseTimeEntity {
     private String statusReason;
 
     @NotNull
-    @Column(name = "total_price", nullable = false, precision = 15, scale = 0)
+    @Column(name = "total_price", nullable = false, precision = 15)
     private BigDecimal totalPrice;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, orphanRemoval = true)
     private final List<OrderProduct> orderProducts = new ArrayList<>();
 
     private Order(String memberId, OrderStatus status) {

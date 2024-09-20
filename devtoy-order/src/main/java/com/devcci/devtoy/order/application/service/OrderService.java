@@ -59,7 +59,7 @@ public class OrderService {
                 order, productRequest.productId(), productRequest.quantity(), product.price());
             order.addOrderProduct(orderProduct);
         }
-        orderRepository.save(order);
+        orderRepository.saveWithBulk(order);
         eventPublisher.publishEvent(new OrderCreatedEvent(order));
         return order.getId();
     }
