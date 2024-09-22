@@ -12,7 +12,7 @@ services:
       TZ: Asia/Seoul
     volumes:
       - ./mysql/conf.d:/etc/mysql/conf.d
-      - ./docker_volume/mysql/product/data:/var/lib/mysql
+      - ~/docker_volume/devtoy/mysql/product/data:/var/lib/mysql
       - ./mysql/initdb.d/product:/docker-entrypoint-initdb.d
 
   devtoy-mysql-order:
@@ -28,7 +28,7 @@ services:
       TZ: Asia/Seoul
     volumes:
       - ./mysql/conf.d:/etc/mysql/conf.d
-      - ./docker_volume/mysql/order/data:/var/lib/mysql
+      - ~/docker_volume/devtoy/mysql/order/data:/var/lib/mysql
       - ./mysql/initdb.d/order:/docker-entrypoint-initdb.d
 
   devtoy-mysql-member:
@@ -44,7 +44,7 @@ services:
       TZ: Asia/Seoul
     volumes:
       - ./mysql/conf.d:/etc/mysql/conf.d
-      - ./docker_volume/mysql/member/data:/var/lib/mysql
+      - ~/docker_volume/devtoy/mysql/member/data:/var/lib/mysql
       - ./mysql/initdb.d/member:/docker-entrypoint-initdb.d
 
   devtoy-kafka-01:
@@ -53,8 +53,8 @@ services:
     ports:
       - "9092:9092"
     volumes:
-      - ./docker_volume/kafka/devtoy-kafka-01/secrets:/etc/kafka/secrets
-      - ./docker_volume/kafka/devtoy-kafka-01/data:/var/lib/kafka/data
+      - ~/docker_volume/devtoy/kafka/devtoy-kafka-01/secrets:/etc/kafka/secrets
+      - ~/docker_volume/devtoy/kafka/devtoy-kafka-01/data:/var/lib/kafka/data
     environment:
       CLUSTER_ID: "event-broker"
       KAFKA_NODE_ID: 1
@@ -75,8 +75,8 @@ services:
     ports:
       - "9093:9093"
     volumes:
-      - ./docker_volume/kafka/devtoy-kafka-02/secrets:/etc/kafka/secrets
-      - ./docker_volume/kafka/devtoy-kafka-02/data:/var/lib/kafka/data
+      - ~/docker_volume/devtoy/kafka/devtoy-kafka-02/secrets:/etc/kafka/secrets
+      - ~/docker_volume/devtoy/kafka/devtoy-kafka-02/data:/var/lib/kafka/data
     environment:
       CLUSTER_ID: "event-broker"
       KAFKA_NODE_ID: 2
@@ -97,8 +97,8 @@ services:
     ports:
       - "9094:9094"
     volumes:
-      - ./docker_volume/kafka/devtoy-kafka-03/secrets:/etc/kafka/secrets
-      - ./docker_volume/kafka/devtoy-kafka-03/data:/var/lib/kafka/data
+      - ~/docker_volume/devtoy/kafka/devtoy-kafka-03/secrets:/etc/kafka/secrets
+      - ~/docker_volume/devtoy/kafka/devtoy-kafka-03/data:/var/lib/kafka/data
 
     environment:
       CLUSTER_ID: "event-broker"
@@ -133,6 +133,6 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - ./docker_volume/redis/data:/data
-      - ./docker_volume/redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - ~/docker_volume/devtoy/redis/data:/data
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
     command: redis-server /usr/local/etc/redis/redis.conf
