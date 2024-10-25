@@ -33,6 +33,7 @@
 
 - [Postman](https://documenter.getpostman.com/view/17962382/2sA3sAh7di)
 - [Swagger](http://localhost:8080)(localhost 호출이므로 프로젝트 실행 필요)
+- Kafka UI: http://localhost:9090
 
 - 테스트 유저 정보
     - memberId: tester1
