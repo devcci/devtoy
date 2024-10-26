@@ -5,6 +5,7 @@ import com.devcci.devtoy.member.application.dto.LoginRequest;
 import com.devcci.devtoy.member.application.dto.LoginResponse;
 import com.devcci.devtoy.member.application.dto.SignUpRequest;
 import com.devcci.devtoy.member.application.service.AuthenticationService;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import java.util.Map;
 @RequestMapping("/auth")
 @RestController
 public class AuthenticationApi {
+
     private final AuthenticationService authenticationService;
 
     public AuthenticationApi(AuthenticationService authenticationService) {
@@ -44,7 +46,8 @@ public class AuthenticationApi {
     }
 
     @GetMapping("/refresh")
-    public ResponseEntity<Map<String, String>> refresh(@RequestHeader(DevtoyHeaders.MEMBER_ID) String memberId) {
+    public ResponseEntity<Map<String, String>> refresh(
+        @Parameter(hidden = true) @RequestHeader(DevtoyHeaders.MEMBER_ID) String memberId) {
         String accessToken = authenticationService.refreshAccessToken(memberId);
         return ResponseEntity.ok()
             .body(Map.of("accessToken", accessToken));
