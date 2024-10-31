@@ -2,7 +2,7 @@ package com.devcci.devtoy.product.application.service;
 
 import com.devcci.devtoy.common.exception.ApiException;
 import com.devcci.devtoy.common.exception.ErrorCode;
-import com.devcci.devtoy.common.infra.kafka.dto.OrderMessage;
+import com.devcci.devtoy.common.infra.kafka.dto.OrderEventMessage;
 import com.devcci.devtoy.product.domain.product.Product;
 import com.devcci.devtoy.product.domain.product.ProductRepository;
 import com.devcci.devtoy.product.domain.product.event.ProductModificationEvent;
@@ -32,8 +32,8 @@ public class ProductStockManageService {
     }
 
     @Transactional
-    public void removeStockQuantity(OrderMessage orderMessage) {
-        orderMessage.orderProducts().forEach(
+    public void removeStockQuantity(OrderEventMessage orderEventMessage) {
+        orderEventMessage.orderProducts().forEach(
             orderProductMessage -> {
                 Product product = productRepository.findByIdWithPessimisticLock(orderProductMessage.productId())
                     .orElseThrow(() -> new ApiException(ErrorCode.PRODUCT_NOT_FOUND));
@@ -41,6 +41,6 @@ public class ProductStockManageService {
                 product.removeStockQuantity(orderProductMessage.quantity());
             }
         );
-        eventPublisher.publishEvent(new ProductOrderEvent(orderMessage));
+        eventPublisher.publishEvent(new ProductOrderEvent(orderEventMessage));
     }
 }

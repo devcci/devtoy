@@ -1,6 +1,6 @@
 package com.devcci.devtoy.order.infra.kafka;
 
-import com.devcci.devtoy.common.infra.kafka.dto.OrderMessage;
+import com.devcci.devtoy.common.infra.kafka.dto.OrderEventMessage;
 import com.devcci.devtoy.order.domain.order.event.OrderFailedEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.RecordMetadata;
@@ -17,21 +17,22 @@ import java.util.concurrent.CompletableFuture;
 @Component
 public class OrderKafkaProducer {
 
-    private final KafkaTemplate<String, OrderMessage> orderKafkaTemplate;
-    private final String topicOrderCreate;
+    private final KafkaTemplate<String, OrderEventMessage> orderKafkaTemplate;
+    private final String topicOrderEvent;
     private final ApplicationEventPublisher eventPublisher;
 
     public OrderKafkaProducer(
-        @Qualifier("orderKafkaTemplate") KafkaTemplate<String, OrderMessage> orderKafkaTemplate,
-        @Value("${topic.order.create}") String topicOrderCreate, ApplicationEventPublisher eventPublisher
+        @Qualifier("orderKafkaTemplate") KafkaTemplate<String, OrderEventMessage> orderKafkaTemplate,
+        @Value("${topic.order.event}") String topicOrderEvent, ApplicationEventPublisher eventPublisher
     ) {
         this.orderKafkaTemplate = orderKafkaTemplate;
-        this.topicOrderCreate = topicOrderCreate;
+        this.topicOrderEvent = topicOrderEvent;
         this.eventPublisher = eventPublisher;
     }
 
-    public void send(String orderId, OrderMessage msg) {
-        CompletableFuture<SendResult<String, OrderMessage>> send = orderKafkaTemplate.send(topicOrderCreate, orderId,
+    public void send(String orderId, OrderEventMessage msg) {
+        CompletableFuture<SendResult<String, OrderEventMessage>> send = orderKafkaTemplate.send(topicOrderEvent,
+            orderId,
             msg);
 
         send.whenComplete((result, exception) -> {

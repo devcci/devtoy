@@ -1,7 +1,7 @@
 package com.devcci.devtoy.product.infra.kafka.config;
 
 import com.devcci.devtoy.common.infra.kafka.config.CommonKafkaConsumerConfig;
-import com.devcci.devtoy.common.infra.kafka.dto.OrderMessage;
+import com.devcci.devtoy.common.infra.kafka.dto.OrderEventMessage;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +20,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @EnableKafka
 @Configuration
 public class KafkaConsumerConfig extends CommonKafkaConsumerConfig {
+
     private final String consumerGroupId;
 
     public KafkaConsumerConfig(
@@ -32,12 +33,13 @@ public class KafkaConsumerConfig extends CommonKafkaConsumerConfig {
     }
 
     @Bean("orderCreatedMessageListenerFactory")
-    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, OrderMessage>> orderMessageListenerFactory() {
-        JsonDeserializer<OrderMessage> jsonDeserializer = new JsonDeserializer<>(OrderMessage.class);
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, OrderEventMessage>> orderMessageListenerFactory() {
+        JsonDeserializer<OrderEventMessage> jsonDeserializer = new JsonDeserializer<>(OrderEventMessage.class);
         jsonDeserializer.setUseTypeHeaders(false);
 
-        ConsumerFactory<String, OrderMessage> consumerFactory =
-            new DefaultKafkaConsumerFactory<>(consumerConfigs(consumerGroupId), new StringDeserializer(), jsonDeserializer);
+        ConsumerFactory<String, OrderEventMessage> consumerFactory =
+            new DefaultKafkaConsumerFactory<>(consumerConfigs(consumerGroupId), new StringDeserializer(),
+                jsonDeserializer);
 
         return kafkaListenerContainerFactory(consumerFactory, 3);
     }

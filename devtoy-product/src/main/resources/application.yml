@@ -33,7 +33,7 @@ spring:
 
 topic:
   order:
-    create: devtoy-order-create
+    event: devtoy-order-event
     result: devtoy-order-result
 
 eureka:

@@ -1,7 +1,8 @@
 package com.devcci.devtoy.product.application.service;
 
-import com.devcci.devtoy.common.infra.kafka.dto.OrderMessage;
-import com.devcci.devtoy.common.infra.kafka.dto.OrderMessage.OrderProductMessage;
+import com.devcci.devtoy.common.domain.OrderStatus;
+import com.devcci.devtoy.common.infra.kafka.dto.OrderEventMessage;
+import com.devcci.devtoy.common.infra.kafka.dto.OrderEventMessage.OrderProductMessage;
 import com.devcci.devtoy.product.config.UnitTest;
 import com.devcci.devtoy.product.domain.brand.Brand;
 import com.devcci.devtoy.product.domain.category.Category;
@@ -58,12 +59,13 @@ class ProductStockManageServiceUnitTest {
     @Test
     void removeStockQuantity() {
         // given
-        OrderMessage orderMessage =
-            OrderMessage.of(
+        OrderEventMessage orderEventMessage =
+            OrderEventMessage.of(
                 1L, "tester1",
                 List.of(
                     OrderProductMessage.of(1L, 50L, new BigDecimal("1500")),
-                    OrderProductMessage.of(2L, 100L, new BigDecimal("2000")))
+                    OrderProductMessage.of(2L, 100L, new BigDecimal("2000"))),
+                OrderStatus.COMPLETED
             );
         Product product1 = Product.createProduct("product1", new BigDecimal("1500"), mock(Brand.class),
             mock(Category.class), "description", 100L);
@@ -73,11 +75,11 @@ class ProductStockManageServiceUnitTest {
         given(productRepository.findByIdWithPessimisticLock(2L)).willReturn(Optional.of(product2));
 
         // when
-        productStockManageService.removeStockQuantity(orderMessage);
+        productStockManageService.removeStockQuantity(orderEventMessage);
 
         // then
         assertThat(product1.getStockQuantity()).isEqualTo(50L);
         assertThat(product2.getStockQuantity()).isEqualTo(100L);
-        verify(eventPublisher).publishEvent(new ProductOrderEvent(orderMessage));
+        verify(eventPublisher).publishEvent(new ProductOrderEvent(orderEventMessage));
     }
 }

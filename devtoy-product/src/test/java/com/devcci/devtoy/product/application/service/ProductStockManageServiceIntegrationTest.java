@@ -1,7 +1,7 @@
 package com.devcci.devtoy.product.application.service;
 
 import com.devcci.devtoy.common.domain.OrderStatus;
-import com.devcci.devtoy.common.infra.kafka.dto.OrderMessage;
+import com.devcci.devtoy.common.infra.kafka.dto.OrderEventMessage;
 import com.devcci.devtoy.common.infra.kafka.dto.OrderResultMessage;
 import com.devcci.devtoy.product.config.IntegrationTest;
 import com.devcci.devtoy.product.domain.product.ProductRepository;
@@ -57,9 +57,10 @@ class ProductStockManageServiceIntegrationTest {
         CountDownLatch startLatch = new CountDownLatch(1);
         CountDownLatch doneLatch = new CountDownLatch(threadCount);
 
-        List<OrderMessage> orders = List.of(
-            OrderMessage.of(1L, "tester1",
-                List.of(OrderMessage.OrderProductMessage.of(1L, 1L, new BigDecimal("11200"))))
+        List<OrderEventMessage> orders = List.of(
+            OrderEventMessage.of(1L, "tester1",
+                List.of(OrderEventMessage.OrderProductMessage.of(1L, 1L, new BigDecimal("11200"))),
+                OrderStatus.COMPLETED)
         );
         OrderResultMessage message = new OrderResultMessage("1", OrderStatus.COMPLETED, null);
 

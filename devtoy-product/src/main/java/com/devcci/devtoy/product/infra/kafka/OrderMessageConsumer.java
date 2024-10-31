@@ -2,7 +2,7 @@ package com.devcci.devtoy.product.infra.kafka;
 
 import com.devcci.devtoy.common.domain.OrderStatus;
 import com.devcci.devtoy.common.exception.ApiException;
-import com.devcci.devtoy.common.infra.kafka.dto.OrderMessage;
+import com.devcci.devtoy.common.infra.kafka.dto.OrderEventMessage;
 import com.devcci.devtoy.common.infra.kafka.dto.OrderResultMessage;
 import com.devcci.devtoy.product.application.service.ProductStockManageService;
 import com.devcci.devtoy.product.infra.kafka.config.KafkaConsumerConfig;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @ConditionalOnBean(KafkaConsumerConfig.class)
 @Slf4j
 @Component
-public class OrderMessageConsumer implements AcknowledgingMessageListener<String, OrderMessage> {
+public class OrderMessageConsumer implements AcknowledgingMessageListener<String, OrderEventMessage> {
 
     private final ProductStockManageService productStockManageService;
     private final OrderResultMessageProducer orderResultMessageProducer;
@@ -30,8 +30,8 @@ public class OrderMessageConsumer implements AcknowledgingMessageListener<String
     }
 
     @Override
-    @KafkaListener(topics = "${topic.order.create}", containerFactory = "orderCreatedMessageListenerFactory")
-    public void onMessage(@NonNull ConsumerRecord<String, OrderMessage> msg, Acknowledgment acknowledgment) {
+    @KafkaListener(topics = "${topic.order.event}", containerFactory = "orderCreatedMessageListenerFactory")
+    public void onMessage(@NonNull ConsumerRecord<String, OrderEventMessage> msg, Acknowledgment acknowledgment) {
         try {
             productStockManageService.removeStockQuantity(msg.value());
         } catch (ApiException e) {

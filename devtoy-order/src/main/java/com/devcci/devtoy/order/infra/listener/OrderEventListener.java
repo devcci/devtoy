@@ -1,7 +1,7 @@
 package com.devcci.devtoy.order.infra.listener;
 
-import com.devcci.devtoy.common.infra.kafka.dto.OrderMessage;
-import com.devcci.devtoy.common.infra.kafka.dto.OrderMessage.OrderProductMessage;
+import com.devcci.devtoy.common.infra.kafka.dto.OrderEventMessage;
+import com.devcci.devtoy.common.infra.kafka.dto.OrderEventMessage.OrderProductMessage;
 import com.devcci.devtoy.order.application.service.OrderService;
 import com.devcci.devtoy.order.domain.order.Order;
 import com.devcci.devtoy.order.domain.order.event.OrderCompletedEvent;
@@ -27,7 +27,7 @@ public class OrderEventListener {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onOrderCreated(OrderCreatedEvent event) {
         Order order = event.order();
-        OrderMessage orderMessage = OrderMessage.of(
+        OrderEventMessage orderEventMessage = OrderEventMessage.of(
             order.getId(),
             order.getMemberId(),
             order.getOrderProducts().stream()
@@ -36,9 +36,10 @@ public class OrderEventListener {
                     orderProduct.getQuantity(),
                     orderProduct.getPrice()
                 ))
-                .toList()
+                .toList(),
+            order.getStatus()
         );
-        orderKafkaProducer.send(order.getId().toString(), orderMessage);
+        orderKafkaProducer.send(order.getId().toString(), orderEventMessage);
     }
 
     @EventListener

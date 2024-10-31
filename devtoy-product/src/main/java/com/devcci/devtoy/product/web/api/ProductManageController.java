@@ -1,8 +1,6 @@
 package com.devcci.devtoy.product.web.api;
 
 
-import com.devcci.devtoy.common.infra.kafka.dto.OrderMessage;
-import com.devcci.devtoy.common.infra.kafka.dto.OrderMessage.OrderProductMessage;
 import com.devcci.devtoy.product.application.service.ProductManageService;
 import com.devcci.devtoy.product.application.service.ProductStockManageService;
 import com.devcci.devtoy.product.web.dto.ProductAddRequest;
@@ -15,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -24,9 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.math.BigDecimal;
 import java.net.URI;
-import java.util.List;
 
 @Tag(name = "상품 관리 API")
 @RequestMapping("/product")
@@ -80,12 +75,5 @@ public class ProductManageController {
         @Valid @RequestBody StockModifyRequest stockModifyRequest) {
         productStockManageService.modifyStockQuantity(productId, stockModifyRequest.quantity());
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/test")
-    public void test() {
-        OrderProductMessage orderProductMessage = OrderProductMessage.of(1L, 1L, new BigDecimal("11200"));
-
-        productStockManageService.removeStockQuantity(OrderMessage.of(1L, "test", List.of(orderProductMessage)));
     }
 }

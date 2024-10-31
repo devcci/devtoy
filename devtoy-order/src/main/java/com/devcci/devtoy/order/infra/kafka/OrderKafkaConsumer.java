@@ -36,7 +36,7 @@ public class OrderKafkaConsumer implements AcknowledgingMessageListener<String, 
         } catch (Exception e) {
             log.error(e.getMessage());
             eventPublisher.publishEvent(
-                new OrderFailedEvent(Long.valueOf(msg.value().orderId()), msg.value().reason()));
+                new OrderFailedEvent(Long.valueOf(msg.value().orderId()), e.getMessage()));
         } finally {
             acknowledgment.acknowledge();
         }

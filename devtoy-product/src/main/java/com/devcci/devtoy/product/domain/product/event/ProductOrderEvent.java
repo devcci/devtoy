@@ -1,7 +1,7 @@
 package com.devcci.devtoy.product.domain.product.event;
 
-import com.devcci.devtoy.common.infra.kafka.dto.OrderMessage;
+import com.devcci.devtoy.common.infra.kafka.dto.OrderEventMessage;
 
-public record ProductOrderEvent(OrderMessage orderMessage) {
+public record ProductOrderEvent(OrderEventMessage orderEventMessage) {
 
 }
